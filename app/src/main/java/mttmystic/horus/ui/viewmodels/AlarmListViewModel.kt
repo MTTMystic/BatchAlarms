@@ -7,8 +7,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
-import mttmystic.horus.data.Alarm
-import mttmystic.horus.proto.Alarm as DataStoreAlarm
+import mttmystic.horus.proto.Alarm
 import mttmystic.horus.data.AlarmRepository
 //import mttmystic.horus.data.AlarmRepositoryNew
 
@@ -27,8 +26,8 @@ import mttmystic.horus.data.AlarmRepository
 }*/
 
 class AlarmListViewModel(val repository: AlarmRepository) : ViewModel() {
-    fun getAlarms() : Flow<List<DataStoreAlarm>> {
-        return repository._alarmsList
+    fun getAlarms() : Flow<List<Alarm>> {
+        return repository.alarmsList
     }
 
     fun toggleAlarm(pendingNum: Int) {
@@ -38,9 +37,9 @@ class AlarmListViewModel(val repository: AlarmRepository) : ViewModel() {
 
     }
 
-    fun cancelAllAlarms() {
+    fun deleteAllAlarms() {
         viewModelScope.launch {
-            repository.cancelAllAlarms()
+            repository.deleteAllAlarms()
         }
 
     }

@@ -9,7 +9,6 @@ import android.util.Log
 import androidx.lifecycle.ViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import mttmystic.horus.data.Alarm
 import mttmystic.horus.data.Interval
 import mttmystic.horus.data.Span
 import mttmystic.horus.data.Time

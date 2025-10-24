@@ -76,7 +76,7 @@ class CreateAlarmsViewModel(val repository: AlarmRepository) : ViewModel() {
         setSpan()
         setInterval()
         viewModelScope.launch {
-            repository.setAlarms(_span.value, _interval.value)
+            repository.createAlarms(_span.value, _interval.value)
         }
 
     }

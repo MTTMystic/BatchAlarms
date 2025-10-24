@@ -34,9 +34,3 @@ data class Interval(var length : Int = 0) {
     }
 }
 
-
-data class Alarm(
-    val time : Time,
-    val id : Int,
-    val timeInMillis : Long,
-    var active : Boolean = true)

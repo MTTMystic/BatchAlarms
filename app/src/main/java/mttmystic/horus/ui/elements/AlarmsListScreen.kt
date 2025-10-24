@@ -41,6 +41,6 @@ fun AlarmsListScreen(viewModel : AlarmListViewModel, onClickFAB : () -> Unit) {
     DisplayAlarmsScreen(
             alarmsList,
             onClickFAB = onClickFAB,
-            onClickCancel = { viewModel.cancelAllAlarms() },
+            onClickCancel = { viewModel.deleteAllAlarms() },
             onClickToggle = { id -> viewModel.toggleAlarm(id) })
 }

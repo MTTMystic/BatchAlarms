@@ -20,7 +20,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.sp
 import mttmystic.horus.AlarmHandlerViewModel
-import mttmystic.horus.data.Alarm
+import mttmystic.horus.proto.Alarm
 import mttmystic.horus.data.Time
 import mttmystic.horus.proto.Alarm as DataStoreAlarm
 import mttmystic.horus.isAlarmToday
@@ -29,7 +29,7 @@ import mttmystic.horus.isAlarmToday
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DisplayAlarmsScreen(
-    alarms : List<DataStoreAlarm>,
+    alarms : List<Alarm>,
     onClickFAB : () -> Unit,
     onClickCancel : () -> Unit,
     onClickToggle : (Int) -> Unit
@@ -61,7 +61,7 @@ fun DisplayAlarmsScreen(
         ){
             if (alarms.isNotEmpty()) {
                 alarms.forEach { alarm ->
-                    val time = Time(alarm.time.hour, alarm.time.minute)
+                    val time = Time(alarm.hour, alarm.minute)
                     Alarm(
                         //isToday = isAlarmToday(time),
                         timeText = time.display(),
