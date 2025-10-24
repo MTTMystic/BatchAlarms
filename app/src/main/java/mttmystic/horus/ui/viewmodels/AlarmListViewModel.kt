@@ -10,9 +10,9 @@ import kotlinx.coroutines.launch
 import mttmystic.horus.data.Alarm
 import mttmystic.horus.proto.Alarm as DataStoreAlarm
 import mttmystic.horus.data.AlarmRepository
-import mttmystic.horus.data.AlarmRepositoryNew
+//import mttmystic.horus.data.AlarmRepositoryNew
 
-class AlarmListViewModelOLD(val repository: AlarmRepository) : ViewModel() {
+/*class AlarmListViewModelOLD(val repository: AlarmRepository) : ViewModel() {
     fun getAlarms() : StateFlow<List<Alarm>> {
         return repository.alarms
     }
@@ -24,9 +24,9 @@ class AlarmListViewModelOLD(val repository: AlarmRepository) : ViewModel() {
     fun cancelAllAlarms() {
         repository.cancelAllAlarms()
     }
-}
+}*/
 
-class AlarmListViewModel(val repository: AlarmRepositoryNew) : ViewModel() {
+class AlarmListViewModel(val repository: AlarmRepository) : ViewModel() {
     fun getAlarms() : Flow<List<DataStoreAlarm>> {
         return repository._alarmsList
     }

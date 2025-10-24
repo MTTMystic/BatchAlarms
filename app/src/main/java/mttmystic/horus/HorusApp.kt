@@ -7,13 +7,13 @@ import androidx.datastore.core.DataStore
 import androidx.datastore.dataStore
 import mttmystic.horus.data.AlarmRepository
 import mttmystic.horus.data.AlarmListSerializer
-import mttmystic.horus.data.AlarmRepositoryNew
+//import mttmystic.horus.data.AlarmRepositoryNew
 import mttmystic.horus.proto.Alarm
 import mttmystic.horus.proto.AlarmList
 
 class HorusApp : Application() {
     lateinit var alarmRepo : AlarmRepository;
-    lateinit var alarmRepoNew : AlarmRepositoryNew;
+    //lateinit var alarmRepoNew : AlarmRepositoryNew;
     lateinit var notificationMgr : Notifications
     private val ALARM_NAME = "alarm"
     private val DATA_STORE_FILE_NAME = "alarm.pb"
@@ -29,7 +29,7 @@ class HorusApp : Application() {
         // Initialize AlarmManager and schedule alarms here
         val appContext : Context = applicationContext
         alarmRepo = AlarmRepository(alarmStore, appContext)
-        alarmRepoNew = AlarmRepositoryNew(alarmStore, appContext)
+        //alarmRepoNew = AlarmRepositoryNew(alarmStore, appContext)
         notificationMgr = Notifications(appContext)
 
     }

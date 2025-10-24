@@ -7,13 +7,10 @@ message AlarmList {
     repeated Alarm alarms  = 1;
 }
 message Alarm {
-    message Time {
-        int32 hour = 1;
-        int32 minute = 2;
-    }
-    Time time = 3;
-    int32 id = 4;
-    int64 millis = 5;
-    bool active = 6;
+    int32 hour = 1;
+    int32 minute = 2;
+    int32 id = 3;
+    int64 millis = 4;
+    bool active = 5;
 }
 

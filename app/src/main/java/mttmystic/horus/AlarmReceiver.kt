@@ -33,7 +33,7 @@ class AlarmReceiver: BroadcastReceiver() {
             val alarmID = intent.getIntExtra(alarmIDKey, 0)
 
             CoroutineScope(Dispatchers.IO).launch {
-                appContext.alarmRepoNew.toggleAlarm(alarmID)
+                appContext.alarmRepo.toggleAlarm(alarmID)
             }
 
 

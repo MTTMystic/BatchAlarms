@@ -7,12 +7,12 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import mttmystic.horus.data.AlarmRepository
-import mttmystic.horus.data.AlarmRepositoryNew
+//import mttmystic.horus.data.AlarmRepositoryNew
 import mttmystic.horus.data.Interval
 import mttmystic.horus.data.Span
 import mttmystic.horus.data.Time
 
-class CreateAlarmsViewModel(val repository: AlarmRepositoryNew) : ViewModel() {
+class CreateAlarmsViewModel(val repository: AlarmRepository) : ViewModel() {
     private var _span = MutableStateFlow(Span())
     val span get() = _span.asStateFlow()
     private var _pendingSpan = Span()

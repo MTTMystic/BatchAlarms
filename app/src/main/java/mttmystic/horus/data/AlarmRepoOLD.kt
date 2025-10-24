@@ -1,0 +1,254 @@
+package mttmystic.horus.data
+
+import android.app.AlarmManager
+import android.app.PendingIntent
+import android.content.Context
+import android.content.Intent
+import android.icu.util.Calendar
+import android.util.Log
+import androidx.core.content.ContextCompat.getString
+import androidx.datastore.core.DataStore
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import mttmystic.horus.AlarmReceiver
+import mttmystic.horus.R
+import mttmystic.horus.proto.AlarmList as DataStoreAlarmList
+
+class AlarmRepositoryOLD(
+    private val alarmListStore: DataStore<DataStoreAlarmList>,
+    private val context: Context
+){
+    private val _alarms : MutableStateFlow<List<Alarm>> =
+        MutableStateFlow<List<Alarm>>(mutableListOf())
+
+    val alarms : StateFlow<List<Alarm>>  get() =
+        _alarms.asStateFlow()
+
+    private val _alarmMgr : AlarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
+    
+    private var _alarmTag = 0 //TODO set alarm tag to be [id of last alarm held] + 1 to enable extending span
+
+    init {
+        //TODO get alarms from data store
+        Log.d("alarm manager", "initialized repo")
+    }
+    private fun _msToTime(millisElapsed : Long) : Pair<Int, Int> {
+        val totalSeconds = millisElapsed / 1000
+        val hours = totalSeconds / 3600
+        val minutes = ((totalSeconds) % 3600) / 60
+        return Pair(hours.toInt(), minutes.toInt())
+    }
+
+    private fun _alarmTime(millisElapsed: Long, span : Span) : Time {
+        val timeSince = _msToTime(millisElapsed)
+        return Time(span.start.hour + timeSince.first, span.start.minute + timeSince.second)
+    }
+
+    fun isAlarmToday(time : Time) : Boolean {
+        val calendar : Calendar = Calendar.getInstance()
+        calendar.setTimeInMillis(System.currentTimeMillis())
+        val currentHour = calendar.get(Calendar.HOUR_OF_DAY)
+        val currentMinute = calendar.get(Calendar.MINUTE)
+        return (time.hour >= currentHour) and (time.minute >= currentMinute)
+    }
+
+    fun fetchAlarms() {
+        //we know that when the alarms list is empty and the alarm tag is 0 no alarms were created yet
+        //if alarm tag weren't zero that would mean the user had deleted the alarms they had set
+        //since alarm tag gets reset when user creates new alarms
+        return
+    }
+
+    fun setAlarm(timeString: String, timeInMillis: Long, pendingNum:Int) {
+        val alarmAction = getString(context, R.string.alarm_action)
+        val alarmIDKey = getString(context, R.string.alarm_id_key)
+        val alarmTimeKey = getString(context, R.string.alarm_time_key)
+        val alarmIntent = Intent(context, AlarmReceiver::class.java).apply {
+            action = "ALARM"
+            putExtra(alarmTimeKey, timeString)
+            putExtra(alarmIDKey,
+                pendingNum)
+        }
+
+        val pendingIntent = PendingIntent.getBroadcast(
+            context,
+            pendingNum,
+            alarmIntent,
+            PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_ONE_SHOT
+        )
+
+        _alarmMgr.setExactAndAllowWhileIdle(
+            AlarmManager.RTC_WAKEUP,
+            timeInMillis,
+            pendingIntent
+        )
+    }
+
+    private fun _getAlarm(timeInMillis : Long) : Alarm{
+        val alarmCalendar : Calendar = Calendar.getInstance().apply {
+            setTimeInMillis(timeInMillis)
+        }
+        val alarmTime = Time(
+            hour= alarmCalendar.get(Calendar.HOUR_OF_DAY),
+            minute = alarmCalendar.get(Calendar.MINUTE)
+        )
+
+        val alarm = Alarm (
+            time = alarmTime,
+            timeInMillis = timeInMillis,
+            id = _alarmTag
+        )
+
+        _alarmTag++
+        return alarm
+
+    }
+
+    fun generateAlarm(timeInMillis: Long) {
+        val alarm = _getAlarm(timeInMillis)
+        _alarms.value = _alarms.value + alarm
+        setAlarm(alarm.time.display(), timeInMillis, alarm.id)
+    }
+
+    fun setAlarms(span : Span, interval: Interval) {
+        _alarmTag = 0
+        cancelAllAlarms()
+
+        val calendar : Calendar =  Calendar.getInstance().apply {
+            setTimeInMillis(System.currentTimeMillis())
+            set(Calendar.HOUR_OF_DAY, span.start.hour)
+            set(Calendar.MINUTE, span.start.minute)
+        }
+
+        val step : Long = interval.inMillis()
+        val end : Long = calendar.timeInMillis + span.lengthInMillis()
+        //val start = calendar.timeInMillis
+        var curr = calendar.timeInMillis
+        while (curr <= end) {
+            if (curr > System.currentTimeMillis()) {
+                generateAlarm(curr)
+            } else {
+                /*val dayInterval = Interval(24*60)
+                val newTime = curr + dayInterval.inMillis()
+                generateAlarm((newTime))*/
+            }
+
+            curr += step
+        }
+
+        if ((curr - step) != end)
+        {
+            generateAlarm(end)
+        }
+
+
+    }
+
+    /*fun setSpanAlarms(span : Span, interval : Interval) {
+        //the calendar should have been set with the span start hour and start minute
+        _alarmTag = 0
+        val calendar : Calendar = Calendar.getInstance().apply {
+            setTimeInMillis(System.currentTimeMillis())
+            set(Calendar.HOUR_OF_DAY, span.start.hour)
+            set(Calendar.MINUTE, span.start.minute)
+        }
+
+        val millisStep : Long = interval.inMillis()
+        //todo add this to start millis from calendar set to span start
+        val endMillis : Long = calendar.timeInMillis + span.lengthInMillis()
+        val startMillis = calendar.timeInMillis
+        var millisCurrent = startMillis
+        while (millisCurrent <= endMillis) {
+            //val minutes_elapsed = (millisCurrent / millisStep) * interval.value.length
+            //Log.d("alarm manager", "alarm step: ${minutes_elapsed} minutes since ${span.start.hour}:${span.start.minute}")
+            //TODO set an alarm at millisCurrent
+            val alarm = Alarm(
+                time = _alarmTime(millisCurrent - startMillis, span),
+                id = _alarmTag,
+                timeInMillis = millisCurrent
+            )
+            setAlarm(
+                timeString = alarm.time.display(),
+                timeInMillis = millisCurrent,
+                pendingNum = _alarmTag
+            )
+
+            calendar.setTimeInMillis(millisCurrent)
+
+            _alarms.value += alarm //TODO modify this to make a whole new list instead of adding to existing list so that it will update
+            //val alarmTime : Time = alarmTime(millisCurrent - startMillis)
+            Log.d(
+                "alarm manager",
+                "${calendar.get(Calendar.HOUR_OF_DAY)}:${calendar.get(Calendar.MINUTE)}"
+            )
+            millisCurrent += millisStep
+            _alarmTag++
+        }
+
+        if ((millisCurrent - millisStep) != endMillis) {
+            val alarm = Alarm(
+                time = _alarmTime(millisCurrent - startMillis, span),
+                id = _alarmTag,
+                timeInMillis = millisCurrent)
+            setAlarm(
+                alarm.time.display(),
+                timeInMillis = endMillis,
+                pendingNum = _alarmTag
+            )
+
+            _alarms.value += alarm
+            _alarmTag++
+        }
+
+        //setAlarmCalendar(span.end.hour, span.end.minute)
+        //Log.d("alarm manager", "alarm step: ${span.end.hour}:${span.end.minute}")
+    }*/
+
+    fun toggleAlarm(pendingNum: Int) {
+        val otherAlarms = _alarms.value.filterNot {it.id == pendingNum}
+        val alarm = (_alarms.value.filter {it.id == pendingNum})[0]
+        if (alarm.active) {
+            _cancelAlarm(pendingNum)
+        } else {
+            setAlarm(
+                timeString= alarm.time.display(),
+                timeInMillis = alarm.timeInMillis,
+                pendingNum = pendingNum
+            )
+        }
+        val newAlarm = alarm.copy(active = !alarm.active)
+        val newAlarms = _alarms.value.filterNot {it.id == pendingNum} + newAlarm
+        _alarms.value = newAlarms.sortedBy { it.id }
+    }
+
+    private fun _cancelAlarm(pendingNum:Int) {
+        val alarm = _alarms.value[pendingNum]
+        val alarmAction = getString(context, R.string.alarm_action)
+        val alarmIDKey = getString(context, R.string.alarm_id_key)
+        val alarmTimeKey = getString(context, R.string.alarm_time_key)
+        val alarmIntent = Intent(context, AlarmReceiver::class.java).apply {
+            action = "ALARM"
+            putExtra(alarmTimeKey, alarm.time.display())
+            putExtra(alarmIDKey,
+                pendingNum)
+        }
+        val pendingIntent = PendingIntent.getBroadcast(
+            context,
+            pendingNum,
+            alarmIntent,
+            PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_ONE_SHOT
+        )
+
+        _alarmMgr.cancel(pendingIntent)
+        Log.d("alarm manager", "cancelled alarm ${pendingNum}")
+        //Log.d("alarm manager", "alarm set")
+    }
+
+    fun cancelAllAlarms() {
+        _alarms.value.forEach { alarm ->
+            _cancelAlarm(alarm.id)
+        }
+        _alarms.value = mutableListOf()
+    }
+}

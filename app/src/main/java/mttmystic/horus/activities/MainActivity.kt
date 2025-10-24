@@ -72,13 +72,13 @@ class MainActivity : ComponentActivity() {
                         }
                         if (showCreateAlarmScreen) {
                             CreateAlarmsScreen(
-                                viewModel = CreateAlarmsViewModel(app.alarmRepoNew),
+                                viewModel = CreateAlarmsViewModel(app.alarmRepo),
                                 onConfirm = {showCreateAlarmScreen = false}, // TODO make this nav back to display alarms screen
                                 onDismiss = {
                                     showCreateAlarmScreen = false // TODO make this nav back to display alarms screen
                                 })
                         } else {
-                            AlarmsListScreen(AlarmListViewModel(app.alarmRepoNew), {showCreateAlarmScreen = true})
+                            AlarmsListScreen(AlarmListViewModel(app.alarmRepo), {showCreateAlarmScreen = true})
                         }
                     }
                 }
