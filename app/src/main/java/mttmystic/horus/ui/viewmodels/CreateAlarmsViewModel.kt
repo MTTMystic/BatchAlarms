@@ -72,6 +72,13 @@ class CreateAlarmsViewModel(val repository: AlarmRepository) : ViewModel() {
         _interval.value = _pendingInterval
     }
 
+    fun validateSpanLength() : Boolean{
+        val spanLength = _pendingSpan.lengthInMillis()
+        val intervalLength = _pendingInterval.inMillis()
+
+        return spanLength > intervalLength
+    }
+
     fun submit() {
         setSpan()
         setInterval()
