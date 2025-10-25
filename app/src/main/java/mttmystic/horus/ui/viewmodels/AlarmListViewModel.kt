@@ -9,6 +9,11 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import mttmystic.horus.proto.Alarm
 import mttmystic.horus.data.AlarmRepository
+import mttmystic.horus.domain.CreateAlarmsUseCase
+import mttmystic.horus.domain.DeleteAlarmsUseCase
+import mttmystic.horus.domain.GetAlarmsUseCase
+import mttmystic.horus.domain.ToggleAlarmUseCase
+
 //import mttmystic.horus.data.AlarmRepositoryNew
 
 /*class AlarmListViewModelOLD(val repository: AlarmRepository) : ViewModel() {
@@ -25,7 +30,7 @@ import mttmystic.horus.data.AlarmRepository
     }
 }*/
 
-class AlarmListViewModel(val repository: AlarmRepository) : ViewModel() {
+/*class AlarmListViewModel(val repository: AlarmRepository) : ViewModel() {
     fun getAlarms() : Flow<List<Alarm>> {
         return repository.alarmsList
     }
@@ -40,6 +45,30 @@ class AlarmListViewModel(val repository: AlarmRepository) : ViewModel() {
     fun deleteAllAlarms() {
         viewModelScope.launch {
             repository.deleteAllAlarms()
+        }
+
+    }
+}*/
+
+class AlarmListViewModel(
+    private val getAlarmsUseCase: GetAlarmsUseCase,
+    private val toggleAlarmUseCase: ToggleAlarmUseCase,
+    private val deleteAlarmsUseCase: DeleteAlarmsUseCase
+) : ViewModel() {
+     fun getAlarms() : Flow<List<Alarm>> {
+        return getAlarmsUseCase()
+    }
+
+    fun toggleAlarm(id: Int) {
+        viewModelScope.launch {
+            toggleAlarmUseCase(id)
+        }
+
+    }
+
+    fun deleteAllAlarms() {
+        viewModelScope.launch {
+           deleteAlarmsUseCase()
         }
 
     }

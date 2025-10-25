@@ -35,6 +35,7 @@ class AlarmRepository (
     private var _alarmTag = 0
 
     //TODO conversion between 12hr and 24hr format
+
     private fun timeString(hour: Int, minute: Int) : String {
         return "${String.format("%02d", hour)}:${String.format("%02d", minute)}"
     }
@@ -179,7 +180,7 @@ class AlarmRepository (
     }
 
     suspend fun deleteAllAlarms() {
-        cancelAllAlarms()
+        //cancelAllAlarms()
 
         alarmListStore.updateData { currentList ->
             currentList.toBuilder()
@@ -194,11 +195,11 @@ class AlarmRepository (
                 .map {
                     if (it.id == id) {
                         //val alarm = alarmFromProto(it)
-                        if (it.active) {
+                        /*if (it.active) {
                             _cancelAlarm(id, it.hour, it.minute)
                         } else {
                             setAlarm(it)
-                        }
+                        }*/
                         it.toBuilder().setActive(!it.active).build()
                     } else {
                         it

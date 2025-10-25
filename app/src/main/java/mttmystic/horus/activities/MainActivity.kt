@@ -26,9 +26,13 @@ import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.isGranted
 import com.google.accompanist.permissions.rememberPermissionState
 import com.google.accompanist.permissions.shouldShowRationale
-import mttmystic.horus.AlarmHandlerViewModel
 import mttmystic.horus.HorusApp
 import mttmystic.horus.data.Time
+import mttmystic.horus.domain.AlarmService
+import mttmystic.horus.domain.DeleteAlarmsUseCase
+import mttmystic.horus.domain.GetAlarmsUseCase
+import mttmystic.horus.domain.ToggleAlarmUseCase
+import mttmystic.horus.proto.alarmList
 import mttmystic.horus.ui.elements.AlarmsListScreen
 import mttmystic.horus.ui.elements.CreateAlarmsScreen
 import mttmystic.horus.ui.theme.HorusTheme
@@ -47,6 +51,12 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.Companion.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
+                    //TODO more sophisticated DI?
+                    val alarmListViewModel = AlarmListViewModel(
+                        GetAlarmsUseCase(app.alarmRepo),
+                        ToggleAlarmUseCase(app.alarmRepo, app.alarmService),
+                        DeleteAlarmsUseCase(app.alarmRepo, app.alarmService)
+                    )
                     val notifyPermissionState = rememberPermissionState(android.Manifest.permission.POST_NOTIFICATIONS)
                     if (!notifyPermissionState.status.isGranted) {
                         Column(
@@ -78,7 +88,7 @@ class MainActivity : ComponentActivity() {
                                     showCreateAlarmScreen = false // TODO make this nav back to display alarms screen
                                 })
                         } else {
-                            AlarmsListScreen(AlarmListViewModel(app.alarmRepo), {showCreateAlarmScreen = true})
+                            AlarmsListScreen(alarmListViewModel, {showCreateAlarmScreen = true})
                         }
                     }
                 }
