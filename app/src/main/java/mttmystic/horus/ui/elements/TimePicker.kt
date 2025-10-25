@@ -39,12 +39,12 @@ fun TimePicker(
 
     val currentTime = Calendar.getInstance()
 
+    //TODO add parameter to determine whether 24hr or 12hr
     val timePickerState = rememberTimePickerState(
         initialHour = currentTime.get(Calendar.HOUR_OF_DAY),
         initialMinute = currentTime.get(Calendar.MINUTE),
         is24Hour = true
     )
-
 
     LaunchedEffect(timePickerState.hour, timePickerState.minute) {
         //onChangeHour(timePickerState.hour)
@@ -71,7 +71,7 @@ fun TimePicker(
             TimeInput(
                 modifier = Modifier
                     .focusProperties {canFocus = allowFocus},
-                state = timePickerState
+                state = timePickerState,
             )
 
         }

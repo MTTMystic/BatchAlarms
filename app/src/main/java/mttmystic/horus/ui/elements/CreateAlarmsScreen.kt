@@ -16,8 +16,10 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
@@ -36,6 +38,8 @@ fun CreateAlarmsScreen(
 ) {
     val focusManager = LocalFocusManager.current
     val focusRequester = remember { FocusRequester() }
+    var spanLengthInvalid by remember {mutableStateOf(false)}
+
     Column (
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Top,
@@ -45,11 +49,14 @@ fun CreateAlarmsScreen(
             .focusGroup()
     ) {
         val (a, b, c) = FocusRequester.createRefs()
+        if (spanLengthInvalid) {
+            Text("Please set the time between alarms to be less than the duration of the alarms.")
+        }
         Text("First Alarm")
         TimePicker(
             onChange = {time : Time -> viewModel.setPendingStart(time)},
         )
-
+        //TODO error indication when span length is invalid
         Text("Last Alarm")
         TimePicker(
             onChange = {time: Time -> viewModel.setPendingEnd(time)}
@@ -60,7 +67,7 @@ fun CreateAlarmsScreen(
             horizontalArrangement = Arrangement.Center,
             verticalAlignment = Alignment.CenterVertically) {
             IntervalInput(
-                onDone = {minutes : Int -> viewModel.setPendingInterval(minutes)})
+                onSubmit = {minutes : Int -> viewModel.setPendingInterval(minutes)})
             Text("minutes")
         }
         Row (
@@ -73,8 +80,13 @@ fun CreateAlarmsScreen(
             Spacer(Modifier.width(10.dp))
             Button(onClick =
                 {
-                    viewModel.submit()
-                    onConfirm()
+                    if (viewModel.validateSpanLength()) {
+                        viewModel.submit()
+                        onConfirm()
+                    }
+                    else {
+                        spanLengthInvalid = true
+                    }
                 }) {
                 Text("Ok")
             }

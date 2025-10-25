@@ -29,9 +29,12 @@ import com.google.accompanist.permissions.shouldShowRationale
 import mttmystic.horus.HorusApp
 import mttmystic.horus.data.Time
 import mttmystic.horus.domain.AlarmService
+import mttmystic.horus.domain.CreateAlarmsUseCase
 import mttmystic.horus.domain.DeleteAlarmsUseCase
 import mttmystic.horus.domain.GetAlarmsUseCase
 import mttmystic.horus.domain.ToggleAlarmUseCase
+import mttmystic.horus.domain.ValidateIntervalUseCase
+import mttmystic.horus.domain.ValidateSpanLengthUseCase
 import mttmystic.horus.proto.alarmList
 import mttmystic.horus.ui.elements.AlarmsListScreen
 import mttmystic.horus.ui.elements.CreateAlarmsScreen
@@ -56,6 +59,12 @@ class MainActivity : ComponentActivity() {
                         GetAlarmsUseCase(app.alarmRepo),
                         ToggleAlarmUseCase(app.alarmRepo, app.alarmService),
                         DeleteAlarmsUseCase(app.alarmRepo, app.alarmService)
+                    )
+
+                    val createAlarmsViewModel = CreateAlarmsViewModel(
+                        CreateAlarmsUseCase(app.alarmRepo, app.alarmService),
+                        ValidateIntervalUseCase(),
+                        ValidateSpanLengthUseCase()
                     )
                     val notifyPermissionState = rememberPermissionState(android.Manifest.permission.POST_NOTIFICATIONS)
                     if (!notifyPermissionState.status.isGranted) {
@@ -82,7 +91,7 @@ class MainActivity : ComponentActivity() {
                         }
                         if (showCreateAlarmScreen) {
                             CreateAlarmsScreen(
-                                viewModel = CreateAlarmsViewModel(app.alarmRepo),
+                                viewModel = createAlarmsViewModel,
                                 onConfirm = {showCreateAlarmScreen = false}, // TODO make this nav back to display alarms screen
                                 onDismiss = {
                                     showCreateAlarmScreen = false // TODO make this nav back to display alarms screen

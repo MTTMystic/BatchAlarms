@@ -26,7 +26,7 @@ fun validateIntervalInput(text : String) : Boolean{
 }
 
 @Composable
-fun IntervalInput(modifier : Modifier = Modifier, onDone: (pendingNum: Int) -> Unit) {
+fun IntervalInput(modifier : Modifier = Modifier, onSubmit: (pendingInterval: Int) -> Boolean) {
     val keyboardController = LocalSoftwareKeyboardController.current
     val focusManager = LocalFocusManager.current
     var num by remember { mutableStateOf("")}
@@ -53,11 +53,11 @@ fun IntervalInput(modifier : Modifier = Modifier, onDone: (pendingNum: Int) -> U
             isError = inputError,
             keyboardActions = KeyboardActions(
                 onDone = {
-                    if (num.isNotEmpty() && validateIntervalLength(num.trim().toInt())) {
+                    val success = num.isNotEmpty() && onSubmit(num.trim().toInt())
+                    if (success) {
                         num = String.format("%02d", num.trim().toInt())
                         keyboardController?.hide()
                         focusManager.clearFocus(force = true)
-                        onDone(num.trim().toInt())
                     } else {
                         inputError = true
                     }

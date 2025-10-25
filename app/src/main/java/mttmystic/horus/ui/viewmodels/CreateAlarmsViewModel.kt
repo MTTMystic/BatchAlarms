@@ -11,8 +11,15 @@ import mttmystic.horus.data.AlarmRepository
 import mttmystic.horus.data.Interval
 import mttmystic.horus.data.Span
 import mttmystic.horus.data.Time
+import mttmystic.horus.domain.CreateAlarmsUseCase
+import mttmystic.horus.domain.ValidateIntervalUseCase
+import mttmystic.horus.domain.ValidateSpanLengthUseCase
 
-class CreateAlarmsViewModel(val repository: AlarmRepository) : ViewModel() {
+class CreateAlarmsViewModel(
+   private val createAlarmsUseCase: CreateAlarmsUseCase,
+    private val validateIntervalUseCase: ValidateIntervalUseCase,
+    private val validateSpanLengthUseCase: ValidateSpanLengthUseCase
+) : ViewModel() {
     private var _span = MutableStateFlow(Span())
     val span get() = _span.asStateFlow()
     private var _pendingSpan = Span()
@@ -28,40 +35,13 @@ class CreateAlarmsViewModel(val repository: AlarmRepository) : ViewModel() {
         _pendingSpan.end = time
     }
 
-    /*
-    fun validatePendingStart() : Boolean {
-        /*val calendar = Calendar.getInstance().apply{
-            setTimeInMillis(System.currentTimeMillis())
-            set(Calendar.HOUR_OF_DAY, _pendingSpan.start.hour)
-            set(Calendar.MINUTE, _pendingSpan.start.minute)
-        }
-        val currentTime = System.currentTimeMillis()
-        return calendar.timeInMillis > currentTime*/
-        val currentCalendar = Calendar.getInstance()
-        val currentHour = currentCalendar.get(Calendar.HOUR_OF_DAY)
-        val currentMinute = currentCalendar.get(Calendar.MINUTE)
-        return true
-
-    }
-
-    fun validatePendingEnd() : Boolean {
-        val startCalendar = Calendar.getInstance().apply{
-            setTimeInMillis(System.currentTimeMillis())
-            set(Calendar.HOUR_OF_DAY, _pendingSpan.start.hour)
-            set(Calendar.MINUTE, _pendingSpan.start.minute)
+    fun setPendingInterval(minutes : Int) : Boolean {
+        if (validateIntervalUseCase(minutes)) {
+            _pendingInterval = Interval(minutes)
+            return true
         }
 
-        val endCalendar =  Calendar.getInstance().apply{
-            setTimeInMillis(System.currentTimeMillis())
-            set(Calendar.HOUR_OF_DAY, _pendingSpan.end.hour)
-            set(Calendar.MINUTE, _pendingSpan.end.minute)
-        }
-
-        return endCalendar.timeInMillis >= startCalendar.timeInMillis
-    }
-     */
-    fun setPendingInterval(minutes : Int) {
-        _pendingInterval = Interval(minutes)
+        return false
     }
 
     fun setSpan() {
@@ -73,17 +53,15 @@ class CreateAlarmsViewModel(val repository: AlarmRepository) : ViewModel() {
     }
 
     fun validateSpanLength() : Boolean{
-        val spanLength = _pendingSpan.lengthInMillis()
-        val intervalLength = _pendingInterval.inMillis()
-
-        return spanLength > intervalLength
+        return validateSpanLengthUseCase(_pendingSpan, _pendingInterval)
     }
 
     fun submit() {
+        //TODO VALIDATION HERE
         setSpan()
         setInterval()
         viewModelScope.launch {
-            repository.createAlarms(_span.value, _interval.value)
+           createAlarmsUseCase(_span.value, _interval.value)
         }
 
     }
