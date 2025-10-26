@@ -3,6 +3,8 @@ package mttmystic.horus.ui.viewmodels
 import android.icu.util.Calendar
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import dagger.hilt.android.lifecycle.HiltViewModel
+import jakarta.inject.Inject
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
@@ -15,7 +17,8 @@ import mttmystic.horus.domain.CreateAlarmsUseCase
 import mttmystic.horus.domain.ValidateIntervalUseCase
 import mttmystic.horus.domain.ValidateSpanLengthUseCase
 
-class CreateAlarmsViewModel(
+@HiltViewModel
+class CreateAlarmsViewModel @Inject constructor(
    private val createAlarmsUseCase: CreateAlarmsUseCase,
     private val validateIntervalUseCase: ValidateIntervalUseCase,
     private val validateSpanLengthUseCase: ValidateSpanLengthUseCase

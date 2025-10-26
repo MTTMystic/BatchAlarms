@@ -1,9 +1,10 @@
 package mttmystic.horus.domain
 
+import jakarta.inject.Inject
 import kotlinx.coroutines.flow.first
 import mttmystic.horus.data.AlarmRepository
 
-class DeleteAlarmsUseCase (
+class DeleteAlarmsUseCase @Inject constructor(
     private val alarmRepository: AlarmRepository,
     private val alarmService: AlarmService
 ) {

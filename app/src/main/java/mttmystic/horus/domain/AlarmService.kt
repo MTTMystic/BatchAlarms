@@ -5,11 +5,21 @@ import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
 import androidx.core.content.ContextCompat.getString
+import dagger.hilt.android.qualifiers.ApplicationContext
+import jakarta.inject.Inject
 import mttmystic.horus.AlarmReceiver
 import mttmystic.horus.R
 import mttmystic.horus.proto.Alarm
 
-class AlarmService(private val context : Context) {
+/*interface AlarmService {
+    fun timeString(hour: Int, minute: Int) : String
+    fun setAlarm(alarm: Alarm)
+    fun setAlarmsList(alarms : List<Alarm>)
+    fun cancelAlarm(id: Int, hour: Int, minute: Int)
+    fun cancelAlarmsList(alarms : List<Alarm>)
+}*/
+
+class AlarmService @Inject constructor(@ApplicationContext private val context : Context) {
     private val _alarmMgr: AlarmManager =
         context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
 

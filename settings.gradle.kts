@@ -22,6 +22,6 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "schedule_alarm_demo"
+rootProject.name = "BatchAlarms"
 include(":app")
  

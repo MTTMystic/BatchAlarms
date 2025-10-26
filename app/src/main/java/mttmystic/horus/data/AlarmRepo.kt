@@ -8,6 +8,9 @@ import android.icu.util.Calendar
 import android.util.Log
 import androidx.core.content.ContextCompat.getString
 import androidx.datastore.core.DataStore
+import dagger.hilt.android.qualifiers.ApplicationContext
+import jakarta.inject.Inject
+import jakarta.inject.Singleton
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.forEach
@@ -20,9 +23,19 @@ import kotlin.collections.forEach
 
 //TODO add a function to cancel all alarms without deleting them
 
-class AlarmRepository (
+/*interface AlarmRepository {
+    //fun _buildAlarm(timeInMillis: Long) : Alarm
+    //suspend fun addAlarm(alarm : Alarm)
+    suspend fun generateAlarmsList(span: Span, interval: Interval)
+    suspend fun deleteAllAlarms()
+    suspend fun toggleAlarm(id: Int)
+    suspend fun toggleAllAlarms()
+}*/
+
+@Singleton
+class AlarmRepository @Inject constructor(
     private val alarmListStore: DataStore<AlarmList>,
-    private val context: Context
+    @ApplicationContext private val context: Context
 ) {
 
     val alarmsList : Flow<List<Alarm>> = alarmListStore.data
@@ -35,10 +48,6 @@ class AlarmRepository (
     private var _alarmTag = 0
 
     //TODO conversion between 12hr and 24hr format
-
-    private fun timeString(hour: Int, minute: Int) : String {
-        return "${String.format("%02d", hour)}:${String.format("%02d", minute)}"
-    }
 
     private fun _buildAlarm(timeInMillis: Long): Alarm {
         val alarmCalendar: Calendar = Calendar.getInstance().apply {
@@ -77,6 +86,7 @@ class AlarmRepository (
             setTimeInMillis(System.currentTimeMillis())
             set(Calendar.HOUR_OF_DAY, span.start.hour)
             set(Calendar.MINUTE, span.start.minute)
+            set(Calendar.SECOND, 0)
         }
 
         val step: Long = interval.inMillis()
@@ -99,85 +109,6 @@ class AlarmRepository (
         }
     }
 
-    private fun setAlarm(alarm: Alarm) {
-        val alarmAction = getString(context, R.string.alarm_action)
-        val alarmIDKey = getString(context, R.string.alarm_id_key)
-        val alarmTimeKey = getString(context, R.string.alarm_time_key)
-        val timeString = timeString(alarm.hour, alarm.minute)
-        val alarmIntent = Intent(context, AlarmReceiver::class.java).apply {
-            action = "ALARM"
-            putExtra(alarmTimeKey, timeString)
-            putExtra(
-                alarmIDKey,
-                alarm.id
-            )
-        }
-
-        val pendingIntent = PendingIntent.getBroadcast(
-            context,
-            alarm.id,
-            alarmIntent,
-            PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_ONE_SHOT
-        )
-
-        _alarmMgr.setExactAndAllowWhileIdle(
-            AlarmManager.RTC_WAKEUP,
-            alarm.millis,
-            pendingIntent
-        )
-    }
-
-    private suspend fun setAllAlarms() {
-        alarmsList.collect {
-            list -> list.forEach {
-                alarm -> setAlarm(alarm)
-
-            }
-        }
-    }
-
-    suspend fun createAlarms(span: Span, interval: Interval) {
-        generateAlarmsList(span, interval)
-        setAllAlarms()
-    }
-
-    private fun _cancelAlarm(id: Int, hour: Int, minute: Int) {
-        val alarmAction = getString(context, R.string.alarm_action)
-        val alarmIDKey = getString(context, R.string.alarm_id_key)
-        val alarmTimeKey = getString(context, R.string.alarm_time_key)
-        val alarmIntent = Intent(context, AlarmReceiver::class.java).apply {
-            action = "ALARM"
-            putExtra(alarmTimeKey, timeString(hour, minute))
-            putExtra(
-                alarmIDKey,
-                id
-            )
-        }
-        val pendingIntent = PendingIntent.getBroadcast(
-            context,
-            id,
-            alarmIntent,
-            PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_ONE_SHOT
-        )
-
-        _alarmMgr.cancel(pendingIntent)
-    }
-
-    private suspend fun cancelAllAlarms() {
-
-        val currentList = alarmsList.first()
-        currentList.forEach { alarm ->
-            _cancelAlarm(alarm.id, alarm.hour, alarm.minute)
-        }
-        /*alarmsList.collect {
-                list -> list.forEach {
-                alarm ->
-            //_cancelAlarm(alarm.id, alarm.hour, alarm.minute)
-                    Log.d("alarm manager", "attempt to cancel alarm")
-            }
-        }
-         */
-    }
 
     suspend fun deleteAllAlarms() {
         //cancelAllAlarms()
@@ -223,7 +154,5 @@ class AlarmRepository (
                 .addAllAlarms(updated)
                 .build()
         }
-
-        cancelAllAlarms()
     }
 }

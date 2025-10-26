@@ -1,27 +1,28 @@
 package mttmystic.horus
 
-import android.app.NotificationChannel
-import android.app.NotificationManager
-import android.app.PendingIntent
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
-import android.os.Build
-import android.util.Log
-import androidx.core.app.NotificationCompat
 import androidx.core.content.ContextCompat.getString
+import dagger.hilt.android.AndroidEntryPoint
+import dagger.hilt.android.qualifiers.ApplicationContext
+import jakarta.inject.Inject
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
-import mttmystic.horus.activities.AlarmActivity
-import mttmystic.horus.proto.alarm
+import mttmystic.horus.data.AlarmRepository
 
+@AndroidEntryPoint
 class AlarmReceiver: BroadcastReceiver() {
-    override fun onReceive(context: Context, intent: Intent) {
+    @Inject lateinit var alarmRepo : AlarmRepository
+    @Inject lateinit var notificationMgr : Notifications
+
+    override fun onReceive(@ApplicationContext context: Context, intent: Intent) {
         val alarmAction = getString(context, R.string.alarm_action)
+
+
         if (intent.action == alarmAction) {
-            val appContext : HorusApp = context.getApplicationContext()  as HorusApp
+            val appContext : App = context.applicationContext as App
             //var alarmID : Int = intent.getIntExtra("alarm_id", 0)
             //appContext.notificationMgr.cancelNotification(context, alarmID)
             //appContext.alarmRepo.toggleAlarm(alarmID)
@@ -33,22 +34,25 @@ class AlarmReceiver: BroadcastReceiver() {
             val alarmID = intent.getIntExtra(alarmIDKey, 0)
 
             CoroutineScope(Dispatchers.IO).launch {
-                appContext.alarmRepo.toggleAlarm(alarmID)
+                alarmRepo.toggleAlarm(alarmID)
             }
 
 
-            appContext.notificationMgr.generateNotification(context, alarmTime, alarmID)
+            notificationMgr.generateNotification(context, alarmTime, alarmID)
         }
     }
 }
 
+@AndroidEntryPoint
 class StopAlarmReceiver : BroadcastReceiver() {
-    override fun onReceive(context : Context, intent: Intent) {
-        val appContext : HorusApp = context.getApplicationContext() as HorusApp
+    @Inject lateinit var notificationMgr : Notifications
+
+    override fun onReceive(@ApplicationContext context : Context, intent: Intent) {
+        val appContext : App = context.getApplicationContext() as App
         val alarmID : Int = intent.getIntExtra("alarm_id", 0)
         //var alarm_id : Int? = intent?.getIntExtra("alarm_id", Int.MAX_VALUE)
 
-        appContext.notificationMgr.cancelNotification(context, alarmID)
+        notificationMgr.cancelNotification(context, alarmID)
 
 
     }

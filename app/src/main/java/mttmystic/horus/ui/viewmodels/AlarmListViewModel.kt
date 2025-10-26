@@ -3,6 +3,8 @@ package mttmystic.horus.ui.viewmodels
 import androidx.compose.runtime.collectAsState
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import dagger.hilt.android.lifecycle.HiltViewModel
+import jakarta.inject.Inject
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.StateFlow
@@ -50,7 +52,8 @@ import mttmystic.horus.domain.ToggleAlarmUseCase
     }
 }*/
 
-class AlarmListViewModel(
+@HiltViewModel
+class AlarmListViewModel @Inject constructor(
     private val getAlarmsUseCase: GetAlarmsUseCase,
     private val toggleAlarmUseCase: ToggleAlarmUseCase,
     private val deleteAlarmsUseCase: DeleteAlarmsUseCase

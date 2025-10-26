@@ -13,12 +13,16 @@ import android.net.Uri
 import android.os.Build
 import androidx.core.app.NotificationCompat
 import androidx.core.content.ContextCompat.getString
+import dagger.hilt.android.qualifiers.ApplicationContext
+import jakarta.inject.Inject
+import jakarta.inject.Singleton
 import mttmystic.horus.activities.AlarmActivity
 import mttmystic.horus.proto.alarm
 
-class Notifications(context : Context) {
+@Singleton
+class Notifications @Inject constructor(@ApplicationContext context : Context) {
 
-    private var pendingNotifications : List<Int> = mutableListOf()
+    //private var pendingNotifications : List<Int> = mutableListOf()
 
     val notificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
 
@@ -140,8 +144,8 @@ class Notifications(context : Context) {
         val title = getString(context, R.string.alarm_notification_title)
         val text = alarm_time
         val builder = getNotificationBuilder(context, title, alarm_time, alarm_id)
-        pendingNotifications = pendingNotifications.filterNot {it != alarm_id}
-        pendingNotifications += alarm_id
+        //pendingNotifications = pendingNotifications.filterNot {it != alarm_id}
+        //pendingNotifications += alarm_id
         notificationManager.notify(666, builder.build())
         playAlarmSound(context)
     }
