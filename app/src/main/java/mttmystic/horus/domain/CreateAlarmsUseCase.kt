@@ -13,7 +13,9 @@ class CreateAlarmsUseCase @Inject constructor(
     suspend operator fun invoke(span : Span, interval: Interval) {
         //val activeAlarms = alarms.filter {it.active}
         alarmService.cancelAlarmsList(alarmRepository.alarmsList.first())
+
         alarmRepository.generateAlarmsList(span, interval)
+
         alarmService.setAlarmsList(alarmRepository.alarmsList.first())
     }
 }

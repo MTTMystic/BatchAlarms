@@ -57,7 +57,10 @@ class AlarmService @Inject constructor(@ApplicationContext private val context :
 
      fun setAlarmsList(alarms : List<Alarm>) {
         alarms.forEach {
-                alarm -> setAlarm(alarm)
+                alarm ->
+                    if (alarm.active) {
+                        setAlarm(alarm)
+                    }
         }
     }
 

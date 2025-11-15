@@ -33,6 +33,7 @@ import mttmystic.horus.domain.GetAlarmsUseCase
 import mttmystic.horus.domain.ToggleAlarmUseCase
 import mttmystic.horus.domain.ValidateIntervalUseCase
 import mttmystic.horus.domain.ValidateSpanLengthUseCase
+import mttmystic.horus.ui.AppNavHost
 import mttmystic.horus.ui.elements.AlarmsListScreen
 import mttmystic.horus.ui.elements.CreateAlarmsScreen
 import mttmystic.horus.ui.theme.HorusTheme
@@ -53,6 +54,8 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.Companion.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
+                    AppNavHost()
+                    /*
                     //TODO more sophisticated DI?
                     /*val alarmListViewModel = AlarmListViewModel(
                         GetAlarmsUseCase(app.alarmRepo),
@@ -102,7 +105,7 @@ class MainActivity : ComponentActivity() {
                         } else {
                             AlarmsListScreen(alarmListViewModel, {showCreateAlarmScreen = true})
                         }
-                    }
+                    }*/
                 }
 
             }

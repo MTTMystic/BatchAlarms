@@ -11,10 +11,18 @@ import androidx.datastore.core.DataStore
 import dagger.hilt.android.qualifiers.ApplicationContext
 import jakarta.inject.Inject
 import jakarta.inject.Singleton
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.WhileSubscribed
+import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.forEach
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.flow.take
 import mttmystic.horus.AlarmReceiver
 import mttmystic.horus.R
 import mttmystic.horus.proto.AlarmList
@@ -38,8 +46,13 @@ class AlarmRepository @Inject constructor(
     @ApplicationContext private val context: Context
 ) {
 
-    val alarmsList : Flow<List<Alarm>> = alarmListStore.data
+    val alarmsList : StateFlow<List<Alarm>> = alarmListStore.data
         .map {it.alarmsList}
+        .stateIn(
+            scope = CoroutineScope(Dispatchers.IO),
+            started = SharingStarted.WhileSubscribed(5000),
+            initialValue = emptyList()
+        )
 
     private val _alarmMgr: AlarmManager =
         context.getSystemService(Context.ALARM_SERVICE) as AlarmManager

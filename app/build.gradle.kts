@@ -68,6 +68,7 @@ dependencies {
     implementation("com.google.protobuf:protobuf-kotlin-lite:4.32.0")
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.9.0")
     implementation(libs.androidx.appcompat)
+    implementation(libs.androidx.navigation.compose)
 // Check for the latest version
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
@@ -78,6 +79,8 @@ dependencies {
     debugImplementation(libs.androidx.ui.test.manifest)
     implementation("com.google.dagger:hilt-android:2.57.1")
     kapt("com.google.dagger:hilt-android-compiler:2.57.1")
+    implementation("androidx.hilt:hilt-navigation-fragment:1.0.0")
+    implementation("androidx.hilt:hilt-navigation-compose:1.2.0")
 }
 
 protobuf {
@@ -97,4 +100,5 @@ protobuf {
             }
         }
     }
+
 }
