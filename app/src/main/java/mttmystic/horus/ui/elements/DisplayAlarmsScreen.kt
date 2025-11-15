@@ -1,9 +1,12 @@
 package mttmystic.horus.ui.elements
 
+//import mttmystic.horus.AlarmHandlerViewModel
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Delete
@@ -19,10 +22,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.sp
-//import mttmystic.horus.AlarmHandlerViewModel
-import mttmystic.horus.proto.Alarm
 import mttmystic.horus.data.Time
-import mttmystic.horus.proto.Alarm as DataStoreAlarm
+import mttmystic.horus.proto.Alarm
+
 //import mttmystic.horus.isAlarmToday
 
 
@@ -55,11 +57,14 @@ fun DisplayAlarmsScreen(
             } },
 
     ) { innerPadding ->
-        Column (
-            modifier = Modifier
-                .padding(innerPadding)
-        ){
-            if (alarms.isNotEmpty()) {
+        val scrollState = rememberScrollState()
+
+        if (alarms.isNotEmpty()) {
+            Column (
+                modifier = Modifier
+                    .padding(innerPadding)
+                .verticalScroll(scrollState)
+            ) {
                 alarms.forEach { alarm ->
                     val time = Time(alarm.hour, alarm.minute)
                     Alarm(
@@ -71,22 +76,21 @@ fun DisplayAlarmsScreen(
                     )
                     //Text(alarm.time.display(), fontSize=48.sp)
                 }
-            } else {
-                Box (
-                    modifier = Modifier
-                        .fillMaxSize(),
-                    contentAlignment = Alignment.Center
-                ) {
-                    Text(
-                        textAlign = TextAlign.Center,
-                        text="No alarms",
-                        fontSize = 36.sp)
-                }
-                }
-
-
-
+            }
         }
+        else {
+            Box (
+                modifier = Modifier
+                    .fillMaxSize(),
+                contentAlignment = Alignment.Center
+            ) {
+                Text(
+                    textAlign = TextAlign.Center,
+                    text="No alarms",
+                    fontSize = 36.sp)
+            }
+        }
+
     }
 
 
