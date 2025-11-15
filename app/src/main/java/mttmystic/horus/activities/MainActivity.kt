@@ -46,7 +46,6 @@ import mttmystic.horus.ui.viewmodels.CreateAlarmsViewModel
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val app = application as App
         setContent {
             HorusTheme {
                 // A surface container using the 'background' color from the theme
@@ -55,57 +54,6 @@ class MainActivity : ComponentActivity() {
                     color = MaterialTheme.colorScheme.background
                 ) {
                     AppNavHost()
-                    /*
-                    //TODO more sophisticated DI?
-                    /*val alarmListViewModel = AlarmListViewModel(
-                        GetAlarmsUseCase(app.alarmRepo),
-                        ToggleAlarmUseCase(app.alarmRepo, app.alarmService),
-                        DeleteAlarmsUseCase(app.alarmRepo, app.alarmService)
-                    )
-
-                    val createAlarmsViewModel = CreateAlarmsViewModel(
-                        CreateAlarmsUseCase(app.alarmRepo, app.alarmService),
-                        ValidateIntervalUseCase(),
-                        ValidateSpanLengthUseCase()
-                    )
-                     */
-                    val alarmListViewModel : AlarmListViewModel by viewModels()
-                    val createAlarmsViewModel : CreateAlarmsViewModel by viewModels()
-
-                    val notifyPermissionState = rememberPermissionState(android.Manifest.permission.POST_NOTIFICATIONS)
-                    if (!notifyPermissionState.status.isGranted) {
-                        Column(
-                            horizontalAlignment = Alignment.CenterHorizontally,
-                            verticalArrangement = Arrangement.Center
-                        ) {
-                            val textToShow = if (notifyPermissionState.status.shouldShowRationale) {
-                                "Notifications are needed for alarm to function. Please grant the permission and enable notifications." }
-                            else {
-                                "Notification permission is required. Please grant the permission"
-                            }
-                            Text(
-                                modifier = Modifier.padding(horizontal = 10.dp)
-                                    .fillMaxWidth(0.75f),
-                                text = textToShow)
-                            Button(onClick = {notifyPermissionState.launchPermissionRequest()}) {
-                                Text("Request permission")
-                            }
-                        }
-                    } else {
-                        var showCreateAlarmScreen by remember{
-                            mutableStateOf(false)
-                        }
-                        if (showCreateAlarmScreen) {
-                            CreateAlarmsScreen(
-                                viewModel = createAlarmsViewModel,
-                                onConfirm = {showCreateAlarmScreen = false}, // TODO make this nav back to display alarms screen
-                                onDismiss = {
-                                    showCreateAlarmScreen = false // TODO make this nav back to display alarms screen
-                                })
-                        } else {
-                            AlarmsListScreen(alarmListViewModel, {showCreateAlarmScreen = true})
-                        }
-                    }*/
                 }
 
             }
