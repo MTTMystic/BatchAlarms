@@ -7,7 +7,7 @@ import mttmystic.horus.data.AlarmRepository
 import mttmystic.horus.data.Interval
 import mttmystic.horus.data.Span
 
-class CreateAlarmsUseCase @Inject constructor(
+class ReplaceAlarmsUseCase @Inject constructor(
     private val alarmRepository : AlarmRepository,
     private val alarmService: AlarmService
 ) {
