@@ -8,15 +8,12 @@ import mttmystic.horus.data.Interval
 import mttmystic.horus.data.Span
 
 class ReplaceAlarmsUseCase @Inject constructor(
-    private val alarmRepository : AlarmRepository,
-    private val alarmService: AlarmService
+    private val deleteAlarmsUseCase: DeleteAlarmsUseCase,
+    private val createAlarmsUseCase: CreateAlarmsUseCase
 ) {
     suspend operator fun invoke(span : Span, interval: Interval) {
         //val activeAlarms = alarms.filter {it.active}
-        alarmService.cancelAlarmsList(alarmRepository.alarmsList.first())
-
-        alarmRepository.generateAlarmsList(span, interval)
-
-        alarmService.setAlarmsList(alarmRepository.alarmsList.first())
+        deleteAlarmsUseCase()
+        createAlarmsUseCase(span, interval)
     }
 }

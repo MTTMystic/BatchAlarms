@@ -47,10 +47,10 @@
                 <action android:name="STOP_ALARM"/>
             </intent-filter>
         </receiver>
-        <receiver android:name=".StopAlarmReceiver"
-            android:exported="false">
+        <receiver android:name=".BootReceiver"
+            android:exported="true">
             <intent-filter>
-                <action android:name="STOP_ALARM"/>
+                <action android:name="android.intent.action.BOOT_COMPLETED"/>
             </intent-filter>
         </receiver>
     </application>

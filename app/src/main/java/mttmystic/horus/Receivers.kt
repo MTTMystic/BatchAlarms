@@ -60,3 +60,16 @@ class StopAlarmReceiver : BroadcastReceiver() {
         }
     }
 }
+
+@AndroidEntryPoint
+class BootReceiver : BroadcastReceiver() {
+    @Inject lateinit var handler: AlarmHandler
+
+    override fun onReceive(@ApplicationContext context : Context, intent: Intent) {
+        val result = goAsync()
+        ReceiverScope.launch {
+            handler.onBoot()
+            result.finish()
+        }
+    }
+}

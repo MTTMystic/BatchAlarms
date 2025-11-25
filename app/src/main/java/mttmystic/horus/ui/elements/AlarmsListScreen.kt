@@ -52,7 +52,7 @@ fun AlarmsListScreen(viewModel : AlarmListViewModel, onClickFAB : () -> Unit) {
             showRequest = true
         }
     }
-    Text("Granted: ${notificationPermissionState.status.isGranted}")
+    //Text("Granted: ${notificationPermissionState.status.isGranted}")
     if (showRequest) {
         RequestPermissions(
             showRationale = notificationPermissionState.status.shouldShowRationale,

@@ -4,6 +4,7 @@ import android.app.NotificationManager
 import android.content.Context
 import dagger.hilt.android.qualifiers.ApplicationContext
 import jakarta.inject.Inject
+import kotlinx.coroutines.flow.first
 import mttmystic.horus.data.AlarmRepository
 
 
@@ -21,5 +22,9 @@ class AlarmHandler @Inject constructor (
     //for now suspend is not needed but jic
     suspend fun stopAlarm(alarmID: Int) {
         notificationMgr.cancelNotification(appContext, alarmID)
+    }
+
+    suspend fun onBoot() {
+        alarmService.setAlarmsList(alarmRepo.alarmsList.first())
     }
 }
