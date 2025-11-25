@@ -1,0 +1,16 @@
+syntax = "proto3";
+
+option java_package = "mttmystic.horus.proto";
+option java_multiple_files = true;
+
+message AlarmList {
+    repeated Alarm alarms  = 1;
+}
+message Alarm {
+    int32 hour = 1;
+    int32 minute = 2;
+    int32 id = 3;
+    int64 millis = 4;
+    bool active = 5;
+}
+

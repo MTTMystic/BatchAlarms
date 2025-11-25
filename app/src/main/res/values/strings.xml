@@ -1,0 +1,11 @@
+<resources>
+    <string name="app_name">Horus</string>
+    <string name="notification_channel_description">Alarm Notification</string>
+    <string name="notification_channel_id">horus_alarms</string>
+    <string name="alarm_notification_title">Horus Alarm</string>
+    <string name="alarm_action">ALARM</string>
+    <string name="stop_alarm_action">STOP_ALARM</string>
+    <string name="stop_alarm_text">Stop</string>
+    <string name="alarm_id_key">ALARM_ID</string>
+    <string name="alarm_time_key">ALARM_TIME</string>
+</resources>
