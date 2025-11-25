@@ -58,6 +58,8 @@ class AlarmListViewModel @Inject constructor(
     private val toggleAlarmUseCase: ToggleAlarmUseCase,
     private val deleteAlarmsUseCase: DeleteAlarmsUseCase
 ) : ViewModel() {
+
+
      fun getAlarms() : StateFlow<List<Alarm>> {
         return getAlarmsUseCase()
     }

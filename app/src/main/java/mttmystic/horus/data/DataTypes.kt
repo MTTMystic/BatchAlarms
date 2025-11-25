@@ -26,7 +26,7 @@ data class Span(
     }
 }
 
-data class Interval(var length : Int = 0) {
+data class Interval(var length : Int = 5) {
     //this should be in minutes
 
     fun inMillis() : Long {

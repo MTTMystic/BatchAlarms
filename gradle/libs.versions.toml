@@ -1,6 +1,6 @@
 [versions]
 accompanistPermissions = "<latest_version>"
-agp = "8.12.3"
+agp = "8.13.1"
 datastorePreferences = "1.1.7"
 kotlin = "2.2.10"
 coreKtx = "1.17.0"

@@ -42,6 +42,7 @@ fun IntervalInput(modifier : Modifier = Modifier, onSubmit: (pendingInterval: In
             onValueChange = {
                 if  (validateIntervalInput(it)) {
                     num = it
+
                 }
             },
             label = @Composable {Text("interval")},
@@ -53,7 +54,9 @@ fun IntervalInput(modifier : Modifier = Modifier, onSubmit: (pendingInterval: In
             isError = inputError,
             keyboardActions = KeyboardActions(
                 onDone = {
-                    val success = num.isNotEmpty() && onSubmit(num.trim().toInt())
+                    //TODO all this should be done in ValidateIntervalUseCase
+                    // and reuse that use case here + when submitting entire form
+                    val success = validateIntervalInput(num) && onSubmit(num.trim().toInt())
                     if (success) {
                         num = String.format("%02d", num.trim().toInt())
                         keyboardController?.hide()
