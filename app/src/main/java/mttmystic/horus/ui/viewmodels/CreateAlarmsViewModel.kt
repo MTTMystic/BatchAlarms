@@ -26,7 +26,7 @@ class CreateAlarmsViewModel @Inject constructor(
     private var _span = MutableStateFlow(Span())
     val span get() = _span.asStateFlow()
     private var _pendingSpan = Span()
-    private var _pendingInterval = Interval(5)
+    private var _pendingInterval = Interval(1)
     private var _interval = MutableStateFlow(Interval(1))
     val interval get() = _interval.asStateFlow()
 
@@ -42,9 +42,10 @@ class CreateAlarmsViewModel @Inject constructor(
         if (validateIntervalUseCase(minutes)) {
             _pendingInterval = Interval(minutes)
             return true
+        } else {
+            return false
         }
 
-        return false
     }
 
     fun setSpan() {

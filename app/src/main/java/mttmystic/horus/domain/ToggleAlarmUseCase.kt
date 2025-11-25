@@ -2,9 +2,8 @@ package mttmystic.horus.domain
 
 import jakarta.inject.Inject
 import kotlinx.coroutines.flow.first
+import mttmystic.horus.AlarmService
 import mttmystic.horus.data.AlarmRepository
-import mttmystic.horus.proto.Alarm
-import mttmystic.horus.proto.alarm
 
 class ToggleAlarmUseCase @Inject constructor(
     private val alarmRepository: AlarmRepository,

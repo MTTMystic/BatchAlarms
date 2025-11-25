@@ -26,11 +26,13 @@ fun validateIntervalInput(text : String) : Boolean{
 }
 
 @Composable
-fun IntervalInput(modifier : Modifier = Modifier, onSubmit: (pendingInterval: Int) -> Boolean) {
+fun IntervalInput(
+    modifier : Modifier = Modifier,
+    updatePendingInterval: (pendingInterval: Int) -> Boolean,
+) {
     val keyboardController = LocalSoftwareKeyboardController.current
     val focusManager = LocalFocusManager.current
     var num by remember { mutableStateOf("")}
-    var savedNum by remember {mutableStateOf("")}
     var inputError by remember {mutableStateOf(false)}
 
     Column {
@@ -42,7 +44,6 @@ fun IntervalInput(modifier : Modifier = Modifier, onSubmit: (pendingInterval: In
             onValueChange = {
                 if  (validateIntervalInput(it)) {
                     num = it
-
                 }
             },
             label = @Composable {Text("interval")},
@@ -56,7 +57,7 @@ fun IntervalInput(modifier : Modifier = Modifier, onSubmit: (pendingInterval: In
                 onDone = {
                     //TODO all this should be done in ValidateIntervalUseCase
                     // and reuse that use case here + when submitting entire form
-                    val success = validateIntervalInput(num) && onSubmit(num.trim().toInt())
+                    val success = validateIntervalInput(num) && updatePendingInterval(num.trim().toInt())
                     if (success) {
                         num = String.format("%02d", num.trim().toInt())
                         keyboardController?.hide()

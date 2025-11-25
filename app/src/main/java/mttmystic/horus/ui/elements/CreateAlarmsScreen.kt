@@ -39,6 +39,7 @@ fun CreateAlarmsScreen(
     val focusManager = LocalFocusManager.current
     val focusRequester = remember { FocusRequester() }
     var spanLengthInvalid by remember {mutableStateOf(false)}
+    var intervalInvalid by remember {mutableStateOf(false)}
 
     Column (
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -67,7 +68,9 @@ fun CreateAlarmsScreen(
             horizontalArrangement = Arrangement.Center,
             verticalAlignment = Alignment.CenterVertically) {
             IntervalInput(
-                onSubmit = {minutes : Int -> viewModel.setPendingInterval(minutes)})
+                updatePendingInterval  = {minutes : Int -> viewModel.setPendingInterval(minutes)},
+
+                )
             Text("minutes")
         }
         Row (
@@ -80,12 +83,11 @@ fun CreateAlarmsScreen(
             Spacer(Modifier.width(10.dp))
             Button(onClick =
                 {
-                    if (viewModel.validateSpanLength()) {
+                    intervalInvalid = !viewModel.validateInterval()
+                    spanLengthInvalid = !viewModel.validateSpanLength()
+                    if (!intervalInvalid && !spanLengthInvalid) {
                         viewModel.submit()
                         onConfirm()
-                    }
-                    else {
-                        spanLengthInvalid = true
                     }
                 }) {
                 Text("Ok")
