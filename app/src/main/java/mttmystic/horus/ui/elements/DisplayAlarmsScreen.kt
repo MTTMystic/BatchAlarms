@@ -23,6 +23,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.sp
+import mttmystic.horus.data.AlarmUI
 import mttmystic.horus.data.Time
 import mttmystic.horus.proto.Alarm as protoAlarm
 import mttmystic.horus.ui.elements.Alarm
@@ -76,13 +77,15 @@ fun DisplayAlarmsScreen(
                 .verticalScroll(scrollState)
             ) {
                 alarms.forEach { alarm ->
-                    val time = Time(alarm.hour, alarm.minute)
+                    val protoAlarm = alarm
+                    val time = Time(protoAlarm.hour, protoAlarm.minute)
                     Alarm (
                         //isToday = isAlarmToday(time),
                         timeText = time.display(),
-                        id = alarm.id,
-                        onClickToggle = {onClickToggle(alarm.id)},
-                        isActive = alarm.active
+                        id = protoAlarm.id,
+                        onClickToggle = {onClickToggle(protoAlarm.id)},
+                        isActive = protoAlarm.active,
+                        //nextTimeLabel = alarm.nextTimeLabel
                     )
                     //Text(alarm.time.display(), fontSize=48.sp)
                 }

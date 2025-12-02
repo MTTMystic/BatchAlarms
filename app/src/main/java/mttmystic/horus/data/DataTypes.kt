@@ -1,15 +1,16 @@
 package mttmystic.horus.data
 
+import mttmystic.horus.proto.Alarm
 import kotlin.times
 
-data class Time(var hour: Int = 0,
+class Time(var hour: Int = 0,
                 var minute: Int = 0) {
     fun display() : String {
         return  "${String.format("%02d", hour)}:${String.format("%02d", minute)}"
     }
 }
 
-data class Span(
+class Span(
     var start : Time = Time(),
     var end : Time = Time()
 ) {
@@ -33,7 +34,7 @@ data class Span(
     }
 }
 
-data class Interval(var length : Int = 5) {
+class Interval(var length : Int = 5) {
     //this should be in minutes
 
     fun inMillis() : Long {
@@ -41,3 +42,4 @@ data class Interval(var length : Int = 5) {
     }
 }
 
+data class AlarmUI(val protoAlarm : Alarm, val nextTimeLabel : String)

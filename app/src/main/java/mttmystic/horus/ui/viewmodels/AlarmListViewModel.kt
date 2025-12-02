@@ -4,8 +4,11 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import jakarta.inject.Inject
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
+import mttmystic.horus.data.AlarmUI
 import mttmystic.horus.proto.Alarm
 import mttmystic.horus.domain.DeleteAlarmsUseCase
 import mttmystic.horus.domain.GetAlarmsUseCase
@@ -57,6 +60,11 @@ class AlarmListViewModel @Inject constructor(
 
      fun getAlarms() : StateFlow<List<Alarm>> {
         return getAlarmsUseCase()
+/*.stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.Eagerly,
+            initialValue = emptyList()
+        )*/
     }
 
     fun toggleAlarm(id: Int) {

@@ -26,10 +26,11 @@ fun Alarm(
     //isToday : Boolean,
     id : Int,
     onClickToggle : () -> Unit,
-    isActive : Boolean
+    isActive : Boolean,
+    nextTimeLabel : String = "upcoming"
 ) {
     val description  = if (isActive) {
-        "Upcoming"
+        nextTimeLabel
         /*if (isToday){
             "Today"
         } else {
