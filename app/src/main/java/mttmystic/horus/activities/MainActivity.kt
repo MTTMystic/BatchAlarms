@@ -10,7 +10,7 @@ import androidx.compose.ui.Modifier
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import dagger.hilt.android.AndroidEntryPoint
 import mttmystic.horus.ui.AppNavHost
-import mttmystic.horus.ui.theme.HorusTheme
+import mttmystic.horus.ui.theme.BatchAlarmsTheme
 
 
 @OptIn(ExperimentalPermissionsApi::class)
@@ -19,7 +19,7 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            HorusTheme {
+            BatchAlarmsTheme(dynamicColor = false, darkTheme = true) {
                 // A surface container using the 'background' color from the theme
                 Surface(
                     modifier = Modifier.Companion.fillMaxSize(),

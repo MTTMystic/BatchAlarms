@@ -1,6 +1,5 @@
 package mttmystic.horus.ui.elements
 
-//import mttmystic.horus.AlarmHandlerViewModel
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -14,16 +13,20 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.sp
 import mttmystic.horus.data.Time
-import mttmystic.horus.proto.Alarm
+import mttmystic.horus.proto.Alarm as protoAlarm
+import mttmystic.horus.ui.elements.Alarm
+
 
 //import mttmystic.horus.isAlarmToday
 
@@ -31,22 +34,29 @@ import mttmystic.horus.proto.Alarm
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DisplayAlarmsScreen(
-    alarms : List<Alarm>,
+    alarms : List<protoAlarm>,
     onClickFAB : () -> Unit,
     onClickCancel : () -> Unit,
     onClickToggle : (Int) -> Unit
 ) {
     Scaffold(
-        topBar = {TopAppBar(
-            title = { Text("Horus") },
-            actions = {
-                IconButton(onClick = onClickCancel) {
-                    Icon(
-                        imageVector = Icons.Filled.Delete,
-                        contentDescription = "cancel all alarms"
-                    )
-                }
-            }
+        topBar = {
+            TopAppBar(
+                title = { Text("Batch Alarms") },
+                actions = {
+                    IconButton(onClick = onClickCancel) {
+                        Icon(
+                            imageVector = Icons.Filled.Delete,
+                            contentDescription = "cancel all alarms"
+                        )
+                    }
+                },
+                colors = TopAppBarDefaults.topAppBarColors(
+                        containerColor = MaterialTheme.colorScheme.primaryContainer,
+                        titleContentColor = MaterialTheme.colorScheme.onPrimaryContainer,
+                        navigationIconContentColor = MaterialTheme.colorScheme.onPrimaryContainer,
+                        actionIconContentColor = MaterialTheme.colorScheme.onPrimaryContainer
+                )
         )},
         floatingActionButton = {
             FloatingActionButton(onClick = onClickFAB) {
@@ -67,11 +77,11 @@ fun DisplayAlarmsScreen(
             ) {
                 alarms.forEach { alarm ->
                     val time = Time(alarm.hour, alarm.minute)
-                    Alarm(
+                    Alarm (
                         //isToday = isAlarmToday(time),
                         timeText = time.display(),
                         id = alarm.id,
-                        onClickToggle = onClickToggle,
+                        onClickToggle = {onClickToggle(alarm.id)},
                         isActive = alarm.active
                     )
                     //Text(alarm.time.display(), fontSize=48.sp)

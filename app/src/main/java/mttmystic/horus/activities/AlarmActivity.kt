@@ -9,13 +9,13 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.ui.Modifier
-import mttmystic.horus.ui.theme.HorusTheme
+import mttmystic.horus.ui.theme.BatchAlarmsTheme
 
 class AlarmActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            HorusTheme {
+            BatchAlarmsTheme {
                 Surface(
                     modifier = Modifier.Companion.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background

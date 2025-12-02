@@ -16,8 +16,15 @@ data class Span(
     //get the length of the interval in minutes
     fun lengthInMinutes() : Int {
         //val hoursDiff = this.endHour - this.startHour
-        val minutesStart : Int = (this.start.hour * 60) + this.start.minute
-        val minutesEnd : Int = (this.end.hour * 60) + this.end.minute
+        //start minutes since midnight
+        var minutesStart : Int = (this.start.hour * 60) + this.start.minute
+        //end minutes since midnight
+        var minutesEnd : Int = (this.end.hour * 60) + this.end.minute
+        //if minutesEnd < minutesStart
+        if (minutesEnd <= minutesStart) {
+            minutesEnd = minutesEnd +  1440
+        }
+
         return (minutesEnd - minutesStart)
     }
 

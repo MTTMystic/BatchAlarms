@@ -17,6 +17,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import mttmystic.horus.data.Time
 
 
 @Composable
@@ -24,7 +25,7 @@ fun Alarm(
     timeText : String,
     //isToday : Boolean,
     id : Int,
-    onClickToggle : (Int) -> Unit,
+    onClickToggle : () -> Unit,
     isActive : Boolean
 ) {
     val description  = if (isActive) {
@@ -62,7 +63,7 @@ fun Alarm(
                 )
                 Switch(checked = isActive,
                     onCheckedChange = {
-                        onClickToggle(id)
+                        onClickToggle()
                         toggleToast.show()
                     })
             }

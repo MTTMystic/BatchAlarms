@@ -43,7 +43,7 @@ fun TimePicker(
     val timePickerState = rememberTimePickerState(
         initialHour = currentTime.get(Calendar.HOUR_OF_DAY),
         initialMinute = currentTime.get(Calendar.MINUTE),
-        is24Hour = true
+        is24Hour = false
     )
 
     LaunchedEffect(timePickerState.hour, timePickerState.minute) {

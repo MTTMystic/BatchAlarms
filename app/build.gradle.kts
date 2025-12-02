@@ -69,6 +69,7 @@ dependencies {
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.9.0")
     implementation(libs.androidx.appcompat)
     implementation(libs.androidx.navigation.compose)
+    implementation(libs.androidx.compose.ui.text.google.fonts)
 // Check for the latest version
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
