@@ -35,7 +35,7 @@ import mttmystic.horus.ui.elements.Alarm
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DisplayAlarmsScreen(
-    alarms : List<protoAlarm>,
+    alarms : List<AlarmUI>,
     onClickFAB : () -> Unit,
     onClickCancel : () -> Unit,
     onClickToggle : (Int) -> Unit
@@ -77,7 +77,7 @@ fun DisplayAlarmsScreen(
                 .verticalScroll(scrollState)
             ) {
                 alarms.forEach { alarm ->
-                    val protoAlarm = alarm
+                    val protoAlarm = alarm.protoAlarm
                     val time = Time(protoAlarm.hour, protoAlarm.minute)
                     Alarm (
                         //isToday = isAlarmToday(time),
@@ -85,7 +85,7 @@ fun DisplayAlarmsScreen(
                         id = protoAlarm.id,
                         onClickToggle = {onClickToggle(protoAlarm.id)},
                         isActive = protoAlarm.active,
-                        //nextTimeLabel = alarm.nextTimeLabel
+                        nextTimeLabel = alarm.nextTimeLabel
                     )
                     //Text(alarm.time.display(), fontSize=48.sp)
                 }

@@ -58,13 +58,12 @@ class AlarmListViewModel @Inject constructor(
 ) : ViewModel() {
 
 
-     fun getAlarms() : StateFlow<List<Alarm>> {
-        return getAlarmsUseCase()
-/*.stateIn(
+     fun getAlarms() : StateFlow<List<AlarmUI>> {
+        return getAlarmsUseCase().stateIn(
             scope = viewModelScope,
             started = SharingStarted.Eagerly,
             initialValue = emptyList()
-        )*/
+        )
     }
 
     fun toggleAlarm(id: Int) {

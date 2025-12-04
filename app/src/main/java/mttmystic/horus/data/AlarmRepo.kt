@@ -25,6 +25,7 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.take
 import mttmystic.horus.AlarmReceiver
 import mttmystic.horus.R
+import mttmystic.horus.domain.computeNextAlarm
 import mttmystic.horus.proto.AlarmList
 import mttmystic.horus.proto.Alarm
 import kotlin.collections.forEach
@@ -95,23 +96,17 @@ class AlarmRepository @Inject constructor(
         _alarmTag = 0
         deleteAllAlarms()
 
-        val calendar : Calendar = Calendar.getInstance().apply {
-            setTimeInMillis(System.currentTimeMillis())
-            set(Calendar.HOUR_OF_DAY, span.start.hour)
-            set(Calendar.MINUTE, span.start.minute)
-            set(Calendar.SECOND, 0)
-        }
+        val firstAlarmMillis = computeNextAlarm(span.start.hour, span.start.minute)
+            .toInstant()
+            .toEpochMilli()
 
         val step: Long = interval.inMillis()
-        val end: Long = calendar.timeInMillis + span.lengthInMillis()
+        val end: Long = firstAlarmMillis + span.lengthInMillis()
         //val start = calendar.timeInMillis
-        var curr = calendar.timeInMillis
+        var curr = firstAlarmMillis
         while (curr <= end) {
-            //TODO possibly eliminate this condition by invalidating input where start is not a time in the future
-            if (curr > System.currentTimeMillis()) {
-                addAlarm(_buildAlarm(curr))
-                _alarmTag++
-            }
+            addAlarm(_buildAlarm(curr))
+            _alarmTag++
 
             curr += step
         }

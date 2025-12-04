@@ -7,22 +7,25 @@ import kotlinx.coroutines.flow.map
 import mttmystic.horus.data.AlarmRepository
 import mttmystic.horus.data.AlarmUI
 import mttmystic.horus.proto.Alarm
+import java.time.ZonedDateTime
 
 class GetAlarmsUseCase @Inject constructor(
     private val alarmRepository: AlarmRepository,
-    private val nextTimeUseCase: NextTimeUseCase
 ) {
-    operator fun invoke() : StateFlow<List<Alarm>> {
-        return  alarmRepository.alarmsList
-        /*val uiAlarms = alarmList.map { alarms ->
+    operator fun invoke() : Flow<List<AlarmUI>> {
+        val alarmList =   alarmRepository.alarmsList
+        val uiAlarms = alarmList.map { alarms ->
+            var nextTime = ZonedDateTime.now()
             alarms.map { alarm ->
+                val nextAlarmTime = computeNextAlarm(alarm.hour, alarm.minute, nextTime)
+                nextTime = nextAlarmTime
                 AlarmUI(
                     protoAlarm = alarm,
-                    nextTimeLabel = nextTimeUseCase(alarm.hour, alarm.minute)
+                    nextTimeLabel = nextLabel(nextAlarmTime, ZonedDateTime.now())
                 )
             }
         }
 
-        return uiAlarms*/
+        return uiAlarms
     }
 }
