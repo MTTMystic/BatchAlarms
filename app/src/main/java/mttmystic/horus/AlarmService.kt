@@ -7,17 +7,55 @@ import android.content.Intent
 import androidx.core.content.ContextCompat
 import dagger.hilt.android.qualifiers.ApplicationContext
 import jakarta.inject.Inject
+import mttmystic.horus.data.Interval
+import mttmystic.horus.data.Span
 import mttmystic.horus.proto.Alarm
+import java.time.LocalTime
+import java.time.ZonedDateTime
 
-class AlarmService @Inject constructor(@ApplicationContext private val context : Context) {
+class AlarmService @Inject constructor(@ApplicationContext private val context: Context) {
     private val _alarmMgr: AlarmManager =
         context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
 
-     fun timeString(hour: Int, minute: Int) : String {
+    fun computeNextAlarm(hour: Int, minute:Int, now : ZonedDateTime = ZonedDateTime.now()) : ZonedDateTime {
+        val alarmTime = LocalTime.of(hour, minute)
+
+        val todayAtAlarm = now.with(alarmTime)
+
+        val nextAlarm = if (!todayAtAlarm.isAfter(now)) {
+            todayAtAlarm.plusDays(1)
+        } else {
+            todayAtAlarm
+        }
+
+        return nextAlarm
+    }
+
+    fun timeString(hour: Int, minute: Int): String {
         return "${String.format("%02d", hour)}:${String.format("%02d", minute)}"
     }
 
-     fun setAlarm(alarm: Alarm) {
+    fun generateAlarmTimes(span : Span, interval : Interval) : MutableList<Long> {
+        val timeList : MutableList<Long> = mutableListOf()
+        val firstAlarmMillis = computeNextAlarm(span.start.hour, span.start.minute)
+            .toInstant()
+            .toEpochMilli()
+
+        val step: Long = interval.inMillis()
+        val end: Long = firstAlarmMillis + span.lengthInMillis()
+        var curr = firstAlarmMillis
+        while (curr <= end) {
+            timeList.add(curr)
+            curr += step
+        }
+
+        if ((curr - step) != end) {
+            timeList.add(curr)
+        }
+
+        return timeList
+    }
+    fun setAlarm(alarm: Alarm) {
         val alarmAction = ContextCompat.getString(context, R.string.alarm_action)
         val alarmIDKey = ContextCompat.getString(context, R.string.alarm_id_key)
         val alarmTimeKey = ContextCompat.getString(context, R.string.alarm_time_key)
@@ -45,16 +83,15 @@ class AlarmService @Inject constructor(@ApplicationContext private val context :
         )
     }
 
-     fun setAlarmsList(alarms : List<Alarm>) {
-        alarms.forEach {
-                alarm ->
-                    if (alarm.active) {
-                        setAlarm(alarm)
-                    }
+    fun setAlarmsList(alarms: List<Alarm>) {
+        alarms.forEach { alarm ->
+            if (alarm.active) {
+                setAlarm(alarm)
+            }
         }
     }
 
-     fun cancelAlarm(id: Int, hour: Int, minute: Int) {
+    fun cancelAlarm(id: Int, hour: Int, minute: Int) {
         val alarmAction = ContextCompat.getString(context, R.string.alarm_action)
         val alarmIDKey = ContextCompat.getString(context, R.string.alarm_id_key)
         val alarmTimeKey = ContextCompat.getString(context, R.string.alarm_time_key)
@@ -76,7 +113,7 @@ class AlarmService @Inject constructor(@ApplicationContext private val context :
         _alarmMgr.cancel(pendingIntent)
     }
 
-     fun cancelAlarmsList(alarms : List<Alarm>) {
+    fun cancelAlarmsList(alarms: List<Alarm>) {
         alarms.forEach { alarm ->
             cancelAlarm(alarm.id, alarm.hour, alarm.minute)
         }

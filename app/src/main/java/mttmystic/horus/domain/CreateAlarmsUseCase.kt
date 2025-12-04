@@ -13,7 +13,8 @@ class CreateAlarmsUseCase @Inject constructor(
 ) {
 
     suspend operator fun invoke(span: Span, interval : Interval) {
-        alarmRepository.generateAlarmsList(span, interval)
+        val alarmTimes = alarmService.generateAlarmTimes(span, interval)
+        alarmRepository.generateAlarmsList(alarmTimes)
         alarmService.setAlarmsList(alarmRepository.alarmsList.first())
     }
 

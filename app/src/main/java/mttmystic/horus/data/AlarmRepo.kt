@@ -1,34 +1,20 @@
 package mttmystic.horus.data
 
 import android.app.AlarmManager
-import android.app.PendingIntent
 import android.content.Context
-import android.content.Intent
 import android.icu.util.Calendar
-import android.util.Log
-import androidx.core.content.ContextCompat.getString
 import androidx.datastore.core.DataStore
 import dagger.hilt.android.qualifiers.ApplicationContext
 import jakarta.inject.Inject
 import jakarta.inject.Singleton
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.WhileSubscribed
-import kotlinx.coroutines.flow.filter
-import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.flow.forEach
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
-import kotlinx.coroutines.flow.take
-import mttmystic.horus.AlarmReceiver
-import mttmystic.horus.R
-import mttmystic.horus.domain.computeNextAlarm
-import mttmystic.horus.proto.AlarmList
 import mttmystic.horus.proto.Alarm
-import kotlin.collections.forEach
+import mttmystic.horus.proto.AlarmList
 
 //TODO add a function to cancel all alarms without deleting them
 
@@ -91,28 +77,14 @@ class AlarmRepository @Inject constructor(
         }
     }
 
-    suspend fun generateAlarmsList(span: Span, interval: Interval) {
+    suspend fun generateAlarmsList(alarmTimes : MutableList<Long> ) {
         //clear previous alarm list
         _alarmTag = 0
         deleteAllAlarms()
 
-        val firstAlarmMillis = computeNextAlarm(span.start.hour, span.start.minute)
-            .toInstant()
-            .toEpochMilli()
 
-        val step: Long = interval.inMillis()
-        val end: Long = firstAlarmMillis + span.lengthInMillis()
-        //val start = calendar.timeInMillis
-        var curr = firstAlarmMillis
-        while (curr <= end) {
-            addAlarm(_buildAlarm(curr))
-            _alarmTag++
-
-            curr += step
-        }
-
-        if ((curr - step) != end) {
-            addAlarm(_buildAlarm(curr))
+        alarmTimes.forEach { it : Long ->
+            addAlarm(_buildAlarm(it))
             _alarmTag++
         }
     }
