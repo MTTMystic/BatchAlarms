@@ -9,11 +9,11 @@ plugins {
 }
 
 android {
-    namespace = "mttmystic.horus"
+    namespace = "mttmystic.batchAlarms"
     compileSdk = 36
 
     defaultConfig {
-        applicationId = "mttmystic.schedule_alarm_demo"
+        applicationId = "mttmystic.batchAlarms"
         minSdk = 33
         targetSdk = 36
         versionCode = 1
@@ -82,6 +82,8 @@ dependencies {
     kapt("com.google.dagger:hilt-android-compiler:2.57.1")
     implementation("androidx.hilt:hilt-navigation-fragment:1.0.0")
     implementation("androidx.hilt:hilt-navigation-compose:1.2.0")
+    implementation("androidx.datastore:datastore-preferences:1.2.0")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.5.2")
 }
 
 protobuf {

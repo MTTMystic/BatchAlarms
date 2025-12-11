@@ -1,8 +1,8 @@
 <resources>
-    <string name="app_name">Horus</string>
+    <string name="app_name">Batch Alarms</string>
     <string name="notification_channel_description">Alarm Notification</string>
-    <string name="notification_channel_id">horus_alarms</string>
-    <string name="alarm_notification_title">Horus Alarm</string>
+    <string name="notification_channel_id">batch_alarms</string>
+    <string name="alarm_notification_title">Batch Alarm</string>
     <string name="alarm_action">ALARM</string>
     <string name="stop_alarm_action">STOP_ALARM</string>
     <string name="stop_alarm_text">Stop</string>
