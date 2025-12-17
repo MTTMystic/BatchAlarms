@@ -32,7 +32,6 @@ class AlarmRepository @Inject constructor(
     private val alarmListStore: DataStore<AlarmList>,
     @ApplicationContext private val context: Context
 ) {
-
     val alarmsList : StateFlow<List<Alarm>> = alarmListStore.data
         .map {it.alarmsList}
         .stateIn(

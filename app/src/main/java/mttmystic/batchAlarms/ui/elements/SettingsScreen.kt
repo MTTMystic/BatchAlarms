@@ -53,10 +53,10 @@ fun SettingsScreen(
                 Text("Use 24hr format")
                 Switch(settings.use24Hr, onCheckedChange = {viewModel.toggle24HrFormat()})
             }
-            Row() {
+            /*Row() {
                 Text("Persistent alarms")
                 Switch(settings.persistAlarms, onCheckedChange = {viewModel.togglePersistAlarms()})
-            }
+            }*/
         }
     }
 }

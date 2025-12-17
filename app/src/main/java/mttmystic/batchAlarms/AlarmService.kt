@@ -85,9 +85,11 @@ class AlarmService @Inject constructor(@ApplicationContext private val context: 
         )
     }
 
+    //TODO this should check to see if the alarm is in the future or not
     fun setAlarmsList(alarms: List<Alarm>) {
         alarms.forEach { alarm ->
-            if (alarm.active) {
+            val futureAlarm = alarm.millis > System.currentTimeMillis()
+            if (alarm.active && futureAlarm) {
                 setAlarm(alarm)
             }
         }
