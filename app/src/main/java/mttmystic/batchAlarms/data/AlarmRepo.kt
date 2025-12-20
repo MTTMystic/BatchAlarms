@@ -68,6 +68,17 @@ class AlarmRepository @Inject constructor(
         return alarm
     }
 
+    private fun _buildAlarm(alarmProto : AlarmProto) : Alarm {
+        val alarm : Alarm = Alarm.newBuilder()
+            .setId(alarmProto.id)
+            .setHour(alarmProto.hour)
+            .setMinute(alarmProto.minute)
+            .setActive(true)
+            .setMillis(alarmProto.millis)
+            .build()
+        return alarm
+    }
+
     suspend fun addAlarm(alarm : Alarm) {
         alarmListStore.updateData { currentList ->
             currentList.toBuilder()
@@ -88,6 +99,12 @@ class AlarmRepository @Inject constructor(
         }
     }
 
+    suspend fun generateAlarmsList(alarmList : MutableList<AlarmProto>) {
+        deleteAllAlarms()
+        alarmList.forEach { it : AlarmProto ->
+            addAlarm(_buildAlarm(it))
+        }
+    }
 
     suspend fun deleteAllAlarms() {
         //cancelAllAlarms()
