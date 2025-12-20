@@ -9,6 +9,7 @@ class Time(var hour: Int = 0,
     }
 }
 
+
 class Span(
     var start : Time = Time(),
     var end : Time = Time()
@@ -36,10 +37,17 @@ class Span(
 class Interval(var length : Int = 5) {
     //this should be in minutes
 
-    fun inMillis() : Long {
+    fun lengthInMillis() : Long {
         return (this.length * 60 * 1000).toLong()
     }
 }
+
+data class AlarmProto(
+    val hour: Int,
+    val minute : Int,
+    val millis : Long,
+    val id : Int
+)
 
 data class AlarmUI(val protoAlarm : Alarm, val nextTimeLabel : String = "upcoming")
 
