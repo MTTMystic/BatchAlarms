@@ -27,7 +27,7 @@ class AlarmService @Inject constructor(@ApplicationContext private val context: 
         context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
 
     fun computeNextAlarm(hour: Int, minute:Int, now : ZonedDateTime = ZonedDateTime.now()) : ZonedDateTime {
-        val alarmTime = LocalTime.of(hour, minute)
+        val alarmTime = LocalTime.of(hour, minute, 0, 0)
 
         val todayAtAlarm = now.with(alarmTime)
 
@@ -46,20 +46,26 @@ class AlarmService @Inject constructor(@ApplicationContext private val context: 
             .toEpochMilli()
     }
 
-    fun computeNextAlarmMillis(hour:Int, minute:Int) : Long {
-        return computeNextAlarm(hour, minute)
+    fun computeNextAlarmMillis(hour:Int, minute:Int, now: ZonedDateTime = ZonedDateTime.now()) : Long {
+        return computeNextAlarm(hour, minute, now)
             .toInstant()
             .toEpochMilli()
     }
 
     fun alarmTimeFromMillis(millis : Long) : Pair<Int, Int> {
-        val zonedAlarmTime = Instant.ofEpochMilli(millis)
-            .atZone(ZoneId.systemDefault())
+        val zonedAlarmTime = alarmDateTimeFromMillis(millis)
 
         val hour : Int = zonedAlarmTime.hour
         val min  : Int = zonedAlarmTime.minute
 
         return Pair(hour, min)
+    }
+
+    fun alarmDateTimeFromMillis(millis: Long) : ZonedDateTime {
+        val zonedAlarmTime = Instant.ofEpochMilli(millis)
+            .atZone(ZoneId.systemDefault())
+
+        return zonedAlarmTime;
     }
 
     fun timeString(hour: Int, minute: Int): String {
@@ -72,12 +78,12 @@ class AlarmService @Inject constructor(@ApplicationContext private val context: 
         //val endMillis = computeNextAlarmMillis(span.end.hour, span.end.minute)
 
         var alarmTime = computeNextAlarm(span.start.hour, span.start.minute)
-        val endTime = computeNextAlarm(span.end.hour, span.end.minute)
+        val endTime = computeNextAlarm(span.end.hour, span.end.minute, alarmTime)
 
         while(!alarmTime.isAfter(endTime)){
             val alarmHour = alarmTime.hour
             val alarmMinute = alarmTime.minute
-            val alarmMillis = computeNextAlarmMillis(alarmHour, alarmMinute)
+            val alarmMillis = alarmTime.toInstant().toEpochMilli()
             //TODO decouple id from request code - use a hash with id and intent label to generate intent request code
             val alarmId = Random.nextInt()
             val alarm = AlarmProto(
@@ -147,7 +153,7 @@ class AlarmService @Inject constructor(@ApplicationContext private val context: 
         )
     }
 
-    //TODO this should check to see if the alarm is in the future or not
+    //TODO move this logic to the alarm init
     fun setAlarmsList(alarms: List<Alarm>) {
         alarms.forEach { alarm ->
             val futureAlarm = alarm.millis > System.currentTimeMillis()

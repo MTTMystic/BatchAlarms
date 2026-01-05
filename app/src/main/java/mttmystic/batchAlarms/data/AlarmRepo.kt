@@ -32,6 +32,7 @@ class AlarmRepository @Inject constructor(
     private val alarmListStore: DataStore<AlarmList>,
     @ApplicationContext private val context: Context
 ) {
+    //TODO set the active and millis of each alarm based on
     val alarmsList : StateFlow<List<Alarm>> = alarmListStore.data
         .map {it.alarmsList}
         .stateIn(
@@ -87,7 +88,7 @@ class AlarmRepository @Inject constructor(
         }
     }
 
-    suspend fun generateAlarmsList(alarmTimes : MutableList<Long> ) {
+    /*suspend fun generateAlarmsList(alarmTimes : MutableList<Long> ) {
         //clear previous alarm list
         _alarmTag = 0
         deleteAllAlarms()
@@ -97,7 +98,7 @@ class AlarmRepository @Inject constructor(
             addAlarm(_buildAlarm(it))
             _alarmTag++
         }
-    }
+    }*/
 
     suspend fun generateAlarmsList(alarmList : MutableList<AlarmProto>) {
         deleteAllAlarms()

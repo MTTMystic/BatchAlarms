@@ -6,6 +6,6 @@ import mttmystic.batchAlarms.data.Span
 
 class ValidateSpanLengthUseCase @Inject constructor() {
     operator fun invoke(span: Span, interval: Interval) : Boolean {
-        return span.lengthInMillis() >= interval.inMillis()
+        return span.lengthInMillis() >= interval.lengthInMillis()
     }
 }

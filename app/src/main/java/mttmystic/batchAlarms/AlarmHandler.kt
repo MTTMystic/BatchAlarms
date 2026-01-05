@@ -16,6 +16,7 @@ class AlarmHandler @Inject constructor (
     suspend fun onAlarm(alarmID: Int, alarmTime: String?) {
         alarmRepo.toggleAlarm(alarmID)
         notificationMgr.generateNotification(appContext, alarmTime, alarmID)
+        //TODO calculate the next time the alarm should fire and update millis in the repo/datastore
     }
 
     //for now suspend is not needed but jic
