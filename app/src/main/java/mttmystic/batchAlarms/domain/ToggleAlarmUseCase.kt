@@ -16,6 +16,11 @@ class ToggleAlarmUseCase @Inject constructor(
             if (alarm.active) {
                 alarmService.cancelAlarm(alarm.id, alarm.hour, alarm.minute)
             } else {
+                //TODO calculate millis of next alarm, update alarm in repo, set alarm
+                //TODO investigate using alarmTime as now reference --
+                val alarmTime = alarmService.alarmDateTimeFromMillis(alarm.millis)
+                val nextTime = alarmService.computeNextAlarmMillis(alarm.hour, alarm.minute)
+                alarmRepository.updateAlarmTime(alarm.id, nextTime)
                 alarmService.setAlarm(alarm)
             }
         }

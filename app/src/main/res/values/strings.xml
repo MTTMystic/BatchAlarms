@@ -8,4 +8,6 @@
     <string name="stop_alarm_text">Stop</string>
     <string name="alarm_id_key">ALARM_ID</string>
     <string name="alarm_time_key">ALARM_TIME</string>
+    <string name="alarm_hour_key">ALARM_HOUR</string>
+    <string name="alarm_minute_key">ALARM_MINUTE</string>
 </resources>

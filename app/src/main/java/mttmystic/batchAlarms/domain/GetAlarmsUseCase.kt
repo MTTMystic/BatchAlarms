@@ -15,7 +15,8 @@ import java.time.temporal.ChronoUnit
 class GetAlarmsUseCase @Inject constructor(
     private val alarmRepository: AlarmRepository,
     private val alarmService : AlarmService,
-    private val dayLabelUseCase: DayLabelUseCase
+    private val dayLabelUseCase: DayLabelUseCase,
+    private val timeStringUseCase : TimeStringUseCase
 ) {
     operator fun invoke() : Flow<List<AlarmUI>> {
         val alarmList =   alarmRepository.alarmsList
@@ -32,7 +33,8 @@ class GetAlarmsUseCase @Inject constructor(
                 val nextAlarmTime = alarmService.alarmDateTimeFromMillis(alarm.millis)
                 AlarmUI(
                     protoAlarm = alarm,
-                    nextTimeLabel = dayLabelUseCase(nextAlarmTime, ZonedDateTime.now())
+                    nextTimeLabel = dayLabelUseCase(nextAlarmTime, ZonedDateTime.now()),
+                    // = timeStringUseCase(alarm.hour, alarm.minute)
                 )
             }
         }

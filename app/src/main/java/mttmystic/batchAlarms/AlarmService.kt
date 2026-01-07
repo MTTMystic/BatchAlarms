@@ -4,7 +4,10 @@ import android.app.AlarmManager
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
+import android.provider.Settings.Global.getString
+import android.util.Log
 import androidx.core.content.ContextCompat
+import androidx.core.content.ContextCompat.getString
 import dagger.hilt.android.qualifiers.ApplicationContext
 import jakarta.inject.Inject
 import mttmystic.batchAlarms.data.Interval
@@ -22,7 +25,10 @@ import java.time.ZonedDateTime
 import java.util.UUID
 import kotlin.random.Random
 
-class AlarmService @Inject constructor(@ApplicationContext private val context: Context) {
+class AlarmService @Inject constructor(
+    @ApplicationContext private val context: Context
+
+) {
     private val _alarmMgr: AlarmManager =
         context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
 
@@ -125,17 +131,29 @@ class AlarmService @Inject constructor(@ApplicationContext private val context: 
 
     }
     fun setAlarm(alarm: Alarm) {
+        Log.d("AlarmService", "alarm ${alarm.hour}:${alarm.minute} is being set")
         val alarmAction = ContextCompat.getString(context, R.string.alarm_action)
         val alarmIDKey = ContextCompat.getString(context, R.string.alarm_id_key)
         val alarmTimeKey = ContextCompat.getString(context, R.string.alarm_time_key)
+        val alarmHourKey = ContextCompat.getString(context, R.string.alarm_hour_key)
+        val alarmMinuteKey = ContextCompat.getString(context, R.string.alarm_minute_key)
+
         val timeString = timeString(alarm.hour, alarm.minute)
 
         val alarmIntent = Intent(context, AlarmReceiver::class.java).apply {
-            action = "ALARM"
+            action = alarmAction
             putExtra(alarmTimeKey, timeString)
             putExtra(
                 alarmIDKey,
                 alarm.id
+            )
+            putExtra(
+                alarmHourKey,
+                alarm.hour
+            )
+            putExtra(
+                alarmMinuteKey,
+                alarm.minute
             )
         }
 
@@ -167,12 +185,22 @@ class AlarmService @Inject constructor(@ApplicationContext private val context: 
         val alarmAction = ContextCompat.getString(context, R.string.alarm_action)
         val alarmIDKey = ContextCompat.getString(context, R.string.alarm_id_key)
         val alarmTimeKey = ContextCompat.getString(context, R.string.alarm_time_key)
+        val alarmHourKey = getString(context, R.string.alarm_hour_key)
+        val alarmMinuteKey = getString(context, R.string.alarm_minute_key)
         val alarmIntent = Intent(context, AlarmReceiver::class.java).apply {
             action = "ALARM"
             putExtra(alarmTimeKey, timeString(hour, minute))
             putExtra(
                 alarmIDKey,
                 id
+            )
+            putExtra(
+                alarmHourKey,
+                hour
+            )
+            putExtra(
+                alarmMinuteKey,
+                minute
             )
         }
         val pendingIntent = PendingIntent.getBroadcast(

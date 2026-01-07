@@ -117,6 +117,28 @@ class AlarmRepository @Inject constructor(
         }
     }
 
+    suspend fun disableAlarm(id: Int) {
+        alarmListStore.updateData { currentList ->
+            val updated = currentList.alarmsList
+                .map {
+                    if (it.id == id) {
+                        //val alarm = alarmFromProto(it)
+                        /*if (it.active) {
+                            _cancelAlarm(id, it.hour, it.minute)
+                        } else {
+                            setAlarm(it)
+                        }*/
+                        it.toBuilder().setActive(false).build()
+                    } else {
+                        it
+                    }
+                }
+            currentList.toBuilder()
+                .clearAlarms()
+                .addAllAlarms(updated)
+                .build()
+        }
+    }
     suspend fun toggleAlarm(id: Int) {
         alarmListStore.updateData { currentList ->
             val updated = currentList.alarmsList
@@ -129,6 +151,23 @@ class AlarmRepository @Inject constructor(
                             setAlarm(it)
                         }*/
                         it.toBuilder().setActive(!it.active).build()
+                    } else {
+                        it
+                    }
+                }
+            currentList.toBuilder()
+                .clearAlarms()
+                .addAllAlarms(updated)
+                .build()
+        }
+    }
+
+    suspend fun updateAlarmTime(id: Int, newTimeMillis : Long) {
+        alarmListStore.updateData { currentList ->
+            val updated = currentList.alarmsList
+                .map {
+                    if (it.id == id) {
+                        it.toBuilder().setMillis(newTimeMillis).build()
                     } else {
                         it
                     }

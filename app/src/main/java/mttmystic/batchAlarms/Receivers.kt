@@ -31,17 +31,15 @@ class AlarmReceiver: BroadcastReceiver() {
 
             val alarmTime = intent.getStringExtra(alarmTimeKey)
             val alarmID = intent.getIntExtra(alarmIDKey, 0)
-
+            val alarmHour = intent.getIntExtra("ALARM_HOUR", 0)
+            val alarmMinute = intent.getIntExtra("ALARM_HOUR", 0)
             val result = goAsync()
 
             ReceiverScope. launch {
-                handler.onAlarm(alarmID, alarmTime)
+                handler.onAlarm(alarmID, alarmTime,
+                    alarmHour, alarmMinute)
                 result.finish()
             }
-
-
-
-
         }
     }
 }
@@ -67,7 +65,7 @@ class BootReceiver : BroadcastReceiver() {
     override fun onReceive(@ApplicationContext context : Context, intent: Intent) {
         val result = goAsync()
         ReceiverScope.launch {
-            handler.onBoot()
+            handler.onInit()
             result.finish()
         }
     }

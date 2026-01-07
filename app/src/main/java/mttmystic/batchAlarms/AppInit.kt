@@ -8,13 +8,12 @@ import mttmystic.batchAlarms.data.AlarmRepository
 
 class AppInit @Inject constructor (
     private val alarmRepository: AlarmRepository,
-    private val alarmService: AlarmService
+    private val alarmService: AlarmService,
+    private val alarmHandler: AlarmHandler
 ) {
     fun init() {
         CoroutineScope(Dispatchers.IO).launch {
-            alarmRepository.alarmsList.collect {
-                alarms -> alarmService.setAlarmsList(alarms)
-            }
+             alarmHandler.onInit()
         }
     }
 }
