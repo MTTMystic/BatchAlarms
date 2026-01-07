@@ -23,7 +23,18 @@ class Notifications @Inject constructor(@ApplicationContext context : Context) {
 
     val notificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
 
-    private lateinit var alarmPlayer : MediaPlayer
+    //TODO add a way to customize this
+    private var alarmUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM)
+    private var alarmPlayer : MediaPlayer = MediaPlayer.create(context, alarmUri).apply {
+        isLooping = true
+        setAudioAttributes(
+            AudioAttributes.Builder()
+                .setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION)
+                .setUsage(AudioAttributes.USAGE_ALARM)
+                .build()
+        )
+
+    }
 
     init {
         createNotificationChannel(context)
@@ -47,17 +58,7 @@ class Notifications @Inject constructor(@ApplicationContext context : Context) {
     }
 
     fun playAlarmSound(context: Context) {
-        val alarmUri : Uri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM)
-        alarmPlayer = MediaPlayer.create(context, alarmUri).apply {
-            isLooping = true
-            setAudioAttributes(
-                AudioAttributes.Builder()
-                    .setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION)
-                    .setUsage(AudioAttributes.USAGE_ALARM)
-                    .build()
-            )
-            start()
-        }
+        alarmPlayer.start()
     }
 
     fun stopAlarmSound() {
