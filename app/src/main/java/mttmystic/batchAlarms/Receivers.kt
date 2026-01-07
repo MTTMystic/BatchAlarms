@@ -36,7 +36,7 @@ class AlarmReceiver: BroadcastReceiver() {
             val result = goAsync()
 
             ReceiverScope. launch {
-                handler.onAlarm(alarmID, alarmTime,
+                handler.onAlarm(alarmID,alarmTime,
                     alarmHour, alarmMinute)
                 result.finish()
             }

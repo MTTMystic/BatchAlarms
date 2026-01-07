@@ -46,12 +46,6 @@ class AlarmService @Inject constructor(
         return nextAlarm
     }
 
-    fun computeNextAlarmMillis(alarmTime : LocalTime) : Long {
-        return computeNextAlarm(alarmTime.hour, alarmTime.minute)
-            .toInstant()
-            .toEpochMilli()
-    }
-
     fun computeNextAlarmMillis(hour:Int, minute:Int, now: ZonedDateTime = ZonedDateTime.now()) : Long {
         return computeNextAlarm(hour, minute, now)
             .toInstant()
@@ -80,8 +74,6 @@ class AlarmService @Inject constructor(
 
     fun generateAlarmsFromSpan(span: Span, interval: Interval) : MutableList<AlarmProto>{
         val alarmList : MutableList<AlarmProto> = mutableListOf()
-        //val startMillis = computeNextAlarmMillis(span.start.hour, span.start.minute)
-        //val endMillis = computeNextAlarmMillis(span.end.hour, span.end.minute)
 
         var alarmTime = computeNextAlarm(span.start.hour, span.start.minute)
         val endTime = computeNextAlarm(span.end.hour, span.end.minute, alarmTime)

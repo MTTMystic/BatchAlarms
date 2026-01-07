@@ -34,7 +34,7 @@ class GetAlarmsUseCase @Inject constructor(
                 AlarmUI(
                     protoAlarm = alarm,
                     nextTimeLabel = dayLabelUseCase(nextAlarmTime, ZonedDateTime.now()),
-                    // = timeStringUseCase(alarm.hour, alarm.minute)
+                    //timeString = timeStringUseCase(alarm.hour, alarm.minute)
                 )
             }
         }
