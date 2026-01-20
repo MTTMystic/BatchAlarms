@@ -8,7 +8,8 @@ This has so far been a good opportunity to learn UI/UX design using Material3, a
 - cancel multiple alarms at once
 - boot persistence
 - recurring alarms
+- toggle 24hr format
 
 # Targets for Release
 - toggle multiple alarms at once
-- toggle 24hr format (trivial but temporarily deferred in favor of core features)
+
