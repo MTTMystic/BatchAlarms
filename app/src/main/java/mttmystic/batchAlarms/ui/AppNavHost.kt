@@ -31,12 +31,13 @@ fun AppNavHost () {
                 onClickFAB = {navController.navigate(route = CreateAlarms)},
                 onClickSettings = {navController.navigate(route = SettingsRoute)})
         }
+        //TODO refactor this
         composable<CreateAlarms> {
             val viewModel : CreateAlarmsViewModel = hiltViewModel()
             CreateAlarmsScreen(
                 viewModel,
-                onConfirm = {navController.navigate(route = AlarmList)},
-                onDismiss = {navController.navigate(route = AlarmList)} )
+                onDone = {navController.navigate(route = AlarmList)},
+            )
         }
         composable<SettingsRoute> {
             val viewModel : SettingsViewModel = hiltViewModel()

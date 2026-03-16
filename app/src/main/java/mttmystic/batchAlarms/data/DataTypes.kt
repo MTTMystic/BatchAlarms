@@ -49,6 +49,104 @@ data class AlarmProto(
     val id : Int
 )
 
-data class AlarmUI(val protoAlarm : Alarm, val nextTimeLabel : String = "upcoming")
+data class AlarmUI(
+    val protoAlarm : Alarm,
+    val nextTimeLabel : String = "upcoming",
+    val timeString : String
+)
 
-data class Settings(val use24Hr : Boolean = false, val persistAlarms : Boolean = true)
+data class Settings(
+    val use24Hr : Boolean = false,
+    val persistAlarms : Boolean = true
+)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+enum class mode {
+    MULTI,
+    SINGLE
+}

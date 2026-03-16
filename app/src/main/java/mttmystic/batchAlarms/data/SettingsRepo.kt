@@ -8,9 +8,14 @@ import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.emptyPreferences
 import androidx.datastore.preferences.core.intPreferencesKey
 import dagger.hilt.android.qualifiers.ApplicationContext
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.stateIn
 import mttmystic.batchAlarms.providers.settingsDataStore
 import java.io.IOException
 import javax.inject.Inject
@@ -40,6 +45,12 @@ class SettingsRepository @Inject constructor(
                 persistAlarms = prefs[SettingsKeys.PERSIST_ALARMS] ?: true,
             )
         }
+        .stateIn(
+            scope = CoroutineScope(Dispatchers.IO),
+            started = SharingStarted.WhileSubscribed(5000),
+            initialValue = Settings()
+        )
+        //.distinctUntilChanged() //only emit when it changes
 
     suspend fun toggle24HrFormat() {
         context.settingsDataStore.updateData {

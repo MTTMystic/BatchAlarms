@@ -2,7 +2,9 @@ package mttmystic.batchAlarms.ui.elements
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
@@ -18,6 +20,10 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.dimensionResource
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import mttmystic.batchAlarms.R
 import mttmystic.batchAlarms.data.Settings
 import mttmystic.batchAlarms.ui.viewmodels.SettingsViewModel
 
@@ -49,8 +55,11 @@ fun SettingsScreen(
                 .wrapContentSize(align = Alignment.Center)
                 .padding(innerPadding)
         ) {
-            Row() {
-                Text("Use 24hr format")
+            Row(
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text("Use 24hr format", fontSize = 20.sp)
+                Spacer(Modifier.width(dimensionResource(R.dimen.padding_small)))
                 Switch(settings.use24Hr, onCheckedChange = {viewModel.toggle24HrFormat()})
             }
             /*Row() {

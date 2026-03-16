@@ -61,13 +61,25 @@ class CreateAlarmsViewModel @Inject constructor(
     fun validateInterval() : Boolean {
         return validateIntervalUseCase(_pendingInterval.length)
     }
-    fun submit() {
+    fun submit() : Boolean {
         //TODO VALIDATION HERE
-        setSpan()
-        setInterval()
-        viewModelScope.launch {
-           replaceAlarmsUseCase(_span.value, _interval.value)
+       val intervalInvalid = !validateInterval()
+        val spanLengthInvalid = !validateSpanLength()
+        if (intervalInvalid or spanLengthInvalid) {
+            return false
+        } else {
+            //TODO?
+            setSpan()
+            setInterval()
+            //TODO creating new alarms does not have to replace the existing ones unless the alarms being generated are duplicates
+            viewModelScope.launch {
+                replaceAlarmsUseCase(_span.value, _interval.value)
+
+            }
+
+            return true
         }
+
 
     }
 }

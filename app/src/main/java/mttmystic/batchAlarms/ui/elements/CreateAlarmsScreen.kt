@@ -29,31 +29,33 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.focus.FocusRequester
-import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.unit.dp
 import mttmystic.batchAlarms.R
 import mttmystic.batchAlarms.data.Time
+import mttmystic.batchAlarms.data.mode
 import mttmystic.batchAlarms.ui.viewmodels.CreateAlarmsViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CreateAlarmsScreen(
     viewModel: CreateAlarmsViewModel,
-    onConfirm : () -> Unit,
-    onDismiss : () -> Unit
+    onDone : () -> Unit,
 ) {
-    val focusManager = LocalFocusManager.current
-    val focusRequester = remember { FocusRequester() }
+
+    var alarmMode by remember {mutableStateOf(mode.SINGLE)}
     var spanLengthInvalid by remember {mutableStateOf(false)}
     var intervalInvalid by remember {mutableStateOf(false)}
-    var onDone = {
-        intervalInvalid = !viewModel.validateInterval()
-        spanLengthInvalid = !viewModel.validateSpanLength()
-        if (!intervalInvalid && !spanLengthInvalid) {
-            viewModel.submit()
-            onConfirm()
+    val onSubmit : () -> Unit = {
+        if (alarmMode == mode.SINGLE) {
+            //TODO
+            onDone()
+        } else {
+            if (viewModel.submit()) {
+                onDone()
+            } else {
+                //TODO
+            }
         }
     }
     Scaffold (
@@ -61,7 +63,7 @@ fun CreateAlarmsScreen(
             TopAppBar (
                 title = { Text("Create Alarms") },
                 navigationIcon = {
-                    IconButton(onClick = onDismiss) {
+                    IconButton(onClick = onDone) {
                         Icon(
                             imageVector = Icons.Filled.Close,
                             contentDescription = "cancel create alarms"
@@ -69,7 +71,7 @@ fun CreateAlarmsScreen(
                     }
                 },
                 actions = {
-                    IconButton(onClick = onDone) {
+                    IconButton(onClick = onSubmit) {
                         Icon(
                             imageVector = Icons.Filled.Done,
                             contentDescription = "create alarms"
@@ -112,7 +114,6 @@ fun CreateAlarmsScreen(
                     .background(MaterialTheme.colorScheme.background)
                     .wrapContentSize(align = Alignment.Center)
             ) {
-                val (a, b, c) = FocusRequester.createRefs()
                 if (spanLengthInvalid) {
                     Text("Please set the time between alarms to be less than the duration of the alarms.")
                 }

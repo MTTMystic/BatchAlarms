@@ -93,7 +93,7 @@ fun DisplayAlarmsScreen(
                     val time = Time(protoAlarm.hour, protoAlarm.minute)
                     Alarm (
                         //isToday = isAlarmToday(time),
-                        timeText = time.display(),
+                        timeText = alarm.timeString,
                         id = protoAlarm.id,
                         onClickToggle = {onClickToggle(protoAlarm.id)},
                         isActive = protoAlarm.active,
