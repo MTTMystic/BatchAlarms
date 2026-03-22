@@ -3,16 +3,16 @@ package mttmystic.batchAlarms.domain
 import jakarta.inject.Inject
 import kotlinx.coroutines.flow.first
 import mttmystic.batchAlarms.AlarmService
-import mttmystic.batchAlarms.data.AlarmRepository
+import mttmystic.batchAlarms.data.repository.oldAlarmRepository
 
 class ToggleAlarmUseCase @Inject constructor(
-    private val alarmRepository: AlarmRepository,
+    private val oldAlarmRepository: oldAlarmRepository,
     private val alarmService: AlarmService
 ) {
     suspend operator fun invoke(id: Int) {
-        val alarm = alarmRepository.alarmsList.first().find {it.id == id}
+        val alarm = oldAlarmRepository.alarmsList.first().find {it.id == id}
         if (alarm != null) {
-            alarmRepository.toggleAlarm(alarm.id)
+            oldAlarmRepository.toggleAlarm(alarm.id)
             if (alarm.active) {
                 alarmService.cancelAlarm(alarm.id, alarm.hour, alarm.minute)
             } else {
@@ -20,7 +20,7 @@ class ToggleAlarmUseCase @Inject constructor(
                 //TODO investigate using alarmTime as now reference --
                 val alarmTime = alarmService.alarmDateTimeFromMillis(alarm.millis)
                 val nextTime = alarmService.computeNextAlarmMillis(alarm.hour, alarm.minute)
-                alarmRepository.updateAlarmTime(alarm.id, nextTime)
+                oldAlarmRepository.updateAlarmTime(alarm.id, nextTime)
                 alarmService.setAlarm(alarm)
             }
         }

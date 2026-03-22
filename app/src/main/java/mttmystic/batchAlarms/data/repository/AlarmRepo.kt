@@ -1,4 +1,4 @@
-package mttmystic.batchAlarms.data
+package mttmystic.batchAlarms.data.repository
 
 import android.app.AlarmManager
 import android.content.Context
@@ -15,31 +15,67 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import batchAlarms.proto.Alarm
 import batchAlarms.proto.AlarmList
+import com.google.protobuf.LazyStringArrayList.emptyList
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.emptyFlow
+import mttmystic.batchAlarms.data.AlarmProto
+import kotlin.collections.forEach
 
 //TODO add a function to cancel all alarms without deleting them
 
-/*interface AlarmRepository {
-    //fun _buildAlarm(timeInMillis: Long) : Alarm
-    //suspend fun addAlarm(alarm : Alarm)
-    suspend fun generateAlarmsList(span: Span, interval: Interval)
-    suspend fun deleteAllAlarms()
-    suspend fun toggleAlarm(id: Int)
-    suspend fun toggleAllAlarms()
-}*/
+
+interface AlarmRepository {
+
+    fun getAlarmsFlow() : Flow<List<Alarm>>
+
+    suspend fun save(alarm : Alarm)
+
+    suspend fun update(alarmId : Int, updatedAlarm: Alarm)
+
+    suspend fun remove(alarmId: Int)
+
+    suspend fun find(alarmId : Int)
+}
+
+interface AlarmRepositoryImpl : AlarmRepository {
+    override fun getAlarmsFlow() : Flow<List<Alarm>> {
+        return emptyFlow()
+    }
+
+    override suspend fun save(alarm : Alarm) {
+
+    }
+
+    override suspend fun update(alarmId : Int, updatedAlarm : Alarm) {
+
+    }
+
+    override suspend fun remove(alarmId : Int) {
+
+    }
+
+    override suspend fun find(alarmId : Int) {
+
+    }
+}
+
 
 @Singleton
-class AlarmRepository @Inject constructor(
+class oldAlarmRepository @Inject constructor(
     private val alarmListStore: DataStore<AlarmList>,
     @ApplicationContext private val context: Context
 ) {
     //TODO set the active and millis of each alarm based on
     val alarmsList : StateFlow<List<Alarm>> = alarmListStore.data
-        .map {it.alarmsList}
+        .map { store ->
+            store.alarmsList.map {it as Alarm}
+
+        }
         .stateIn(
             scope = CoroutineScope(Dispatchers.IO),
             started = SharingStarted.WhileSubscribed(5000),
             initialValue = emptyList()
-        )
+        ) as StateFlow<List<Alarm>>
 
     private val _alarmMgr: AlarmManager =
         context.getSystemService(Context.ALARM_SERVICE) as AlarmManager

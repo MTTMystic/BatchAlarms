@@ -55,10 +55,7 @@ data class AlarmUI(
     val timeString : String
 )
 
-data class Settings(
-    val use24Hr : Boolean = false,
-    val persistAlarms : Boolean = true
-)
+
 
 
 

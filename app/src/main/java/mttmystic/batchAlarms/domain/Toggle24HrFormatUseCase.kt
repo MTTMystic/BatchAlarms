@@ -1,12 +1,12 @@
 package mttmystic.batchAlarms.domain
 
 import jakarta.inject.Inject
-import mttmystic.batchAlarms.data.SettingsRepository
+import mttmystic.batchAlarms.data.repository.oldSettingsRepository
 
 class Toggle24HrFormatUseCase @Inject constructor (
-    private val settingsRepository : SettingsRepository
+    private val oldSettingsRepository : oldSettingsRepository
 ){
     suspend operator fun invoke() {
-        settingsRepository.toggle24HrFormat()
+        oldSettingsRepository.toggle24HrFormat()
     }
 }

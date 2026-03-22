@@ -4,10 +4,10 @@ import jakarta.inject.Inject
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import mttmystic.batchAlarms.data.AlarmRepository
+import mttmystic.batchAlarms.data.repository.oldAlarmRepository
 
 class AppInit @Inject constructor (
-    private val alarmRepository: AlarmRepository,
+    private val oldAlarmRepository: oldAlarmRepository,
     private val alarmService: AlarmService,
     private val alarmHandler: AlarmHandler
 ) {

@@ -24,7 +24,7 @@ import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import mttmystic.batchAlarms.R
-import mttmystic.batchAlarms.data.Settings
+import mttmystic.batchAlarms.data.models.Settings
 import mttmystic.batchAlarms.ui.viewmodels.SettingsViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)

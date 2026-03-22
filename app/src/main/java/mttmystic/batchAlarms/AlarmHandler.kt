@@ -5,13 +5,13 @@ import android.util.Log
 import dagger.hilt.android.qualifiers.ApplicationContext
 import jakarta.inject.Inject
 import kotlinx.coroutines.flow.first
-import mttmystic.batchAlarms.data.AlarmRepository
+import mttmystic.batchAlarms.data.repository.oldAlarmRepository
 import mttmystic.batchAlarms.domain.TimeStringUseCase
 
 
 class AlarmHandler @Inject constructor (
     private val notificationMgr : Notifications,
-    private val alarmRepo : AlarmRepository,
+    private val alarmRepo : oldAlarmRepository,
     private val alarmService : AlarmService,
     private val timeStringUseCase: TimeStringUseCase,
     @ApplicationContext private val appContext : Context

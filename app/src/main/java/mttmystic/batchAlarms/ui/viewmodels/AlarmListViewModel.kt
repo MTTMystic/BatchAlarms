@@ -15,7 +15,7 @@ import mttmystic.batchAlarms.domain.ToggleAlarmUseCase
 
 //import mttmystic.batchAlarms.data.AlarmRepositoryNew
 
-/*class AlarmListViewModelOLD(val repository: AlarmRepository) : ViewModel() {
+/*class AlarmListViewModelOLD(val repository: oldAlarmRepository) : ViewModel() {
     fun getAlarms() : StateFlow<List<Alarm>> {
         return repository.alarms
     }
@@ -29,7 +29,7 @@ import mttmystic.batchAlarms.domain.ToggleAlarmUseCase
     }
 }*/
 
-/*class AlarmListViewModel(val repository: AlarmRepository) : ViewModel() {
+/*class AlarmListViewModel(val repository: oldAlarmRepository) : ViewModel() {
     fun getAlarms() : Flow<List<Alarm>> {
         return repository.alarmsList
     }

@@ -1,27 +1,23 @@
 package mttmystic.batchAlarms.domain
 
-import android.util.Log
-import batchAlarms.proto.Alarm
 import jakarta.inject.Inject
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import mttmystic.batchAlarms.AlarmService
-import mttmystic.batchAlarms.data.AlarmProto
-import mttmystic.batchAlarms.data.AlarmRepository
+import mttmystic.batchAlarms.data.repository.oldAlarmRepository
 import mttmystic.batchAlarms.data.AlarmUI
-import mttmystic.batchAlarms.data.SettingsRepository
+import mttmystic.batchAlarms.data.repository.oldSettingsRepository
 import java.time.ZonedDateTime
-import java.time.temporal.ChronoUnit
 
 class GetAlarmsUseCase @Inject constructor(
-    private val alarmRepository: AlarmRepository,
+    private val oldAlarmRepository: oldAlarmRepository,
     private val alarmService : AlarmService,
     private val dayLabelUseCase: DayLabelUseCase,
-    private val settingsRepository: SettingsRepository,
+    private val oldSettingsRepository: oldSettingsRepository,
     private val timeStringUseCase : TimeStringUseCase
 ) {
     operator fun invoke() : Flow<List<AlarmUI>> {
-        val alarmList =   alarmRepository.alarmsList
+        val alarmList =   oldAlarmRepository.alarmsList
 
         val uiAlarms = alarmList.map { alarms ->
             val now = ZonedDateTime.now()

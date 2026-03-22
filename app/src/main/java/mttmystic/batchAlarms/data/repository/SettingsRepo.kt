@@ -1,19 +1,16 @@
-package mttmystic.batchAlarms.data
+package mttmystic.batchAlarms.data.repository
 
 import android.content.Context
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.booleanPreferencesKey
-import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.emptyPreferences
-import androidx.datastore.preferences.core.intPreferencesKey
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.catch
-import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import mttmystic.batchAlarms.providers.settingsDataStore
@@ -27,11 +24,11 @@ private object SettingsKeys {
 }
 
 @Singleton
-class SettingsRepository @Inject constructor(
+class oldSettingsRepository @Inject constructor(
     @ApplicationContext private val context : Context,
     settingsDataStore : DataStore<Preferences>
 ) {
-    val settings: Flow<Settings> = settingsDataStore.data
+    val settings: Flow<mttmystic.batchAlarms.data.models.Settings> = settingsDataStore.data
         .catch { exception ->
             if (exception is IOException) {
                 emit(emptyPreferences())
@@ -40,7 +37,7 @@ class SettingsRepository @Inject constructor(
             }
         }
         .map { prefs ->
-            Settings(
+            _root_ide_package_.mttmystic.batchAlarms.data.models.Settings(
                 use24Hr = prefs[SettingsKeys.TIME_FORMAT] ?: false,
                 persistAlarms = prefs[SettingsKeys.PERSIST_ALARMS] ?: true,
             )
@@ -48,7 +45,7 @@ class SettingsRepository @Inject constructor(
         .stateIn(
             scope = CoroutineScope(Dispatchers.IO),
             started = SharingStarted.WhileSubscribed(5000),
-            initialValue = Settings()
+            initialValue = _root_ide_package_.mttmystic.batchAlarms.data.models.Settings()
         )
         //.distinctUntilChanged() //only emit when it changes
 

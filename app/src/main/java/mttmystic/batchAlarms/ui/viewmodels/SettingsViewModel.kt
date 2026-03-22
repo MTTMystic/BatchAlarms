@@ -4,21 +4,20 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import jakarta.inject.Inject
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
-import mttmystic.batchAlarms.data.Settings
-import mttmystic.batchAlarms.data.SettingsRepository
+import mttmystic.batchAlarms.data.models.Settings
+import mttmystic.batchAlarms.data.repository.oldSettingsRepository
 
 @HiltViewModel
 class SettingsViewModel @Inject constructor(
-    private val settingsRepository : SettingsRepository
+    private val oldSettingsRepository : oldSettingsRepository
 ) : ViewModel() {
 
    fun getSettings() : StateFlow<Settings> {
-        return settingsRepository.settings.stateIn(
+        return oldSettingsRepository.settings.stateIn(
             scope = viewModelScope,
             started = SharingStarted.Eagerly,
             initialValue = Settings()
@@ -27,14 +26,14 @@ class SettingsViewModel @Inject constructor(
 
     fun toggle24HrFormat() {
         viewModelScope.launch {
-            settingsRepository.toggle24HrFormat()
+            oldSettingsRepository.toggle24HrFormat()
         }
 
     }
 
     fun togglePersistAlarms() {
         viewModelScope.launch {
-            settingsRepository.togglePersistAlarms()
+            oldSettingsRepository.togglePersistAlarms()
         }
 
     }
