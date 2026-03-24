@@ -24,7 +24,7 @@ object AlarmDatabaseModule {
        // val DATA_STORE_FILE_NAME = "alarm.pb"
         return Room.databaseBuilder(
             context,
-            AlarmDatabase::class.java, "alarm"
+            AlarmDatabase::class.java, "alarms"
         ).build()
     }
 }

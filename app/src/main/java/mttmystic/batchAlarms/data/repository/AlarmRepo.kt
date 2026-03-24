@@ -21,6 +21,7 @@ import kotlinx.coroutines.flow.emptyFlow
 import mttmystic.batchAlarms.data.AlarmProto
 import mttmystic.batchAlarms.data.local.AlarmDao
 import mttmystic.batchAlarms.data.toDomain
+import mttmystic.batchAlarms.data.toEntity
 import kotlin.collections.forEach
 import mttmystic.batchAlarms.data.local.Alarm as AlarmEntity
 import mttmystic.batchAlarms.data.models.Alarm as DomainAlarm
@@ -33,11 +34,11 @@ interface AlarmRepository {
 
     suspend fun save(alarm : DomainAlarm)
 
-    suspend fun update(alarmId : Int, updatedAlarm: DomainAlarm)
+    suspend fun update(updatedAlarm: DomainAlarm)
 
     suspend fun remove(alarmId: Int)
 
-    suspend fun find(alarmId : Int)
+    suspend fun find(alarmId : Int) : DomainAlarm
 }
 
 class AlarmRepositoryImpl @Inject constructor (
@@ -53,19 +54,19 @@ class AlarmRepositoryImpl @Inject constructor (
     }
 
     override suspend fun save(alarm : DomainAlarm) {
-
+        alarmDao.insert(alarm.toEntity())
     }
 
-    override suspend fun update(alarmId : Int, updatedAlarm : DomainAlarm) {
-
+    override suspend fun update(updatedAlarm : DomainAlarm) {
+        alarmDao.update(updatedAlarm.toEntity())
     }
 
     override suspend fun remove(alarmId : Int) {
-
+        alarmDao.deleteById(alarmId)
     }
 
-    override suspend fun find(alarmId : Int) {
-
+    override suspend fun find(alarmId : Int) : DomainAlarm {
+        return alarmDao.getById(alarmId).toDomain()
     }
 }
 

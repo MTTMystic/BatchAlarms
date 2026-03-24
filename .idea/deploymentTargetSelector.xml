@@ -13,19 +13,10 @@
         </DropdownSelection>
         <DialogSelection />
       </SelectionState>
-      <SelectionState runConfigName="insert alarm adds alarm to database()">
+      <SelectionState runConfigName="update alarm updates alarm in database()">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
-      <SelectionState runConfigName="getAll returns empty list when no alarms in database()">
-        <option name="selectionMode" value="DROPDOWN" />
-      </SelectionState>
-      <SelectionState runConfigName="delete alarm removes alarm from database()">
-        <option name="selectionMode" value="DROPDOWN" />
-      </SelectionState>
-      <SelectionState runConfigName="getById returns correct alarm()">
-        <option name="selectionMode" value="DROPDOWN" />
-      </SelectionState>
-      <SelectionState runConfigName="getById for multiple alarms returns all alarms()">
+      <SelectionState runConfigName="delete alarm by id removes correct alarm from database()">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
     </selectionStates>

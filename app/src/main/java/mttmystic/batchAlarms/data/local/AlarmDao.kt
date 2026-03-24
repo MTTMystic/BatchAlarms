@@ -4,6 +4,7 @@ import androidx.room.Dao
 import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.Query
+import androidx.room.Update
 import kotlinx.coroutines.flow.Flow
 
 @Dao
@@ -13,6 +14,12 @@ interface AlarmDao {
 
     @Delete
     fun delete(alarm : Alarm)
+
+    @Query("DELETE FROM alarm WHERE id=:alarmId")
+    fun deleteById(alarmId : Int)
+
+    @Update
+    fun update(updatedAlarm : Alarm)
 
     @Query("SELECT * FROM alarm")
     fun getAll() : Flow<List<Alarm>>

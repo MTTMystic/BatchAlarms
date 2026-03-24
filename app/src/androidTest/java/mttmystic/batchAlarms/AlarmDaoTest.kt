@@ -3,6 +3,7 @@ package mttmystic.batchAlarms
 import android.content.Context
 import androidx.room.Room
 import androidx.test.core.app.ApplicationProvider
+import batchAlarms.proto.alarm
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking
 import mttmystic.batchAlarms.data.local.Alarm
@@ -10,6 +11,7 @@ import mttmystic.batchAlarms.data.local.AlarmDao
 import mttmystic.batchAlarms.data.local.AlarmDatabase
 import org.junit.After
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertFalse
 import org.junit.Before
 import org.junit.Test
 
@@ -52,11 +54,19 @@ class AlarmDaoTest {
         assert(allAlarms.containsAll(testAlarmList))
     }
 
+
     @Test
     fun `delete alarm removes alarm from database`() = runBlocking {
         alarmDao.insert(testAlarm)
         alarmDao.delete(testAlarm)
         assert(alarmDao.getAll().first().isEmpty())
+    }
+
+    @Test
+    fun `delete alarm by id removes correct alarm from database`() = runBlocking {
+        alarmDao.insert(*testAlarmList.toTypedArray())
+        alarmDao.deleteById(testAlarm.id)
+        assertFalse(alarmDao.getAll().first().contains(testAlarm))
     }
 
     @Test
@@ -72,4 +82,13 @@ class AlarmDaoTest {
         val result = alarmDao.getById(testAlarmList.map {it.id})
         assertEquals(testAlarmList, result)
     }
+
+    @Test
+    fun `update alarm updates alarm in database` () = runBlocking {
+        alarmDao.insert(testAlarm)
+        alarmDao.update(testAlarm.copy(active = !testAlarm.active))
+        val result = alarmDao.getById(testAlarm.id)
+        assertEquals(testAlarm.copy(active = !testAlarm.active), result )
+    }
+
 }
