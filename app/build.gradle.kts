@@ -59,6 +59,10 @@ android {
 
 }
 
+tasks.withType<Test> {
+    useJUnitPlatform()
+}
+
 dependencies {
 
     implementation(libs.androidx.core.ktx)
@@ -78,6 +82,7 @@ dependencies {
     implementation(libs.androidx.navigation.compose)
     implementation(libs.androidx.compose.ui.text.google.fonts)
     implementation(libs.hilt.android)
+    implementation(libs.core.ktx)
     //kapt("com.google.dagger:hilt-android-compiler:2.57.1")
     ksp(libs.room.compiler)
     ksp(libs.hilt.compiler)
@@ -90,18 +95,24 @@ dependencies {
     testImplementation(libs.junit)
     testImplementation(libs.room.testing)
     androidTestImplementation(libs.androidx.junit)
-    androidTestImplementation(libs.androidx.espresso.core)
-    androidTestImplementation(platform(libs.androidx.compose.bom))
-    androidTestImplementation(platform(libs.junit.bom))
-    androidTestImplementation(libs.junit.jupiter.api)
-    androidTestImplementation(libs.androidx.ui.test.junit4)
+    //androidTestImplementation(libs.androidx.espresso.core)
+    //androidTestImplementation(platform(libs.androidx.compose.bom))
+    //androidTestImplementation(platform(libs.junit.bom))
+    //androidTestImplementation(libs.junit.jupiter.api)
+    //ndroidTestImplementation(libs.androidx.ui.test.junit4)
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
     testImplementation(libs.junit.jupiter)
     testImplementation(libs.junit.jupiter.api)
     testRuntimeOnly(libs.junit.jupiter.engine)
     androidTestImplementation(libs.android.test.core)
-    androidTestRuntimeOnly(libs.android.test.runner)
+    testImplementation(libs.kotlinx.coroutines.test) // or match your coroutines version
+    androidTestImplementation(libs.androidx.runner)
+}
+
+configurations.all {
+    exclude(group = "de.mannodermaus.junit5", module = "android-test-core-junit6")
+    exclude(group = "de.mannodermaus.junit5", module = "android-test-runner-junit6")
 }
 
 protobuf {

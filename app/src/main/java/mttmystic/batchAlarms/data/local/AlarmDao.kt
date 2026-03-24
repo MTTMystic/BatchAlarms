@@ -12,7 +12,7 @@ interface AlarmDao {
     fun insert(vararg alarms : Alarm)
 
     @Delete
-    fun delete(alarm:Alarm)
+    fun delete(alarm : Alarm)
 
     @Query("SELECT * FROM alarm")
     fun getAll() : Flow<List<Alarm>>

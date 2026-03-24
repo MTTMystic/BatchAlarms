@@ -15,6 +15,7 @@ activityCompose = "1.10.1"
 composeBom = "2025.08.00"
 appcompat = "1.7.1"
 navigationCompose = "2.9.6"
+runner = "1.7.0"
 uiTextGoogleFonts = "1.9.5"
 hilt = "2.57.1"
 ksp = "2.2.20-2.0.4"
@@ -22,12 +23,15 @@ room = "2.8.4"
 hilt-navigation-fragment-version = "1.0.0"
 hilt-navigation-compose-version = "1.2.0"
 kotlinx-coroutines-android-version = "1.5.2"
+coreKtxVersion = "1.7.0"
+kotlinx-coroutines-test-version = "1.7.3"
 [libraries]
 accompanist-permissions = { module = "com.google.accompanist:accompanist-permissions", version.ref = "accompanistPermissions" }
 android-junit5 = { module = "de.mannodermaus.gradle.plugins:android-junit5", version.ref = "androidJunit5" }
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
 androidx-datastore = { module = "androidx.datastore:datastore", version.ref = "datastorePreferences" }
 androidx-datastore-preferences = { module = "androidx.datastore:datastore-preferences", version.ref = "datastorePreferences" }
+androidx-runner = { module = "androidx.test:runner", version.ref = "runner" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }
 androidx-espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espressoCore" }
@@ -60,6 +64,8 @@ hilt-compiler = { module = "com.google.dagger:hilt-compiler", version.ref = "hil
 
 android-test-core = { group = "de.mannodermaus.junit5", name = "android-test-core", version.ref = "androidJunit5" }
 android-test-runner = { group = "de.mannodermaus.junit5", name = "android-test-runner", version.ref = "androidJunit5" }
+core-ktx = { group = "androidx.test", name = "core-ktx", version.ref = "coreKtxVersion" }
+kotlinx-coroutines-test = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-test", version.ref = "kotlinx-coroutines-test-version" }
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }
 jetbrainsKotlinAndroid = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }

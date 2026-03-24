@@ -10,6 +10,7 @@ class TypeConverterTest {
     val dayString = "TUESDAY,WEDNESDAY,FRIDAY"
     val daySet = setOf(DayOfWeek.TUESDAY, DayOfWeek.WEDNESDAY, DayOfWeek.FRIDAY)
 
+
     @Test
     fun `string of days is converted to a DayOfWeek set` () {
         val result = converters.setToString(daySet)
