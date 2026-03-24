@@ -4,7 +4,6 @@ import android.app.AlarmManager
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
-import android.provider.Settings.Global.getString
 import android.util.Log
 import androidx.core.content.ContextCompat
 import androidx.core.content.ContextCompat.getString
@@ -12,9 +11,7 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import jakarta.inject.Inject
 import mttmystic.batchAlarms.data.Interval
 import batchAlarms.proto.Alarm
-import batchAlarms.proto.alarm
 import mttmystic.batchAlarms.data.Span
-import mttmystic.batchAlarms.R
 import mttmystic.batchAlarms.data.AlarmProto
 import java.time.Instant
 //import mttmystic.batchAlarms.proto.Alarm
@@ -22,7 +19,6 @@ import java.time.Instant
 import java.time.LocalTime
 import java.time.ZoneId
 import java.time.ZonedDateTime
-import java.util.UUID
 import kotlin.random.Random
 
 class AlarmService @Inject constructor(

@@ -12,5 +12,6 @@ plugins {
 buildscript{
     dependencies {
         classpath("com.google.protobuf:protobuf-gradle-plugin:0.9.5")
+        classpath(libs.android.junit5)
     }
 }

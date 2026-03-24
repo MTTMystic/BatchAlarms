@@ -19,34 +19,44 @@ import com.google.protobuf.LazyStringArrayList.emptyList
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.emptyFlow
 import mttmystic.batchAlarms.data.AlarmProto
+import mttmystic.batchAlarms.data.local.AlarmDao
+import mttmystic.batchAlarms.data.toDomain
 import kotlin.collections.forEach
-
+import mttmystic.batchAlarms.data.local.Alarm as AlarmEntity
+import mttmystic.batchAlarms.data.models.Alarm as DomainAlarm
 //TODO add a function to cancel all alarms without deleting them
 
 
 interface AlarmRepository {
 
-    fun getAlarmsFlow() : Flow<List<Alarm>>
+    fun getAlarmsFlow() : Flow<List<DomainAlarm>>
 
-    suspend fun save(alarm : Alarm)
+    suspend fun save(alarm : DomainAlarm)
 
-    suspend fun update(alarmId : Int, updatedAlarm: Alarm)
+    suspend fun update(alarmId : Int, updatedAlarm: DomainAlarm)
 
     suspend fun remove(alarmId: Int)
 
     suspend fun find(alarmId : Int)
 }
 
-interface AlarmRepositoryImpl : AlarmRepository {
-    override fun getAlarmsFlow() : Flow<List<Alarm>> {
-        return emptyFlow()
+class AlarmRepositoryImpl @Inject constructor (
+    private val alarmDao : AlarmDao
+): AlarmRepository {
+    override fun getAlarmsFlow() : Flow<List<DomainAlarm>> {
+        return alarmDao.getAll().map {
+            alarms ->
+            alarms.map{
+                it.toDomain()
+            }
+        }
     }
 
-    override suspend fun save(alarm : Alarm) {
+    override suspend fun save(alarm : DomainAlarm) {
 
     }
 
-    override suspend fun update(alarmId : Int, updatedAlarm : Alarm) {
+    override suspend fun update(alarmId : Int, updatedAlarm : DomainAlarm) {
 
     }
 

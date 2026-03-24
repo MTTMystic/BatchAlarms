@@ -38,7 +38,7 @@ object AlarmDataStoreModule {
 object SettingsDataStoreModule {
     @Provides
     @Singleton
-    fun provideAlarmListDataStore(@ApplicationContext context : Context) : DataStore<Preferences> {
+    fun provideSettingsDataStore(@ApplicationContext context : Context) : DataStore<Preferences> {
         return context.settingsDataStore
     }
 }

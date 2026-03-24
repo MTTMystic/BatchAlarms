@@ -7,5 +7,5 @@ data class Alarm (
     val hour : Int,
     val minute : Int,
     val repeatDays : Set<DayOfWeek>,
-    val acttive : Boolean
+    val active : Boolean
 )
