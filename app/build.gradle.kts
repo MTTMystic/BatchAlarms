@@ -52,16 +52,16 @@ android {
         }
     }
     testOptions {
-        unitTests.all {
-            it.useJUnitPlatform()
+        unitTests {
+            isIncludeAndroidResources = true
         }
     }
 
 }
 
-tasks.withType<Test> {
-    useJUnitPlatform()
-}
+//tasks.withType<Test> {
+    //useJUnitPlatform()
+//}
 
 dependencies {
 
@@ -110,6 +110,7 @@ dependencies {
     androidTestImplementation(libs.android.test.core)
     testImplementation(libs.kotlinx.coroutines.test) // or match your coroutines version
     androidTestImplementation(libs.androidx.runner)
+    testImplementation(libs.robolectric)
 
 }
 

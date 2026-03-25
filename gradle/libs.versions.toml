@@ -15,6 +15,7 @@ activityCompose = "1.10.1"
 composeBom = "2025.08.00"
 appcompat = "1.7.1"
 navigationCompose = "2.9.6"
+robolectric = "4.16.1"
 runner = "1.7.0"
 uiTextGoogleFonts = "1.9.5"
 hilt = "2.57.1"
@@ -53,6 +54,7 @@ junit-bom = { module = "org.junit:junit-bom", version.ref = "junitBom" }
 junit-jupiter = { group = "org.junit.jupiter", name = "junit-jupiter", version.ref = "junitJupiter" }
 junit-jupiter-api = { group = "org.junit.jupiter", name = "junit-jupiter-api", version.ref = "junitJupiter" }
 junit-jupiter-engine = { group = "org.junit.jupiter", name = "junit-jupiter-engine", version.ref = "junitJupiter" }
+robolectric = { module = "org.robolectric:robolectric", version.ref = "robolectric" }
 room-runtime = { module = "androidx.room:room-runtime", version.ref = "room" }
 room-ktx = { module = "androidx.room:room-ktx", version.ref = "room" }
 room-compiler = { module = "androidx.room:room-compiler", version.ref = "room" }
