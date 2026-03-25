@@ -16,6 +16,11 @@ object ReceiverScope : CoroutineScope {
     private val job = SupervisorJob()
     override val coroutineContext = Dispatchers.IO + job
 }
+
+object AlarmIntentKeys {
+    val idKey = "ALARM_ID"
+}
+
 @AndroidEntryPoint
 class AlarmReceiver: BroadcastReceiver() {
 

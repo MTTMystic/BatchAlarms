@@ -94,6 +94,8 @@ dependencies {
     implementation(libs.room.ktx)
     testImplementation(libs.junit)
     testImplementation(libs.room.testing)
+    testImplementation(libs.mockk)
+    androidTestImplementation(libs.mockk.android)
     androidTestImplementation(libs.androidx.junit)
     //androidTestImplementation(libs.androidx.espresso.core)
     //androidTestImplementation(platform(libs.androidx.compose.bom))
@@ -108,6 +110,7 @@ dependencies {
     androidTestImplementation(libs.android.test.core)
     testImplementation(libs.kotlinx.coroutines.test) // or match your coroutines version
     androidTestImplementation(libs.androidx.runner)
+
 }
 
 configurations.all {

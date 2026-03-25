@@ -25,6 +25,7 @@ hilt-navigation-compose-version = "1.2.0"
 kotlinx-coroutines-android-version = "1.5.2"
 coreKtxVersion = "1.7.0"
 kotlinx-coroutines-test-version = "1.7.3"
+mockk-version = "1.13.10"
 [libraries]
 accompanist-permissions = { module = "com.google.accompanist:accompanist-permissions", version.ref = "accompanistPermissions" }
 android-junit5 = { module = "de.mannodermaus.gradle.plugins:android-junit5", version.ref = "androidJunit5" }
@@ -66,6 +67,8 @@ android-test-core = { group = "de.mannodermaus.junit5", name = "android-test-cor
 android-test-runner = { group = "de.mannodermaus.junit5", name = "android-test-runner", version.ref = "androidJunit5" }
 core-ktx = { group = "androidx.test", name = "core-ktx", version.ref = "coreKtxVersion" }
 kotlinx-coroutines-test = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-test", version.ref = "kotlinx-coroutines-test-version" }
+mockk = { group = "io.mockk", name = "mockk", version.ref = "mockk-version" }
+mockk-android = { group = "io.mockk", name = "mockk-android", version.ref = "mockk-version" }
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }
 jetbrainsKotlinAndroid = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
