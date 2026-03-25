@@ -5,12 +5,33 @@ import android.util.Log
 import dagger.hilt.android.qualifiers.ApplicationContext
 import jakarta.inject.Inject
 import kotlinx.coroutines.flow.first
+import mttmystic.batchAlarms.data.repository.AlarmRepository
 import mttmystic.batchAlarms.data.repository.oldAlarmRepository
 import mttmystic.batchAlarms.domain.TimeStringUseCase
 
+interface AlarmHandler {
+    suspend fun onTrigger(alarmId: Int)
 
-class AlarmHandler @Inject constructor (
-    private val notificationMgr : Notifications,
+    suspend fun onStop(alarmId: Int)
+
+    suspend fun onInit()
+}
+
+class AlarmHandlerImpl @Inject constructor (
+    private val oldNotificationHandler: oldNotificationHandler,
+    private val alarmRepository: AlarmRepository,
+    private val alarmScheduler: AlarmScheduler
+) : AlarmHandler {
+    override suspend fun onTrigger(alarmId : Int ) {
+    }
+
+    override suspend fun onStop(alarmId : Int) {}
+
+    override suspend fun onInit() {}
+}
+
+class oldAlarmHandler @Inject constructor (
+    private val notificationMgr : oldNotificationHandler,
     private val alarmRepo : oldAlarmRepository,
     private val alarmService : AlarmService,
     private val timeStringUseCase: TimeStringUseCase,
@@ -34,18 +55,18 @@ class AlarmHandler @Inject constructor (
     }
 
     suspend fun onInit() {
-        Log.d("AlarmHandler", "onInit started")
+        Log.d("oldAlarmHandler", "onInit started")
         alarmRepo.alarmsList
             .first { it.isNotEmpty() }
             .forEach {
-                Log.d("AlarmHandler", "Processing alarm ${it.hour}:${it.minute}, millis: ${it.millis}, now: ${System.currentTimeMillis()}")
+                Log.d("oldAlarmHandler", "Processing alarm ${it.hour}:${it.minute}, millis: ${it.millis}, now: ${System.currentTimeMillis()}")
                 if (it.millis < System.currentTimeMillis()) {
-                    Log.d("AlarmHandler", "Canceling past alarm ${it.hour}:${it.minute}")
+                    Log.d("oldAlarmHandler", "Canceling past alarm ${it.hour}:${it.minute}")
                     alarmService.cancelAlarm(it.id, it.hour, it.minute)
                     //stopAlarm(it.id)
                     alarmRepo.disableAlarm(it.id)
                 } else {
-                    Log.d("AlarmHandler", "Setting future alarm ${it.hour}:${it.minute}")
+                    Log.d("oldAlarmHandler", "Setting future alarm ${it.hour}:${it.minute}")
                     alarmService.setAlarm(it)
                 }
         }

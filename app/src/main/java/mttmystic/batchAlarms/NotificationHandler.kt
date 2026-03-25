@@ -8,7 +8,6 @@ import android.content.Intent
 import android.media.AudioAttributes
 import android.media.MediaPlayer
 import android.media.RingtoneManager
-import android.net.Uri
 import android.os.Build
 import androidx.core.app.NotificationCompat
 import androidx.core.content.ContextCompat.getString
@@ -16,8 +15,18 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import jakarta.inject.Inject
 import jakarta.inject.Singleton
 
+interface NotificationHandler {
+
+}
+
 @Singleton
-class Notifications @Inject constructor(@ApplicationContext context : Context) {
+class NotificationHandlerImpl @Inject constructor(
+    @ApplicationContext context : Context) : NotificationHandler {
+
+}
+
+@Singleton
+class oldNotificationHandler @Inject constructor(@ApplicationContext context : Context) {
 
     //private var pendingNotifications : List<Int> = mutableListOf()
 

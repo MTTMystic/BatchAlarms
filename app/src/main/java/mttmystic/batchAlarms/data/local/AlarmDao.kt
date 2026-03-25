@@ -21,6 +21,9 @@ interface AlarmDao {
     @Update
     fun update(updatedAlarm : Alarm)
 
+    @Query("UPDATE Alarm SET active = :active WHERE id = :alarmId")
+    fun updateActive(alarmId:Int, active : Boolean)
+
     @Query("SELECT * FROM alarm")
     fun getAll() : Flow<List<Alarm>>
 

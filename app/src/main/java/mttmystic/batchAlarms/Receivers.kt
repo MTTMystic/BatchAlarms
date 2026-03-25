@@ -21,10 +21,11 @@ object AlarmIntentKeys {
     val idKey = "ALARM_ID"
 }
 
+
 @AndroidEntryPoint
 class AlarmReceiver: BroadcastReceiver() {
 
-    @Inject lateinit var handler : AlarmHandler
+    @Inject lateinit var handler : oldAlarmHandler
     override fun onReceive(@ApplicationContext context: Context, intent: Intent) {
         val alarmAction = getString(context, R.string.alarm_action)
 
@@ -51,7 +52,7 @@ class AlarmReceiver: BroadcastReceiver() {
 
 @AndroidEntryPoint
 class StopAlarmReceiver : BroadcastReceiver() {
-    @Inject lateinit var handler : AlarmHandler
+    @Inject lateinit var handler : oldAlarmHandler
     override fun onReceive(@ApplicationContext context : Context, intent: Intent) {
         val alarmID : Int = intent.getIntExtra("alarm_id", 0)
         //right now async is not strictly necessary because this isn't suspending but jic
@@ -65,7 +66,7 @@ class StopAlarmReceiver : BroadcastReceiver() {
 
 @AndroidEntryPoint
 class BootReceiver : BroadcastReceiver() {
-    @Inject lateinit var handler: AlarmHandler
+    @Inject lateinit var handler: oldAlarmHandler
 
     override fun onReceive(@ApplicationContext context : Context, intent: Intent) {
         val result = goAsync()

@@ -9,11 +9,11 @@ import mttmystic.batchAlarms.data.repository.oldAlarmRepository
 class AppInit @Inject constructor (
     private val oldAlarmRepository: oldAlarmRepository,
     private val alarmService: AlarmService,
-    private val alarmHandler: AlarmHandler
+    private val oldAlarmHandler: oldAlarmHandler
 ) {
     fun init() {
         CoroutineScope(Dispatchers.IO).launch {
-             alarmHandler.onInit()
+             oldAlarmHandler.onInit()
         }
     }
 }
