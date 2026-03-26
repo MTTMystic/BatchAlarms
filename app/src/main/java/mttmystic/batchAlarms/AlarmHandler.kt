@@ -23,12 +23,16 @@ class AlarmHandlerImpl @Inject constructor (
     private val alarmScheduler: AlarmScheduler
 ) : AlarmHandler {
     override suspend fun onTrigger(alarmId : Int ) {
-
+        Log.d("AlarmHandler", "alarm fired")
     }
 
-    override suspend fun onStop(alarmId : Int) {}
+    override suspend fun onStop(alarmId : Int) {
+        Log.d("AlarmHandler", "alarm stopped")
+    }
 
-    override suspend fun onInit() {}
+    override suspend fun onInit() {
+        Log.d("AlarmHandler", "initialization")
+    }
 }
 
 class oldAlarmHandler @Inject constructor (

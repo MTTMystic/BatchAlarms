@@ -4,6 +4,7 @@ import jakarta.inject.Inject
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import mttmystic.batchAlarms.data.local.AlarmDatabase
 import mttmystic.batchAlarms.data.repository.oldAlarmRepository
 
 class AppInit @Inject constructor (
@@ -15,5 +16,6 @@ class AppInit @Inject constructor (
         CoroutineScope(Dispatchers.IO).launch {
              oldAlarmHandler.onInit()
         }
+
     }
 }

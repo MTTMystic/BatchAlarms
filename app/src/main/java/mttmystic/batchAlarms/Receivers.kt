@@ -25,8 +25,18 @@ object AlarmIntentKeys {
 @AndroidEntryPoint
 class AlarmReceiver: BroadcastReceiver() {
 
-    @Inject lateinit var handler : oldAlarmHandler
+    @Inject lateinit var alarmHandler : AlarmHandler
     override fun onReceive(@ApplicationContext context: Context, intent: Intent) {
+        val result = goAsync()
+        val alarmId = intent.getIntExtra(AlarmIntentKeys.idKey, 0)
+        CoroutineScope(Dispatchers.IO).launch {
+            try {
+                alarmHandler.onTrigger(alarmId)
+            } finally {
+                result.finish()
+            }
+        }
+        /*
         val alarmAction = getString(context, R.string.alarm_action)
 
 
@@ -46,20 +56,23 @@ class AlarmReceiver: BroadcastReceiver() {
                     alarmHour, alarmMinute)
                 result.finish()
             }
-        }
+        }*/
     }
 }
 
 @AndroidEntryPoint
 class StopAlarmReceiver : BroadcastReceiver() {
-    @Inject lateinit var handler : oldAlarmHandler
+    @Inject lateinit var alarmHandler : AlarmHandler
     override fun onReceive(@ApplicationContext context : Context, intent: Intent) {
-        val alarmID : Int = intent.getIntExtra("alarm_id", 0)
+        val alarmId : Int = intent.getIntExtra("alarm_id", 0)
         //right now async is not strictly necessary because this isn't suspending but jic
         val result = goAsync()
-        ReceiverScope.launch {
-            handler.stopAlarm(alarmID)
-            result.finish()
+        CoroutineScope(Dispatchers.IO).launch {
+            try {
+                alarmHandler.onStop(alarmId)
+            } finally {
+                result.finish()
+            }
         }
     }
 }
@@ -70,9 +83,12 @@ class BootReceiver : BroadcastReceiver() {
 
     override fun onReceive(@ApplicationContext context : Context, intent: Intent) {
         val result = goAsync()
-        ReceiverScope.launch {
-            handler.onInit()
-            result.finish()
+        CoroutineScope(Dispatchers.IO).launch {
+            try {
+                handler.onInit()
+            } finally {
+                result.finish()
+            }
         }
     }
 }

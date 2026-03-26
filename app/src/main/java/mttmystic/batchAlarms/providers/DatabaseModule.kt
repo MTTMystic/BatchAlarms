@@ -13,6 +13,7 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import jakarta.inject.Singleton
 import mttmystic.batchAlarms.data.AlarmListSerializer
+import mttmystic.batchAlarms.data.local.AlarmDao
 import mttmystic.batchAlarms.data.local.AlarmDatabase
 
 @Module
@@ -26,5 +27,10 @@ object AlarmDatabaseModule {
             context,
             AlarmDatabase::class.java, "alarms"
         ).build()
+    }
+
+    @Provides
+    fun provideAlarmDao(database: AlarmDatabase) : AlarmDao {
+        return database.alarmDao()
     }
 }
