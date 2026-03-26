@@ -18,11 +18,12 @@ interface AlarmHandler {
 }
 
 class AlarmHandlerImpl @Inject constructor (
-    private val oldNotificationHandler: oldNotificationHandler,
+    private val notificationHandler: NotificationHandler,
     private val alarmRepository: AlarmRepository,
     private val alarmScheduler: AlarmScheduler
 ) : AlarmHandler {
     override suspend fun onTrigger(alarmId : Int ) {
+
     }
 
     override suspend fun onStop(alarmId : Int) {}

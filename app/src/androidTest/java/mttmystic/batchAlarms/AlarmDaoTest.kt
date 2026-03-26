@@ -91,4 +91,12 @@ class AlarmDaoTest {
         assertEquals(testAlarm.copy(active = !testAlarm.active), result )
     }
 
+    @Test
+    fun `update active updates alarm active property in database` () = runBlocking {
+        alarmDao.insert(testAlarm)
+        alarmDao.updateActive(testAlarm.id, false)
+        val result = alarmDao.getById(testAlarm.id)
+        assertEquals(testAlarm.copy(active = false), result)
+    }
+
 }

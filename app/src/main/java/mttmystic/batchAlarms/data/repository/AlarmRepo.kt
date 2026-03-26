@@ -36,6 +36,8 @@ interface AlarmRepository {
 
     suspend fun update(updatedAlarm: DomainAlarm)
 
+    suspend fun updateActive(alarmId:Int, active:Boolean)
+
     suspend fun remove(alarmId: Int)
 
     suspend fun find(alarmId : Int) : DomainAlarm
@@ -59,6 +61,10 @@ class AlarmRepositoryImpl @Inject constructor (
 
     override suspend fun update(updatedAlarm : DomainAlarm) {
         alarmDao.update(updatedAlarm.toEntity())
+    }
+
+    override suspend fun updateActive(alarmId: Int, active:Boolean) {
+        alarmDao.updateActive(alarmId, active)
     }
 
     override suspend fun remove(alarmId : Int) {
