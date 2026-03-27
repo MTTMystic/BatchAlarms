@@ -10,7 +10,7 @@ import kotlinx.coroutines.flow.Flow
 @Dao
 interface AlarmDao {
     @Insert
-    fun insert(vararg alarms : Alarm)
+    fun insert(vararg alarms : Alarm) : Long
 
     @Delete
     fun delete(alarm : Alarm)

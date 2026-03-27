@@ -32,7 +32,7 @@ interface AlarmRepository {
 
     fun getAlarmsFlow() : Flow<List<DomainAlarm>>
 
-    suspend fun save(alarm : DomainAlarm)
+    suspend fun save(alarm : DomainAlarm) : Int
 
     suspend fun update(updatedAlarm: DomainAlarm)
 
@@ -55,8 +55,8 @@ class AlarmRepositoryImpl @Inject constructor (
         }
     }
 
-    override suspend fun save(alarm : DomainAlarm) {
-        alarmDao.insert(alarm.toEntity())
+    override suspend fun save(alarm : DomainAlarm) : Int {
+        return alarmDao.insert(alarm.toEntity()).toInt()
     }
 
     override suspend fun update(updatedAlarm : DomainAlarm) {

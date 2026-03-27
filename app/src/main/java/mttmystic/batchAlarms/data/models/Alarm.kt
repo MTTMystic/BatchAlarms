@@ -3,7 +3,7 @@ package mttmystic.batchAlarms.data.models
 import java.time.DayOfWeek
 
 data class Alarm (
-    val id : Int,
+    val id : Int = 0,
     val hour : Int,
     val minute : Int,
     val repeatDays : Set<DayOfWeek>,

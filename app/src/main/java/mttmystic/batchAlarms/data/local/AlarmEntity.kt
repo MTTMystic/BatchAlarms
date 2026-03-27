@@ -26,7 +26,7 @@ class Converters {
 @Entity
 @TypeConverters(Converters::class)
 data class Alarm(
-    @PrimaryKey val id: Int,
+    @PrimaryKey(autoGenerate = true) val id: Int = 0,
     val hour: Int,
     val minute: Int,
     val repeatDays : String,
