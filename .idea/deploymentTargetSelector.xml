@@ -19,9 +19,6 @@
       <SelectionState runConfigName="cancel alarm cancels alarm()">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
-      <SelectionState runConfigName="update active updates alarm active property in database()">
-        <option name="selectionMode" value="DROPDOWN" />
-      </SelectionState>
     </selectionStates>
   </component>
 </project>

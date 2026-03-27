@@ -1,7 +1,8 @@
 <resources>
     <string name="app_name">Batch Alarms</string>
+    <string name="notification_channel_id">alarms</string>
+    <string name="notification_channel_name">Alarms</string>
     <string name="notification_channel_description">Alarm Notification</string>
-    <string name="notification_channel_id">batch_alarms</string>
     <string name="alarm_notification_title">Batch Alarm</string>
     <string name="alarm_action">ALARM</string>
     <string name="stop_alarm_action">STOP_ALARM</string>

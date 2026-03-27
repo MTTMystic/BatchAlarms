@@ -15,13 +15,109 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import jakarta.inject.Inject
 import jakarta.inject.Singleton
 
-interface NotificationHandler {
+const val channelIdName = "alarms"
+const val channelIdNum = 666
 
+interface NotificationHandler {
+    fun showNotification(timeString: String)
+
+    fun cancelNotification()
 }
 
 @Singleton
 class NotificationHandlerImpl @Inject constructor(
-    @ApplicationContext context : Context) : NotificationHandler {
+    @ApplicationContext private val context : Context) : NotificationHandler
+{
+    val notificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+
+    //TODO add a way to customize the sound
+    private val alarmUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM)
+
+    private var alarmPlayer : MediaPlayer = MediaPlayer.create(context, alarmUri).apply {
+        isLooping = true
+        setAudioAttributes(
+
+            AudioAttributes.Builder()
+                .setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION)
+                .setUsage(AudioAttributes.USAGE_ALARM)
+                .build()
+        )
+
+    }
+
+    init {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)  {
+            val name = getString(context, R.string.notification_channel_name) //todo replace with string resource
+            //val descriptionText : String = getString(context, R.string.notification_channel_description)
+
+            val importance = NotificationManager.IMPORTANCE_HIGH
+
+            val channel = NotificationChannel(channelIdName, name, importance)
+
+            notificationManager.createNotificationChannel(channel)
+        }
+    }
+
+    fun getShowNotificationIntent() : PendingIntent {
+        val intent = Intent(context, AlarmReceiver::class.java)
+        val notifyPendingIntent = PendingIntent.getBroadcast(
+            context,
+            0,
+            intent,
+            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+        )
+
+        return notifyPendingIntent
+
+    }
+
+    fun getCancelNotificationIntent() : PendingIntent {
+        val intent = Intent(context, StopAlarmReceiver::class.java)
+        val cancelPendingIntent = PendingIntent.getBroadcast(
+            context,
+            0,
+            intent,
+            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+        )
+
+        return cancelPendingIntent
+    }
+
+    fun getNotificationBuilder(title : String,  text : String?) : NotificationCompat.Builder {
+        val notifyIntent = getShowNotificationIntent()
+        val cancelIntent = getCancelNotificationIntent()
+        val builder = NotificationCompat.Builder(context, channelIdName)
+            .setSmallIcon(R.drawable.ic_stat_name)
+            .setContentTitle(title)
+            .setContentText(text)
+            .setPriority(NotificationCompat.PRIORITY_MAX)
+            .setFullScreenIntent(notifyIntent, true)
+            .addAction(0, getString(context, R.string.stop_alarm_text), cancelIntent)
+        return builder
+    }
+
+    fun playAlarmSound(context: Context) {
+        alarmPlayer.start()
+    }
+
+    fun stopAlarmSound() {
+        alarmPlayer.stop()
+        alarmPlayer.release()
+    }
+
+    override fun showNotification(timeString: String) {
+        val title = getString(context, R.string.alarm_notification_title)
+        val builder = getNotificationBuilder(title, timeString)
+        //pendingNotifications = pendingNotifications.filterNot {it != alarm_id}
+        //pendingNotifications += alarm_id
+        notificationManager.notify(channelIdNum, builder.build())
+        playAlarmSound(context)
+    }
+
+    override fun cancelNotification() {
+        notificationManager.cancel(channelIdNum)
+        stopAlarmSound()
+    }
 
 }
 
@@ -112,7 +208,7 @@ class oldNotificationHandler @Inject constructor(@ApplicationContext context : C
             context,
             StopAlarmReceiver::class.java).apply {
             action = "STOP_ALARM"
-            putExtra("alarm_id", alarm_id)
+            putExtra("alarm_id",  alarm_id)
         }
 
         return stopAlarmIntent
