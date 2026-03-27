@@ -1,4 +1,4 @@
-package mttmystic.batchAlarms
+package mttmystic.batchAlarms.domain
 
 import android.app.AlarmManager
 import android.app.PendingIntent
@@ -7,7 +7,8 @@ import android.content.Intent
 import androidx.annotation.VisibleForTesting
 import dagger.hilt.android.qualifiers.ApplicationContext
 import jakarta.inject.Inject
-import mttmystic.batchAlarms.data.local.Alarm
+import mttmystic.batchAlarms.AlarmIntentKeys
+import mttmystic.batchAlarms.AlarmReceiver
 import java.time.DayOfWeek
 import java.time.LocalTime
 import java.time.ZonedDateTime

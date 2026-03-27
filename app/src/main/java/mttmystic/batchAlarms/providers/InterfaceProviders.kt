@@ -4,12 +4,12 @@ import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
-import mttmystic.batchAlarms.AlarmHandler
-import mttmystic.batchAlarms.AlarmHandlerImpl
-import mttmystic.batchAlarms.AlarmScheduler
-import mttmystic.batchAlarms.AlarmSchedulerImpl
-import mttmystic.batchAlarms.NotificationHandler
-import mttmystic.batchAlarms.NotificationHandlerImpl
+import mttmystic.batchAlarms.domain.AlarmHandler
+import mttmystic.batchAlarms.domain.AlarmHandlerImpl
+import mttmystic.batchAlarms.domain.AlarmScheduler
+import mttmystic.batchAlarms.domain.AlarmSchedulerImpl
+import mttmystic.batchAlarms.domain.NotificationHandler
+import mttmystic.batchAlarms.domain.NotificationHandlerImpl
 import mttmystic.batchAlarms.data.repository.AlarmRepository
 import mttmystic.batchAlarms.data.repository.AlarmRepositoryImpl
 

@@ -11,9 +11,9 @@ import kotlinx.coroutines.launch
 import mttmystic.batchAlarms.data.Interval
 import mttmystic.batchAlarms.data.Span
 import mttmystic.batchAlarms.data.Time
-import mttmystic.batchAlarms.domain.ReplaceAlarmsUseCase
-import mttmystic.batchAlarms.domain.ValidateIntervalUseCase
-import mttmystic.batchAlarms.domain.ValidateSpanLengthUseCase
+import mttmystic.batchAlarms.domain.usecases.ReplaceAlarmsUseCase
+import mttmystic.batchAlarms.domain.usecases.ValidateIntervalUseCase
+import mttmystic.batchAlarms.domain.usecases.ValidateSpanLengthUseCase
 
 @HiltViewModel
 class CreateAlarmsViewModel @Inject constructor(

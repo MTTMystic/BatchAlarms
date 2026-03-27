@@ -1,4 +1,4 @@
-package mttmystic.batchAlarms.domain
+package mttmystic.batchAlarms.domain.usecases
 
 import jakarta.inject.Inject
 import kotlinx.coroutines.flow.first

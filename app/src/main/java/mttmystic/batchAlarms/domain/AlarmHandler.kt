@@ -1,13 +1,14 @@
-package mttmystic.batchAlarms
+package mttmystic.batchAlarms.domain
 
 import android.content.Context
 import android.util.Log
 import dagger.hilt.android.qualifiers.ApplicationContext
 import jakarta.inject.Inject
 import kotlinx.coroutines.flow.first
+import mttmystic.batchAlarms.AlarmService
 import mttmystic.batchAlarms.data.repository.AlarmRepository
 import mttmystic.batchAlarms.data.repository.oldAlarmRepository
-import mttmystic.batchAlarms.domain.TimeStringUseCase
+import mttmystic.batchAlarms.domain.usecases.TimeStringUseCase
 
 interface AlarmHandler {
     suspend fun onTrigger(alarmId: Int)
@@ -24,6 +25,8 @@ class AlarmHandlerImpl @Inject constructor (
 ) : AlarmHandler {
     override suspend fun onTrigger(alarmId : Int ) {
         Log.d("AlarmHandler", "alarm fired")
+        //show a notification
+
     }
 
     override suspend fun onStop(alarmId : Int) {

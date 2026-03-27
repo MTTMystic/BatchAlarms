@@ -7,10 +7,8 @@ import android.content.ContextWrapper
 import androidx.test.core.app.ApplicationProvider
 import io.mockk.mockk
 import io.mockk.verify
+import mttmystic.batchAlarms.domain.AlarmSchedulerImpl
 import org.junit.Test
-import java.time.DayOfWeek
-import java.time.ZoneId
-import java.time.ZonedDateTime
 
 class CancelAlarmTest {
     val mockAlarmManager = mockk<AlarmManager>(relaxed = true)

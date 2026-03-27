@@ -4,6 +4,7 @@ import android.app.AlarmManager
 import android.content.Context
 import io.mockk.every
 import io.mockk.mockk
+import mttmystic.batchAlarms.domain.AlarmSchedulerImpl
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 import java.time.DayOfWeek

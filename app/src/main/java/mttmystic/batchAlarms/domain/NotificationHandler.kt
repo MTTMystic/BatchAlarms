@@ -1,4 +1,4 @@
-package mttmystic.batchAlarms
+package mttmystic.batchAlarms.domain
 
 import android.app.NotificationChannel
 import android.app.NotificationManager
@@ -8,18 +8,48 @@ import android.content.Intent
 import android.media.AudioAttributes
 import android.media.MediaPlayer
 import android.media.RingtoneManager
+import android.net.Uri
 import android.os.Build
 import androidx.core.app.NotificationCompat
 import androidx.core.content.ContextCompat.getString
 import dagger.hilt.android.qualifiers.ApplicationContext
 import jakarta.inject.Inject
 import jakarta.inject.Singleton
+import mttmystic.batchAlarms.AlarmReceiver
+import mttmystic.batchAlarms.R
+import mttmystic.batchAlarms.StopAlarmReceiver
 
 const val channelIdName = "alarms"
 const val channelIdNum = 666
 
+/*
+interface MediaPlayerFactory {
+    fun create(uri: Uri) : MediaPlayer
+}
+
+class MediaPlayerFactoryImpl @Inject constructor(
+    @ApplicationContext private val context : Context
+) : MediaPlayerFactory {
+    override fun create(uri : Uri) : MediaPlayer{
+        return MediaPlayer.create(context, uri).apply {
+            isLooping = true
+            setAudioAttributes(
+
+                AudioAttributes.Builder()
+                    .setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION)
+                    .setUsage(AudioAttributes.USAGE_ALARM)
+                    .build()
+            )
+        }
+    }
+}
+*/
+
 interface NotificationHandler {
-    fun showNotification(timeString: String)
+    fun showNotification(
+        timeString: String,
+        uri : Uri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM)
+    )
 
     fun cancelNotification()
 }
@@ -31,19 +61,9 @@ class NotificationHandlerImpl @Inject constructor(
     val notificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
 
     //TODO add a way to customize the sound
-    private val alarmUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM)
+    //private val alarmUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM)
 
-    private var alarmPlayer : MediaPlayer = MediaPlayer.create(context, alarmUri).apply {
-        isLooping = true
-        setAudioAttributes(
-
-            AudioAttributes.Builder()
-                .setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION)
-                .setUsage(AudioAttributes.USAGE_ALARM)
-                .build()
-        )
-
-    }
+    private lateinit var alarmPlayer : MediaPlayer
 
     init {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)  {
@@ -105,12 +125,23 @@ class NotificationHandlerImpl @Inject constructor(
         alarmPlayer.release()
     }
 
-    override fun showNotification(timeString: String) {
+    override fun showNotification (timeString: String, uri : Uri) {
         val title = getString(context, R.string.alarm_notification_title)
         val builder = getNotificationBuilder(title, timeString)
         //pendingNotifications = pendingNotifications.filterNot {it != alarm_id}
         //pendingNotifications += alarm_id
         notificationManager.notify(channelIdNum, builder.build())
+        alarmPlayer = MediaPlayer.create(context, uri).apply {
+            isLooping = true
+            setAudioAttributes(
+
+                AudioAttributes.Builder()
+                    .setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION)
+                    .setUsage(AudioAttributes.USAGE_ALARM)
+                    .build()
+            )
+
+        }
         playAlarmSound(context)
     }
 

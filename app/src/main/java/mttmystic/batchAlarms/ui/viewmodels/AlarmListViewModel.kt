@@ -9,9 +9,9 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import mttmystic.batchAlarms.data.AlarmUI
-import mttmystic.batchAlarms.domain.DeleteAlarmsUseCase
-import mttmystic.batchAlarms.domain.GetAlarmsUseCase
-import mttmystic.batchAlarms.domain.ToggleAlarmUseCase
+import mttmystic.batchAlarms.domain.usecases.DeleteAlarmsUseCase
+import mttmystic.batchAlarms.domain.usecases.GetAlarmsUseCase
+import mttmystic.batchAlarms.domain.usecases.ToggleAlarmUseCase
 
 //import mttmystic.batchAlarms.data.AlarmRepositoryNew
 
