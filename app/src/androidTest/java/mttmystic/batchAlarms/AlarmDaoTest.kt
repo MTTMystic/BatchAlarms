@@ -49,7 +49,7 @@ class AlarmDaoTest {
 
     @Test
     fun `insert multiple alarms adds all alarms to database` () = runBlocking {
-        alarmDao.insert(*testAlarmList.toTypedArray())
+        testAlarmList.forEach { alarmDao.insert(it) }
         val allAlarms = alarmDao.getAll().first()
         assert(allAlarms.containsAll(testAlarmList))
     }
@@ -64,21 +64,21 @@ class AlarmDaoTest {
 
     @Test
     fun `delete alarm by id removes correct alarm from database`() = runBlocking {
-        alarmDao.insert(*testAlarmList.toTypedArray())
+        testAlarmList.forEach { alarmDao.insert(it) }
         alarmDao.deleteById(testAlarm.id)
         assertFalse(alarmDao.getAll().first().contains(testAlarm))
     }
 
     @Test
     fun `getById returns correct alarm`() = runBlocking {
-        alarmDao.insert(*testAlarmList.toTypedArray())
+        testAlarmList.forEach { alarmDao.insert(it) }
         val result = alarmDao.getById(testAlarm.id)
         assertEquals(testAlarm, result)
     }
 
     @Test
     fun `getById for multiple alarms returns all alarms`() = runBlocking {
-        alarmDao.insert(*testAlarmList.toTypedArray())
+        testAlarmList.forEach { alarmDao.insert(it) }
         val result = alarmDao.getById(testAlarmList.map {it.id})
         assertEquals(testAlarmList, result)
     }
