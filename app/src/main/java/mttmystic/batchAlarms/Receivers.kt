@@ -70,7 +70,7 @@ class StopAlarmReceiver : BroadcastReceiver() {
         val result = goAsync()
         CoroutineScope(Dispatchers.IO).launch {
             try {
-                alarmHandler.onStop(alarmId)
+                alarmHandler.onStop()
             } finally {
                 result.finish()
             }

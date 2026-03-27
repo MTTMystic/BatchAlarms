@@ -9,11 +9,13 @@ import mttmystic.batchAlarms.AlarmService
 import mttmystic.batchAlarms.data.repository.AlarmRepository
 import mttmystic.batchAlarms.data.repository.oldAlarmRepository
 import mttmystic.batchAlarms.domain.usecases.TimeStringUseCase
+import java.time.LocalTime
+import java.time.ZonedDateTime
 
 interface AlarmHandler {
     suspend fun onTrigger(alarmId: Int)
 
-    suspend fun onStop(alarmId: Int)
+    suspend fun onStop()
 
     suspend fun onInit()
 }
@@ -21,20 +23,52 @@ interface AlarmHandler {
 class AlarmHandlerImpl @Inject constructor (
     private val notificationHandler: NotificationHandler,
     private val alarmRepository: AlarmRepository,
-    private val alarmScheduler: AlarmScheduler
+    private val alarmScheduler: AlarmScheduler,
+    private val timeStringUseCase:TimeStringUseCase
 ) : AlarmHandler {
     override suspend fun onTrigger(alarmId : Int ) {
         Log.d("AlarmHandler", "alarm fired")
+        //get the alarm with given id
+        val alarm = alarmRepository.find(alarmId)
+        //TODO handle the case where there is no alarm found by that ID
+        //get a formatted hh:mm string
+        val formattedTimeString = timeStringUseCase(alarm.hour, alarm.minute)
         //show a notification
-
+        notificationHandler.showNotification(formattedTimeString)
+        //disactivate the alarm if it does not repeat
+        if (alarm.repeatDays.isEmpty()) {
+            alarmRepository.updateActive(alarm.id, false)
+        } else {
+            //schedule the next alarm (repeating)
+            alarmScheduler.scheduleAlarm(alarm.id, alarm.hour, alarm.minute, alarm.repeatDays)
+        }
     }
 
-    override suspend fun onStop(alarmId : Int) {
+    override suspend fun onStop() {
         Log.d("AlarmHandler", "alarm stopped")
+        notificationHandler.cancelNotification()
     }
 
     override suspend fun onInit() {
         Log.d("AlarmHandler", "initialization")
+        alarmRepository.getAlarmsFlow().first{it.isNotEmpty()}.forEach {
+            //only operate on active alarms
+            if(it.active) {
+                //calculate the time the alarm would have fired
+                val alarmTime = LocalTime.of(it.hour, it.minute)
+                val todayAt = ZonedDateTime.now().with(alarmTime)
+                //did we miss this alarm today?
+                val missedAlarm = !ZonedDateTime.now().isBefore(todayAt)
+                val shouldReschedule = !missedAlarm or (missedAlarm and it.repeatDays.isNotEmpty())
+                if (shouldReschedule) {
+                    alarmScheduler.scheduleAlarm(it.id, it.hour, it.minute, it.repeatDays)
+                } else if (missedAlarm and it.repeatDays.isEmpty()) {
+                    //otherwise the alarm is a one-off alarm that was missed, so disable it
+                    alarmScheduler.cancelAlarm(it.id)
+                    alarmRepository.updateActive(it.id, false)
+                }
+            }
+        }
     }
 }
 
