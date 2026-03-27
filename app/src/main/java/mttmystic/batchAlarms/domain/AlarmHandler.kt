@@ -17,7 +17,7 @@ interface AlarmHandler {
 
     suspend fun onStop()
 
-    suspend fun onInit()
+    suspend fun onInit(now : ZonedDateTime = ZonedDateTime.now() )
 }
 
 class AlarmHandlerImpl @Inject constructor (
@@ -27,7 +27,7 @@ class AlarmHandlerImpl @Inject constructor (
     private val timeStringUseCase:TimeStringUseCase
 ) : AlarmHandler {
     override suspend fun onTrigger(alarmId : Int ) {
-        Log.d("AlarmHandler", "alarm fired")
+        //Log.d("AlarmHandler", "alarm fired")
         //get the alarm with given id
         val alarm = alarmRepository.find(alarmId)
         //TODO handle the case where there is no alarm found by that ID
@@ -45,20 +45,20 @@ class AlarmHandlerImpl @Inject constructor (
     }
 
     override suspend fun onStop() {
-        Log.d("AlarmHandler", "alarm stopped")
+        //Log.d("AlarmHandler", "alarm stopped")
         notificationHandler.cancelNotification()
     }
 
-    override suspend fun onInit() {
-        Log.d("AlarmHandler", "initialization")
+    override suspend fun onInit(now: ZonedDateTime) {
+        //Log.d("AlarmHandler", "initialization")
         alarmRepository.getAlarmsFlow().first{it.isNotEmpty()}.forEach {
             //only operate on active alarms
             if(it.active) {
                 //calculate the time the alarm would have fired
                 val alarmTime = LocalTime.of(it.hour, it.minute)
-                val todayAt = ZonedDateTime.now().with(alarmTime)
+                val todayAt = now.with(alarmTime)
                 //did we miss this alarm today?
-                val missedAlarm = !ZonedDateTime.now().isBefore(todayAt)
+                val missedAlarm = !now.isBefore(todayAt)
                 val shouldReschedule = !missedAlarm or (missedAlarm and it.repeatDays.isNotEmpty())
                 if (shouldReschedule) {
                     alarmScheduler.scheduleAlarm(it.id, it.hour, it.minute, it.repeatDays)

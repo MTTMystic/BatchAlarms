@@ -13,10 +13,19 @@
         </DropdownSelection>
         <DialogSelection />
       </SelectionState>
-      <SelectionState runConfigName="schedule alarm sets alarm()">
+      <SelectionState runConfigName="AlarmHandlerTest">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
-      <SelectionState runConfigName="cancel alarm cancels alarm()">
+      <SelectionState runConfigName="onInit only reschedules active alarm given valid repeat alarm()">
+        <option name="selectionMode" value="DROPDOWN" />
+      </SelectionState>
+      <SelectionState runConfigName="onInit disables missed one-off alarm()">
+        <option name="selectionMode" value="DROPDOWN" />
+      </SelectionState>
+      <SelectionState runConfigName="onInit reschedules missed repeating alarm()">
+        <option name="selectionMode" value="DROPDOWN" />
+      </SelectionState>
+      <SelectionState runConfigName="onTrigger fires notification and disables non-repeating alarm()">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
     </selectionStates>
