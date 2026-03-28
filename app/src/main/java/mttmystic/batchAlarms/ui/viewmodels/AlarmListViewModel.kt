@@ -12,6 +12,7 @@ import mttmystic.batchAlarms.data.AlarmUI
 import mttmystic.batchAlarms.domain.usecases.DeleteAlarms
 import mttmystic.batchAlarms.domain.usecases.GetAlarms
 import mttmystic.batchAlarms.domain.usecases.ToggleAlarm
+import kotlinx.coroutines.flow.flowOf
 
 //import mttmystic.batchAlarms.data.AlarmRepositoryNew
 
@@ -58,11 +59,17 @@ class AlarmListViewModel @Inject constructor(
 
 
      fun getAlarms() : StateFlow<List<AlarmUI>> {
-        return getAlarms().stateIn(
+         //TODO fix this lol
+         return flowOf(emptyList<AlarmUI>()).stateIn(
+             scope = viewModelScope,
+             started = SharingStarted.Eagerly,
+             initialValue = emptyList()
+         )
+        /*return getAlarms().stateIn(
             scope = viewModelScope,
             started = SharingStarted.Eagerly,
             initialValue = emptyList()
-        )
+        )*/
     }
 
     fun toggleAlarm(id: Int) {
