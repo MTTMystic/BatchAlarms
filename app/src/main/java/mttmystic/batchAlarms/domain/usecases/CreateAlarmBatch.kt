@@ -1,15 +1,13 @@
 package mttmystic.batchAlarms.domain.usecases
 
 import jakarta.inject.Inject
-import mttmystic.batchAlarms.data.models.Alarm
-import mttmystic.batchAlarms.data.repository.AlarmRepository
 import mttmystic.batchAlarms.domain.AlarmScheduler
 import java.time.DayOfWeek
 import java.time.ZonedDateTime
 
-class CreateAlarmBatchUseCase @Inject constructor (
+class CreateAlarmBatch @Inject constructor (
     private val alarmScheduler: AlarmScheduler,
-    private val createSingleAlarmUseCase : CreateSingleAlarmUseCase
+    private val createSingleAlarm : CreateSingleAlarm
 ){
     suspend operator fun invoke(
         start : Pair<Int, Int> ,
@@ -33,7 +31,7 @@ class CreateAlarmBatchUseCase @Inject constructor (
         )
 
         while(!alarmTime.isAfter(endTime)) {
-            createSingleAlarmUseCase(alarmTime.hour, alarmTime.minute, repeatDays)
+            createSingleAlarm(alarmTime.hour, alarmTime.minute, repeatDays)
             alarmTime = alarmTime.plusMinutes(freq.toLong())
         }
     }

@@ -9,12 +9,12 @@ import mttmystic.batchAlarms.data.AlarmUI
 import mttmystic.batchAlarms.data.repository.oldSettingsRepository
 import java.time.ZonedDateTime
 
-class GetAlarmsUseCase @Inject constructor(
+class GetAlarms @Inject constructor(
     private val oldAlarmRepository: oldAlarmRepository,
     private val alarmService : AlarmService,
-    private val dayLabelUseCase: DayLabelUseCase,
+    private val dayLabel: DayLabel,
     private val oldSettingsRepository: oldSettingsRepository,
-    private val timeStringUseCase : TimeStringUseCase
+    private val timeString : TimeString
 ) {
     operator fun invoke() : Flow<List<AlarmUI>> {
         val alarmList =   oldAlarmRepository.alarmsList
@@ -31,8 +31,8 @@ class GetAlarmsUseCase @Inject constructor(
                 val nextAlarmTime = alarmService.alarmDateTimeFromMillis(alarm.millis)
                 AlarmUI(
                     protoAlarm = alarm,
-                    nextTimeLabel = dayLabelUseCase(nextAlarmTime, ZonedDateTime.now()),
-                    timeString = timeStringUseCase(alarm.hour, alarm.minute)
+                    nextTimeLabel = dayLabel(nextAlarmTime, ZonedDateTime.now()),
+                    timeString = timeString(alarm.hour, alarm.minute)
                 )
             }
         }

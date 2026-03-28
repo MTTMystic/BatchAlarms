@@ -9,9 +9,9 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import mttmystic.batchAlarms.data.AlarmUI
-import mttmystic.batchAlarms.domain.usecases.DeleteAlarmsUseCase
-import mttmystic.batchAlarms.domain.usecases.GetAlarmsUseCase
-import mttmystic.batchAlarms.domain.usecases.ToggleAlarmUseCase
+import mttmystic.batchAlarms.domain.usecases.DeleteAlarms
+import mttmystic.batchAlarms.domain.usecases.GetAlarms
+import mttmystic.batchAlarms.domain.usecases.ToggleAlarm
 
 //import mttmystic.batchAlarms.data.AlarmRepositoryNew
 
@@ -51,14 +51,14 @@ import mttmystic.batchAlarms.domain.usecases.ToggleAlarmUseCase
 
 @HiltViewModel
 class AlarmListViewModel @Inject constructor(
-    private val getAlarmsUseCase: GetAlarmsUseCase,
-    private val toggleAlarmUseCase: ToggleAlarmUseCase,
-    private val deleteAlarmsUseCase: DeleteAlarmsUseCase
+    private val getAlarms: GetAlarms,
+    private val toggleAlarm: ToggleAlarm,
+    private val deleteAlarms: DeleteAlarms
 ) : ViewModel() {
 
 
      fun getAlarms() : StateFlow<List<AlarmUI>> {
-        return getAlarmsUseCase().stateIn(
+        return getAlarms().stateIn(
             scope = viewModelScope,
             started = SharingStarted.Eagerly,
             initialValue = emptyList()
@@ -67,14 +67,14 @@ class AlarmListViewModel @Inject constructor(
 
     fun toggleAlarm(id: Int) {
         viewModelScope.launch {
-            toggleAlarmUseCase(id)
+            toggleAlarm(id)
         }
 
     }
 
     fun deleteAllAlarms() {
         viewModelScope.launch {
-           deleteAlarmsUseCase()
+           deleteAlarms()
         }
 
     }

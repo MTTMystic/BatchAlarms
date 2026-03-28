@@ -11,15 +11,15 @@ import kotlinx.coroutines.launch
 import mttmystic.batchAlarms.data.Interval
 import mttmystic.batchAlarms.data.Span
 import mttmystic.batchAlarms.data.Time
-import mttmystic.batchAlarms.domain.usecases.ReplaceAlarmsUseCase
-import mttmystic.batchAlarms.domain.usecases.ValidateIntervalUseCase
-import mttmystic.batchAlarms.domain.usecases.ValidateSpanLengthUseCase
+import mttmystic.batchAlarms.domain.usecases.ReplaceAlarms
+import mttmystic.batchAlarms.domain.usecases.ValidateInterval
+import mttmystic.batchAlarms.domain.usecases.ValidateSpanLength
 
 @HiltViewModel
 class CreateAlarmsViewModel @Inject constructor(
-    private val replaceAlarmsUseCase: ReplaceAlarmsUseCase,
-    private val validateIntervalUseCase: ValidateIntervalUseCase,
-    private val validateSpanLengthUseCase: ValidateSpanLengthUseCase
+    private val replaceAlarms: ReplaceAlarms,
+    private val validateInterval: ValidateInterval,
+    private val validateSpanLength: ValidateSpanLength
 ) : ViewModel() {
     private var _span = MutableStateFlow(Span())
     val span get() = _span.asStateFlow()
@@ -37,7 +37,7 @@ class CreateAlarmsViewModel @Inject constructor(
     }
 
     fun setPendingInterval(minutes : Int) : Boolean {
-        if (validateIntervalUseCase(minutes)) {
+        if (validateInterval(minutes)) {
             _pendingInterval = Interval(minutes)
             return true
         } else {
@@ -55,11 +55,11 @@ class CreateAlarmsViewModel @Inject constructor(
     }
 
     fun validateSpanLength() : Boolean{
-        return validateSpanLengthUseCase(_pendingSpan, _pendingInterval)
+        return validateSpanLength(_pendingSpan, _pendingInterval)
     }
 
     fun validateInterval() : Boolean {
-        return validateIntervalUseCase(_pendingInterval.length)
+        return validateInterval(_pendingInterval.length)
     }
     fun submit() : Boolean {
         //TODO VALIDATION HERE
@@ -73,7 +73,7 @@ class CreateAlarmsViewModel @Inject constructor(
             setInterval()
             //TODO creating new alarms does not have to replace the existing ones unless the alarms being generated are duplicates
             viewModelScope.launch {
-                replaceAlarmsUseCase(_span.value, _interval.value)
+                replaceAlarms(_span.value, _interval.value)
 
             }
 

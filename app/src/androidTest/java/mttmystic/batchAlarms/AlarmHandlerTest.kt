@@ -10,7 +10,7 @@ import mttmystic.batchAlarms.data.repository.AlarmRepository
 import mttmystic.batchAlarms.domain.AlarmHandlerImpl
 import mttmystic.batchAlarms.domain.AlarmScheduler
 import mttmystic.batchAlarms.domain.NotificationHandler
-import mttmystic.batchAlarms.domain.usecases.TimeStringUseCase
+import mttmystic.batchAlarms.domain.usecases.TimeString
 import org.junit.Test
 import java.time.DayOfWeek
 import java.time.ZoneId
@@ -20,7 +20,7 @@ class AlarmHandlerTest {
     val mockAlarmRepository = mockk<AlarmRepository>(relaxed = true)
     val mockNotificationHandler = mockk<NotificationHandler>(relaxed = true)
     val mockAlarmScheduler = mockk<AlarmScheduler>(relaxed = true)
-    val mockTimeStringUseCase = mockk<TimeStringUseCase>()
+    val mockTimeString = mockk<TimeString>()
 
     val now = ZonedDateTime.of(2026, 3, 24, 5, 0, 0, 0, ZoneId.systemDefault())
 
@@ -28,7 +28,7 @@ class AlarmHandlerTest {
         mockNotificationHandler,
         alarmRepository = mockAlarmRepository,
         alarmScheduler = mockAlarmScheduler,
-        timeStringUseCase = mockTimeStringUseCase
+        timeString = mockTimeString
     )
 
     val alarm = Alarm(1, 6, 0, emptySet(), true)
@@ -38,7 +38,7 @@ class AlarmHandlerTest {
     @Test
     fun `onTrigger fires notification and disables non-repeating alarm` () = runBlocking {
         coEvery {mockAlarmRepository.find(1)} returns alarm
-        coEvery {mockTimeStringUseCase(alarm.hour, alarm.minute)} returns timeString
+        coEvery {mockTimeString(alarm.hour, alarm.minute)} returns timeString
 
         handler.onTrigger(1)
 
@@ -50,7 +50,7 @@ class AlarmHandlerTest {
     @Test
     fun `onTrigger fires notification and reschedules repeating alarm` () = runBlocking {
         coEvery { mockAlarmRepository.find(1) } returns alarm.copy(repeatDays=repeatDays)
-        coEvery {mockTimeStringUseCase(alarm.hour, alarm.minute)} returns timeString
+        coEvery {mockTimeString(alarm.hour, alarm.minute)} returns timeString
 
         handler.onTrigger(1)
 

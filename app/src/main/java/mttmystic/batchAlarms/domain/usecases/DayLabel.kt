@@ -5,7 +5,7 @@ import java.time.ZonedDateTime
 import java.time.temporal.ChronoUnit
 
 
-class DayLabelUseCase @Inject constructor() {
+class DayLabel @Inject constructor() {
     operator fun invoke(nextAlarm: ZonedDateTime, now : ZonedDateTime = ZonedDateTime.now() ) : String {
         val nextDate = nextAlarm.toLocalDate()
         val today = now.toLocalDate()

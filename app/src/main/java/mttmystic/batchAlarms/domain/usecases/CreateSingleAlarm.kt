@@ -6,7 +6,7 @@ import mttmystic.batchAlarms.data.repository.AlarmRepository
 import mttmystic.batchAlarms.domain.AlarmScheduler
 import java.time.DayOfWeek
 
-class CreateSingleAlarmUseCase @Inject constructor (
+class CreateSingleAlarm @Inject constructor (
     private val alarmRepository: AlarmRepository,
     private val alarmScheduler : AlarmScheduler
 ){

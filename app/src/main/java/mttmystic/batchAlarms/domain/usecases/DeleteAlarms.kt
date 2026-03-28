@@ -5,7 +5,7 @@ import kotlinx.coroutines.flow.first
 import mttmystic.batchAlarms.AlarmService
 import mttmystic.batchAlarms.data.repository.oldAlarmRepository
 
-class DeleteAlarmsUseCase @Inject constructor(
+class DeleteAlarms @Inject constructor(
     private val oldAlarmRepository: oldAlarmRepository,
     private val alarmService: AlarmService
 ) {

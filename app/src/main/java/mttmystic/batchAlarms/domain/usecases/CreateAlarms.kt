@@ -7,7 +7,7 @@ import mttmystic.batchAlarms.data.repository.oldAlarmRepository
 import mttmystic.batchAlarms.data.Interval
 import mttmystic.batchAlarms.data.Span
 
-class CreateAlarmsUseCase @Inject constructor(
+class CreateAlarms @Inject constructor(
     private val oldAlarmRepository : oldAlarmRepository,
     private val alarmService: AlarmService
 ) {

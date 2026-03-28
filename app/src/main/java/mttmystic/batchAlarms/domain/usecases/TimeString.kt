@@ -6,7 +6,7 @@ import mttmystic.batchAlarms.data.repository.oldSettingsRepository
 import java.time.LocalTime
 import java.time.format.DateTimeFormatter
 
-class TimeStringUseCase @Inject constructor (
+class TimeString @Inject constructor (
     private val oldSettingsRepository: oldSettingsRepository
 ) {
     suspend operator fun invoke(hour24 : Int, minute: Int) : String {

@@ -5,7 +5,7 @@ import kotlinx.coroutines.flow.first
 import mttmystic.batchAlarms.AlarmService
 import mttmystic.batchAlarms.data.repository.oldAlarmRepository
 
-class ToggleAlarmUseCase @Inject constructor(
+class ToggleAlarm @Inject constructor(
     private val oldAlarmRepository: oldAlarmRepository,
     private val alarmService: AlarmService
 ) {

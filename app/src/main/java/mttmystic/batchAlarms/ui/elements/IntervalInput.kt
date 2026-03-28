@@ -53,7 +53,7 @@ fun IntervalInput(
             isError = inputError,
             keyboardActions = KeyboardActions(
                 onDone = {
-                    //TODO all this should be done in ValidateIntervalUseCase
+                    //TODO all this should be done in ValidateInterval
                     // and reuse that use case here + when submitting entire form
                     val success = validateIntervalInput(num) && updatePendingInterval(num.trim().toInt())
                     if (success) {

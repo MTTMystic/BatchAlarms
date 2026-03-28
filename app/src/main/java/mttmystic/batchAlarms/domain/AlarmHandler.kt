@@ -8,7 +8,7 @@ import kotlinx.coroutines.flow.first
 import mttmystic.batchAlarms.AlarmService
 import mttmystic.batchAlarms.data.repository.AlarmRepository
 import mttmystic.batchAlarms.data.repository.oldAlarmRepository
-import mttmystic.batchAlarms.domain.usecases.TimeStringUseCase
+import mttmystic.batchAlarms.domain.usecases.TimeString
 import java.time.LocalTime
 import java.time.ZonedDateTime
 
@@ -24,7 +24,7 @@ class AlarmHandlerImpl @Inject constructor (
     private val notificationHandler: NotificationHandler,
     private val alarmRepository: AlarmRepository,
     private val alarmScheduler: AlarmScheduler,
-    private val timeStringUseCase:TimeStringUseCase
+    private val timeString:TimeString
 ) : AlarmHandler {
     override suspend fun onTrigger(alarmId : Int ) {
         //Log.d("AlarmHandler", "alarm fired")
@@ -32,7 +32,7 @@ class AlarmHandlerImpl @Inject constructor (
         val alarm = alarmRepository.find(alarmId)
         //TODO handle the case where there is no alarm found by that ID
         //get a formatted hh:mm string
-        val formattedTimeString = timeStringUseCase(alarm.hour, alarm.minute)
+        val formattedTimeString = timeString(alarm.hour, alarm.minute)
         //show a notification
         notificationHandler.showNotification(formattedTimeString)
         //disactivate the alarm if it does not repeat
@@ -76,12 +76,12 @@ class oldAlarmHandler @Inject constructor (
     private val notificationMgr : oldNotificationHandler,
     private val alarmRepo : oldAlarmRepository,
     private val alarmService : AlarmService,
-    private val timeStringUseCase: TimeStringUseCase,
+    private val timeString: TimeString,
     @ApplicationContext private val appContext : Context
 ) {
     suspend fun onAlarm(alarmID: Int, alarmTime: String?, alarmHour: Int, alarmMinute: Int) {
         alarmRepo.disableAlarm(alarmID)
-        val timeString = timeStringUseCase(alarmHour, alarmMinute)
+        val timeString = timeString(alarmHour, alarmMinute)
         notificationMgr.generateNotification(appContext, alarmTime, alarmID)
 
         //TODO calculate the next time the alarm should fire and update millis in the repo/datastore
