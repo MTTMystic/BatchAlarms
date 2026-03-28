@@ -15,6 +15,10 @@ import java.time.ZonedDateTime
 
 interface AlarmScheduler {
 
+    fun computeNextAlarmTime(hour:Int,
+                             minute: Int,
+                             repeatDays : Set<DayOfWeek>,
+                             now : ZonedDateTime = ZonedDateTime.now()) : ZonedDateTime
     fun scheduleAlarm(id: Int, hour : Int, minute : Int, repeatDays : Set<DayOfWeek> = emptySet())
 
     fun cancelAlarm(id: Int)
@@ -26,12 +30,11 @@ class AlarmSchedulerImpl @Inject constructor (
 ) : AlarmScheduler {
 
     val alarmMgr = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
-    @VisibleForTesting
-    internal fun computeNextAlarmTime(
+    override fun computeNextAlarmTime(
         hour: Int,
         minute: Int,
         repeatDays : Set<DayOfWeek>,
-        now : ZonedDateTime = ZonedDateTime.now()) : ZonedDateTime {
+        now : ZonedDateTime) : ZonedDateTime {
         val localTime = LocalTime.of(hour, minute, 0, 0)
         //val now = ZonedDateTime.now()
         val todayAt = now.with(localTime)

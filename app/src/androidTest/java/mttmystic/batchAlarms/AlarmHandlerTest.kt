@@ -45,7 +45,6 @@ class AlarmHandlerTest {
         coVerify {mockNotificationHandler.showNotification(timeString)}
         //coVerify { mockAlarmScheduler.scheduleAlarm(alarm.id, alarm.hour, alarm.minute, alarm.repeatDays) }
         coVerify { mockAlarmRepository.updateActive(alarm.id, false) }
-
     }
 
     @Test
