@@ -13,16 +13,19 @@
         </DropdownSelection>
         <DialogSelection />
       </SelectionState>
-      <SelectionState runConfigName="insert multiple alarms adds all alarms to database()">
+      <SelectionState runConfigName="create alarm batch schedules alarms at correct times given freq()">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
-      <SelectionState runConfigName="AlarmHandlerTest">
+      <SelectionState runConfigName="create alarm batch schedules alarms at correct times given freq() (1)">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
-      <SelectionState runConfigName="create single alarm saves correct alarm to repo()">
+      <SelectionState runConfigName="create alarm batch does not schedule any alarm after the end time()">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
-      <SelectionState runConfigName="create single alarm schedules alarm()">
+      <SelectionState runConfigName="create alarm batch doesn't schedule alarms after end time()">
+        <option name="selectionMode" value="DROPDOWN" />
+      </SelectionState>
+      <SelectionState runConfigName="create alarm batch does not schedule alarms after end time()">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
     </selectionStates>

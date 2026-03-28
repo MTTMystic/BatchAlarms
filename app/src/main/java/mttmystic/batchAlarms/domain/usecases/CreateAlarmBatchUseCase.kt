@@ -5,16 +5,24 @@ import mttmystic.batchAlarms.data.models.Alarm
 import mttmystic.batchAlarms.data.repository.AlarmRepository
 import mttmystic.batchAlarms.domain.AlarmScheduler
 import java.time.DayOfWeek
+import java.time.ZonedDateTime
 
 class CreateAlarmBatchUseCase @Inject constructor (
     private val alarmScheduler: AlarmScheduler,
     private val createSingleAlarmUseCase : CreateSingleAlarmUseCase
 ){
-    suspend operator fun invoke(start : Pair<Int, Int> , end: Pair<Int, Int>, repeatDays: Set<DayOfWeek>, freq : Int) {
+    suspend operator fun invoke(
+        start : Pair<Int, Int> ,
+        end: Pair<Int, Int>,
+        repeatDays: Set<DayOfWeek>,
+        freq : Int,
+        now: ZonedDateTime = ZonedDateTime.now()
+    ) {
         var alarmTime = alarmScheduler.computeNextAlarmTime(
             start.first,
             start.second,
-            repeatDays
+            repeatDays,
+            now
         )
 
         val endTime = alarmScheduler.computeNextAlarmTime(
