@@ -10,7 +10,7 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import mttmystic.batchAlarms.data.AlarmUI
 import mttmystic.batchAlarms.domain.usecases.DeleteAlarms
-import mttmystic.batchAlarms.domain.usecases.GetAlarms
+import mttmystic.batchAlarms.domain.usecases.oldGetAlarms
 import mttmystic.batchAlarms.domain.usecases.ToggleAlarm
 import kotlinx.coroutines.flow.flowOf
 
@@ -52,7 +52,7 @@ import kotlinx.coroutines.flow.flowOf
 
 @HiltViewModel
 class AlarmListViewModel @Inject constructor(
-    private val getAlarms: GetAlarms,
+    private val oldGetAlarms: oldGetAlarms,
     private val toggleAlarm: ToggleAlarm,
     private val deleteAlarms: DeleteAlarms
 ) : ViewModel() {
@@ -65,7 +65,7 @@ class AlarmListViewModel @Inject constructor(
              started = SharingStarted.Eagerly,
              initialValue = emptyList()
          )
-        /*return getAlarms().stateIn(
+        /*return oldGetAlarms().stateIn(
             scope = viewModelScope,
             started = SharingStarted.Eagerly,
             initialValue = emptyList()
