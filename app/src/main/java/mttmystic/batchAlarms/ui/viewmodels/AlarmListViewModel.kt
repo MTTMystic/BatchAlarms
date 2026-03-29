@@ -11,7 +11,7 @@ import kotlinx.coroutines.launch
 import mttmystic.batchAlarms.data.AlarmUI
 import mttmystic.batchAlarms.domain.usecases.DeleteAlarms
 import mttmystic.batchAlarms.domain.usecases.oldGetAlarms
-import mttmystic.batchAlarms.domain.usecases.ToggleAlarm
+import mttmystic.batchAlarms.domain.usecases.oldToggleAlarm
 import kotlinx.coroutines.flow.flowOf
 
 //import mttmystic.batchAlarms.data.AlarmRepositoryNew
@@ -53,7 +53,7 @@ import kotlinx.coroutines.flow.flowOf
 @HiltViewModel
 class AlarmListViewModel @Inject constructor(
     private val oldGetAlarms: oldGetAlarms,
-    private val toggleAlarm: ToggleAlarm,
+    private val oldToggleAlarm: oldToggleAlarm,
     private val deleteAlarms: DeleteAlarms
 ) : ViewModel() {
 
