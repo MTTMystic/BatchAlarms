@@ -1,6 +1,7 @@
 package mttmystic.batchAlarms.ui.viewmodels
 
 import androidx.compose.runtime.mutableStateOf
+import androidx.core.text.isDigitsOnly
 import androidx.lifecycle.ViewModel
 import jakarta.inject.Inject
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -34,7 +35,7 @@ class CreateAlarmBatchViewModel @Inject constructor(): ViewModel(){
             return true
         } else {
             val valid_input = freqText.all {it.isDigit()}
-            val freqInt = freqText.trim().toInt()
+            val freqInt = if (valid_input) {freqText.trim().toInt()} else -1
             val valid_num = freqInt <= 60 && freqInt >= 5
             return valid_input && valid_num
         }
