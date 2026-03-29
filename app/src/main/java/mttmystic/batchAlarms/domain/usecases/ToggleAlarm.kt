@@ -3,9 +3,29 @@ package mttmystic.batchAlarms.domain.usecases
 import jakarta.inject.Inject
 import kotlinx.coroutines.flow.first
 import mttmystic.batchAlarms.AlarmService
+import mttmystic.batchAlarms.data.repository.AlarmRepository
 import mttmystic.batchAlarms.data.repository.oldAlarmRepository
+import mttmystic.batchAlarms.domain.AlarmScheduler
+
 
 class ToggleAlarm @Inject constructor(
+    private val alarmRepository: AlarmRepository,
+    private val alarmScheduler: AlarmScheduler
+) {
+    suspend operator fun invoke(alarmId: Int) {
+        val alarm = alarmRepository.find(alarmId)
+        alarmRepository.updateActive(alarmId, !alarm.active)
+        if (alarm.active) {
+            //so alarm will be disabled
+            alarmScheduler.cancelAlarm(alarmId)
+        } else {
+            //so alarm will be enabled
+            alarmScheduler.scheduleAlarm(alarmId, alarm.hour, alarm.minute, alarm.repeatDays)
+        }
+    }
+}
+
+class oldToggleAlarm @Inject constructor(
     private val oldAlarmRepository: oldAlarmRepository,
     private val alarmService: AlarmService
 ) {

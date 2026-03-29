@@ -23,6 +23,7 @@ class GetAlarms @Inject constructor (
         val sortedAlarmsFlow = alarmRepository
             .getAlarmsFlow()
             .map {it.sortedWith(compareBy({ it.hour }, {it.minute}))}
+
         val uiAlarms = sortedAlarmsFlow.map { alarms ->
             alarms.map { alarm->
                 val nextTime =
