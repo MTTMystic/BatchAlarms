@@ -3,13 +3,18 @@ package mttmystic.batchAlarms.ui.viewmodels
 import androidx.compose.runtime.mutableStateOf
 import androidx.core.text.isDigitsOnly
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import jakarta.inject.Inject
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.launch
+import mttmystic.batchAlarms.domain.usecases.CreateAlarmBatch
 import java.lang.Character.isDigit
 import java.time.DayOfWeek
 
-class CreateAlarmBatchViewModel @Inject constructor(): ViewModel(){
+class CreateAlarmBatchViewModel @Inject constructor(
+    private val createAlarmBatch : CreateAlarmBatch
+): ViewModel(){
     private var _start : Pair<Int, Int> = Pair(0, 0)
     private var _end : Pair<Int, Int> = Pair(0, 0)
     private var _freq : MutableStateFlow<Int> = MutableStateFlow(5)
@@ -46,6 +51,12 @@ class CreateAlarmBatchViewModel @Inject constructor(): ViewModel(){
             _repeatDays.value.remove(DayOfWeek.valueOf(day))
         } else {
             _repeatDays.value.add(DayOfWeek.valueOf(day))
+        }
+    }
+
+    fun submit() {
+        viewModelScope.launch {
+            createAlarmBatch(_start, _end, _repeatDays.value, _freq.value)
         }
     }
 }
