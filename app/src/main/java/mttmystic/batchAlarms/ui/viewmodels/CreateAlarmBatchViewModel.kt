@@ -1,5 +1,6 @@
 package mttmystic.batchAlarms.ui.viewmodels
 
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.core.text.isDigitsOnly
 import androidx.lifecycle.ViewModel
@@ -17,8 +18,15 @@ class CreateAlarmBatchViewModel @Inject constructor(
 ): ViewModel(){
     private var _start : Pair<Int, Int> = Pair(0, 0)
     private var _end : Pair<Int, Int> = Pair(0, 0)
+
     private var _freq : MutableStateFlow<Int> = MutableStateFlow(5)
     val freq get() = _freq.asStateFlow()
+
+    private var _freqText : MutableStateFlow<String> = MutableStateFlow("")
+    val freqText get() = _freqText.asStateFlow()
+
+    private var _freqValid : MutableStateFlow<Boolean> = MutableStateFlow(true)
+    val freqValid get() = _freqValid.asStateFlow()
 
     private var _repeatDays : MutableStateFlow<MutableSet<DayOfWeek>> = MutableStateFlow(mutableSetOf())
     val repeatDays get() = _repeatDays.asStateFlow()
@@ -31,8 +39,9 @@ class CreateAlarmBatchViewModel @Inject constructor(
         _end = newEnd
     }
 
-    fun setFreq(newFreq : Int) {
-        _freq.value = newFreq
+    fun setFreq(newFreq : String) {
+        _freqText.value = newFreq
+        _freqValid.value = validateFreqInput(_freqText.value)
     }
 
     fun validateFreqInput(freqText: String) : Boolean {
@@ -41,7 +50,7 @@ class CreateAlarmBatchViewModel @Inject constructor(
         } else {
             val valid_input = freqText.all {it.isDigit()}
             val freqInt = if (valid_input) {freqText.trim().toInt()} else -1
-            val valid_num = freqInt <= 60 && freqInt >= 5
+            val valid_num = freqInt in 5..60
             return valid_input && valid_num
         }
     }
@@ -56,7 +65,7 @@ class CreateAlarmBatchViewModel @Inject constructor(
 
     fun submit() {
         viewModelScope.launch {
-            createAlarmBatch(_start, _end, _repeatDays.value, _freq.value)
+            createAlarmBatch(_start, _end, _repeatDays.value, _freqText.value.trim().toInt())
         }
     }
 }

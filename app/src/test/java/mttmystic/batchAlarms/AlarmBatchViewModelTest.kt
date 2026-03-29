@@ -1,12 +1,22 @@
 package mttmystic.batchAlarms
 
+import io.mockk.mockk
+import mttmystic.batchAlarms.data.repository.AlarmRepository
+import mttmystic.batchAlarms.domain.AlarmScheduler
+import mttmystic.batchAlarms.domain.usecases.CreateAlarmBatch
+import mttmystic.batchAlarms.domain.usecases.CreateSingleAlarm
 import mttmystic.batchAlarms.ui.viewmodels.CreateAlarmBatchViewModel
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 import java.time.DayOfWeek
 
 class AlarmBatchViewModelTest {
-    val alarmBatchViewModel : CreateAlarmBatchViewModel = CreateAlarmBatchViewModel()
+    val mockAlarmRepository = mockk<AlarmRepository>(relaxed = true)
+    val mockAlarmScheduler = mockk<AlarmScheduler>(relaxed = true)
+    val createSingleAlarm : CreateSingleAlarm = CreateSingleAlarm(mockAlarmRepository, mockAlarmScheduler)
+    val createAlarmBatch = CreateAlarmBatch(mockAlarmScheduler, createSingleAlarm)
+    val alarmBatchViewModel : CreateAlarmBatchViewModel = CreateAlarmBatchViewModel(createAlarmBatch)
+
     @Test
     fun `empty freq text returns valid` () {
         assert(alarmBatchViewModel.validateFreqInput(""))
