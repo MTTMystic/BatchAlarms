@@ -46,5 +46,5 @@ class CreateAlarmBatchViewModel @Inject constructor(): ViewModel(){
         } else {
             _repeatDays.value.add(DayOfWeek.valueOf(day))
         }
-    }re
+    }
 }
