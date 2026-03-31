@@ -11,15 +11,18 @@ class CreateSingleAlarm @Inject constructor (
     private val alarmScheduler : AlarmScheduler
 ){
     suspend operator fun invoke(hour24 : Int, minute : Int, repeatDays: Set<DayOfWeek>) {
-        val alarmId = alarmRepository.save(
-            Alarm(
-                hour = hour24,
-                minute = minute,
-                repeatDays = repeatDays,
-                active = true
-            )
+        val alarm = Alarm(
+            hour = hour24,
+            minute = minute,
+            repeatDays = repeatDays,
+            active = true
         )
 
-        alarmScheduler.scheduleAlarm(alarmId, hour24, minute, repeatDays)
+        if (!alarmRepository.contains(alarm)) {
+            val alarmId = alarmRepository.save(alarm)
+            alarmScheduler.scheduleAlarm(alarmId, hour24, minute, repeatDays)
+        }
+
+
     }
 }

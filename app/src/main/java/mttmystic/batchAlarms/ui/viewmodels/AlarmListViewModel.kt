@@ -1,11 +1,15 @@
 package mttmystic.batchAlarms.ui.viewmodels
 
+import androidx.compose.runtime.derivedStateOf
+import androidx.compose.runtime.remember
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import jakarta.inject.Inject
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import mttmystic.batchAlarms.data.AlarmUI
@@ -55,13 +59,15 @@ import mttmystic.batchAlarms.domain.usecases.ToggleAlarm
 
 @HiltViewModel
 class AlarmListViewModel @Inject constructor(
-    private val oldGetAlarms: oldGetAlarms,
     private val toggleAlarmUseCase: ToggleAlarm,
     private val getAlarmsUseCase : GetAlarms,
     private val deleteAlarms: DeleteAlarms
 ) : ViewModel() {
 
+    private var _selectedIds = MutableStateFlow<Set<Int>>(emptySet())
+    val selectedIds get() = _selectedIds.asStateFlow()
 
+    val inSelectionMode = _selectedIds.value.isNotEmpty()
      fun getAlarms() : StateFlow<List<uiAlarm>> {
          //TODO fix this lol
          return getAlarmsUseCase().stateIn(

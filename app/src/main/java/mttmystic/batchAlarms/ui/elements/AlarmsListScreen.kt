@@ -27,6 +27,7 @@ fun AlarmsListScreen(
     //val alarmHandler = oldAlarmHandler(LocalContext.current)
     //var showTimePicker by remember{mutableStateOf(false)}
     val alarmsList by viewModel.getAlarms().collectAsState(initial=emptyList())
+
     DisplayAlarmsScreen(
         alarmsList,
         onClickFAB = onClickFAB,

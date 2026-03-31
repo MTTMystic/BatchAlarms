@@ -18,6 +18,7 @@ import batchAlarms.proto.AlarmList
 import com.google.protobuf.LazyStringArrayList.emptyList
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.emptyFlow
+import kotlinx.coroutines.flow.first
 import mttmystic.batchAlarms.data.AlarmProto
 import mttmystic.batchAlarms.data.local.AlarmDao
 import mttmystic.batchAlarms.data.toDomain
@@ -41,6 +42,10 @@ interface AlarmRepository {
     suspend fun remove(alarmId: Int)
 
     suspend fun find(alarmId : Int) : DomainAlarm
+
+    suspend fun find(alarm : DomainAlarm) : Int
+
+    suspend fun contains(alarm : DomainAlarm) : Boolean
 }
 
 class AlarmRepositoryImpl @Inject constructor (
@@ -56,7 +61,12 @@ class AlarmRepositoryImpl @Inject constructor (
     }
 
     override suspend fun save(alarm : DomainAlarm) : Int {
-        return alarmDao.insert(alarm.toEntity()).toInt()
+        if (!contains(alarm)) {
+            return alarmDao.insert(alarm.toEntity()).toInt()
+        } else {
+            return find(alarm)
+        }
+
     }
 
     override suspend fun update(updatedAlarm : DomainAlarm) {
@@ -73,6 +83,26 @@ class AlarmRepositoryImpl @Inject constructor (
 
     override suspend fun find(alarmId : Int) : DomainAlarm {
         return alarmDao.getById(alarmId).toDomain()
+    }
+
+    override suspend fun find(alarm: DomainAlarm) : Int {
+        getAlarmsFlow().first().forEach {
+            val match = it.hour == alarm.hour && it.minute == alarm.minute && it.repeatDays == alarm.repeatDays
+            if (match) {
+                return it.id
+            }
+        }
+        return -1
+    }
+
+    override suspend fun contains(alarm : DomainAlarm) : Boolean {
+        getAlarmsFlow().first().forEach {
+            val match = it.hour == alarm.hour && it.minute == alarm.minute && it.repeatDays == alarm.repeatDays
+            if (match) {
+                return true
+            }
+        }
+        return false
     }
 }
 
