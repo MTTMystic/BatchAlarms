@@ -30,6 +30,7 @@ import androidx.compose.ui.unit.sp
 import mttmystic.batchAlarms.R
 import mttmystic.batchAlarms.data.AlarmUI
 import mttmystic.batchAlarms.data.Time
+import mttmystic.batchAlarms.data.models.uiAlarm
 
 
 //import mttmystic.batchAlarms.isAlarmToday
@@ -38,7 +39,7 @@ import mttmystic.batchAlarms.data.Time
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DisplayAlarmsScreen(
-    alarms : List<AlarmUI>,
+    alarms : List<uiAlarm>,
     onClickFAB : () -> Unit,
     onClickCancel : () -> Unit,
     onClickToggle : (Int) -> Unit,
@@ -88,16 +89,16 @@ fun DisplayAlarmsScreen(
             ) {
                 //todo fix padding
                 Spacer(Modifier.height(dimensionResource(R.dimen.padding_small)))
-                alarms.forEach { alarm ->
-                    val protoAlarm = alarm.protoAlarm
-                    val time = Time(protoAlarm.hour, protoAlarm.minute)
+                alarms.forEach { uiAlarm ->
+                    val alarm = uiAlarm.alarm
+                    //val time = Time(alarm.hour, alarm.minute)
                     Alarm (
                         //isToday = isAlarmToday(time),
-                        timeText = alarm.timeString,
-                        id = protoAlarm.id,
-                        onClickToggle = {onClickToggle(protoAlarm.id)},
-                        isActive = protoAlarm.active,
-                        nextTimeLabel = alarm.nextTimeLabel
+                        timeText = uiAlarm.timeLabel,
+                        id = alarm.id,
+                        onClickToggle = {onClickToggle(alarm.id)},
+                        isActive = alarm.active,
+                        nextTimeLabel = uiAlarm.dayLabel
                     )
                     //Text(alarm.time.display(), fontSize=48.sp)
                 }

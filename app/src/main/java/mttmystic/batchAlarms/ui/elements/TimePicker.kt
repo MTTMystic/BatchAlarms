@@ -25,7 +25,7 @@ import mttmystic.batchAlarms.data.Time
 @Composable
 fun TimePicker(
     modifier : Modifier = Modifier,
-    onChange : (Time) -> Unit,
+    onChange : (Pair<Int, Int>) -> Unit,
 ) {
 
     var allowFocus by remember {mutableStateOf(false)}
@@ -45,7 +45,7 @@ fun TimePicker(
 
     LaunchedEffect(timePickerState.hour, timePickerState.minute) {
         //onChangeHour(timePickerState.hour)
-        onChange(Time(timePickerState.hour, timePickerState.minute))
+        onChange(Pair(timePickerState.hour, timePickerState.minute))
     }
 
 

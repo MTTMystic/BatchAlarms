@@ -13,6 +13,7 @@ import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
+import mttmystic.batchAlarms.data.models.Settings
 import mttmystic.batchAlarms.providers.settingsDataStore
 import java.io.IOException
 import javax.inject.Inject
@@ -22,6 +23,7 @@ private object SettingsKeys {
     val TIME_FORMAT = booleanPreferencesKey("time_format")
     val PERSIST_ALARMS = booleanPreferencesKey("persist_alarms")
 }
+
 
 @Singleton
 class oldSettingsRepository @Inject constructor(
@@ -37,7 +39,7 @@ class oldSettingsRepository @Inject constructor(
             }
         }
         .map { prefs ->
-            _root_ide_package_.mttmystic.batchAlarms.data.models.Settings(
+            Settings(
                 use24Hr = prefs[SettingsKeys.TIME_FORMAT] ?: false,
                 persistAlarms = prefs[SettingsKeys.PERSIST_ALARMS] ?: true,
             )

@@ -4,17 +4,16 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Done
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -33,14 +32,10 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.unit.dp
-import mttmystic.batchAlarms.R
-import mttmystic.batchAlarms.data.Time
 import mttmystic.batchAlarms.data.mode
 import mttmystic.batchAlarms.ui.viewmodels.CreateAlarmBatchViewModel
 import mttmystic.batchAlarms.ui.viewmodels.CreateAlarmViewModel
-import mttmystic.batchAlarms.ui.viewmodels.CreateAlarmsViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -82,14 +77,14 @@ fun CreateAlarmsScreen(
                     )
                 }
             },
-            actions = {
+            /*actions = {
                 IconButton(onClick = onSubmit) {
                     Icon(
                         imageVector = Icons.Filled.Done,
                         contentDescription = "create alarms"
                     )
                 }
-            },
+            }*/
             colors = TopAppBarDefaults.topAppBarColors(
                 containerColor = MaterialTheme.colorScheme.primaryContainer,
                 titleContentColor = MaterialTheme.colorScheme.onPrimaryContainer,
@@ -101,7 +96,15 @@ fun CreateAlarmsScreen(
 
     Scaffold(
         modifier = Modifier,
-        topBar = topAppBar
+        topBar = topAppBar,
+        floatingActionButton = {
+            FloatingActionButton(onClick = onSubmit) {
+                Icon(
+                    Icons.Filled.Check,
+                    contentDescription = "confirm submit alarm"
+                )
+            }
+        }
     )
     { innerPadding ->
         Box(
@@ -110,6 +113,27 @@ fun CreateAlarmsScreen(
                 .padding(innerPadding),
             contentAlignment = Alignment.Center
         ) {
+            SingleChoiceSegmentedButtonRow(
+                modifier = Modifier
+                    .align(Alignment.TopCenter)
+                    .padding(top = 16.dp)
+            ) {
+                options.forEachIndexed { index, label ->
+                    SegmentedButton(
+                        shape = SegmentedButtonDefaults.itemShape(
+                            index = index,
+                            count = 2
+                        ),
+                        colors = SegmentedButtonDefaults.colors(
+                            inactiveContainerColor = MaterialTheme.colorScheme.surfaceContainer,
+                            inactiveContentColor = MaterialTheme.colorScheme.onSurface,
+                        ),
+                        onClick = { toggleMode(index) },
+                        selected = index == selectedIndex,
+                        label = { Text(label) },
+                    )
+                }
+            }
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 //todo extract space to dimens resource
@@ -118,35 +142,23 @@ fun CreateAlarmsScreen(
                     .background(MaterialTheme.colorScheme.background)
                     .wrapContentSize(align = Alignment.Center)
             ) {
-                SingleChoiceSegmentedButtonRow(
-                    modifier = Modifier
-                ) {
-                    options.forEachIndexed { index, label ->
-                        SegmentedButton(
-                            shape = SegmentedButtonDefaults.itemShape(
-                                index = index,
-                                count = 2
-                            ),
-                            onClick = { toggleMode(index) },
-                            selected = index == selectedIndex,
-                            label = { Text(label) }
-                        )
-                    }
-                }
-
                 if (alarmMode == mode.SINGLE) {
                     //TODO single alarm screen
-                    Text("Create Single Alarm")
+                    SingleAlarmContent(singleAlarmViewModel)
                 } else {
                     //TODO multi alarm screen
-                    Text("Create Multiple Alarms")
+                   // Text("Create Multiple Alarms")
+                    MultiAlarmsContent(alarmBatchViewModel)
                 }
             }
+
+            //TODO floating action button
         }
 
     }
 }
 
+/*
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun oldCreateAlarmsScreen(
@@ -274,4 +286,4 @@ fun oldCreateAlarmsScreen(
 
     }
 
-}
+}*/

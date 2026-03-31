@@ -6,15 +6,12 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.unit.sp
 
 @Composable
 fun FreqInput(
@@ -30,7 +27,7 @@ fun FreqInput(
     Column(modifier = Modifier) {
         //TODO extract this to string resource
         if(!inputValid) {
-            Text("Please enter a number between 5 and 60")
+            Text("Please enter a number between 5 and 60", fontSize = 12.sp)
         }
 
         TextField(

@@ -10,26 +10,26 @@ import kotlinx.coroutines.flow.Flow
 @Dao
 interface AlarmDao {
     @Insert
-    fun insert(alarm : Alarm) : Long
+    suspend fun insert(alarm : Alarm) : Long
 
     @Delete
-    fun delete(alarm : Alarm)
+    suspend fun delete(alarm : Alarm)
 
     @Query("DELETE FROM alarm WHERE id=:alarmId")
-    fun deleteById(alarmId : Int)
+    suspend fun deleteById(alarmId : Int)
 
     @Update
-    fun update(updatedAlarm : Alarm)
+    suspend fun update(updatedAlarm : Alarm)
 
     @Query("UPDATE Alarm SET active = :active WHERE id = :alarmId")
-    fun updateActive(alarmId:Int, active:Boolean)
+    suspend fun updateActive(alarmId:Int, active:Boolean)
 
     @Query("SELECT * FROM alarm")
     fun getAll() : Flow<List<Alarm>>
 
     @Query("SELECT * from alarm WHERE id = :alarmId")
-    fun getById(alarmId: Int) : Alarm
+    suspend fun getById(alarmId: Int) : Alarm
 
      @Query("SELECT * from alarm WHERE id IN (:alarmIds)")
-     fun getById(alarmIds : List<Int>) : List<Alarm>
+     suspend fun getById(alarmIds : List<Int>) : List<Alarm>
 }

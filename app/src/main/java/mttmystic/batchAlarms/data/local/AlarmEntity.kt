@@ -10,13 +10,14 @@ import java.time.DayOfWeek
 
 class Converters {
     @TypeConverter
-    fun setToString(set : Set<DayOfWeek>?) : String {
+    fun setToString(set : Set<DayOfWeek>) : String {
         //val dayStrings = set?.map {it.toString()}
         return set?.joinToString(","){it.name} ?: ""
     }
 
     @TypeConverter
-    fun stringToSet(setString : String?) : Set<DayOfWeek> {
+    fun stringToSet(setString : String) : Set<DayOfWeek> {
+        if (setString.isEmpty()) {return emptySet()}
         val dayStrings = setString?.split(",")
         val dayOfWeekSet = dayStrings?.map{DayOfWeek.valueOf(it)}?.toSet()
         return dayOfWeekSet ?: emptySet()
@@ -29,6 +30,6 @@ data class Alarm(
     @PrimaryKey(autoGenerate = true) val id: Int = 0,
     val hour: Int,
     val minute: Int,
-    val repeatDays : String,
+    val repeatDays : String = "",
     val active : Boolean
 )

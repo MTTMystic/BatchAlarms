@@ -8,7 +8,7 @@ import kotlinx.serialization.Serializable
 import mttmystic.batchAlarms.ui.elements.AlarmsListScreen
 import androidx.hilt.navigation.compose.hiltViewModel
 import mttmystic.batchAlarms.ui.elements.CreateAlarmsScreen
-import mttmystic.batchAlarms.ui.elements.oldCreateAlarmsScreen
+//import mttmystic.batchAlarms.ui.elements.oldCreateAlarmsScreen
 import mttmystic.batchAlarms.ui.elements.SettingsScreen
 import mttmystic.batchAlarms.ui.viewmodels.AlarmListViewModel
 import mttmystic.batchAlarms.ui.viewmodels.CreateAlarmBatchViewModel

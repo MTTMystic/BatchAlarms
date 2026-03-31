@@ -64,7 +64,8 @@ fun Alarm(
                 Switch(checked = isActive,
                     onCheckedChange = {
                         onClickToggle()
-                        toggleToast.show()
+                        if (isActive) {toggleToast.show()}
+
                     })
             }
         }

@@ -24,6 +24,9 @@ android {
         vectorDrawables {
             useSupportLibrary = true
         }
+        ksp {
+            arg("room.schemaLocation", "$projectDir/schemas")
+        }
     }
 
     buildTypes {
@@ -56,7 +59,6 @@ android {
             isIncludeAndroidResources = true
         }
     }
-
 }
 
 //tasks.withType<Test> {

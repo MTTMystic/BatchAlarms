@@ -19,7 +19,7 @@ class GetAlarms @Inject constructor (
     private val dayLabeler : DayLabel,
     private val timeString : TimeString
 ) {
-    suspend operator fun invoke() : Flow<List<uiAlarm>> {
+    operator fun invoke() : Flow<List<uiAlarm>> {
         val sortedAlarmsFlow = alarmRepository
             .getAlarmsFlow()
             .map {it.sortedWith(compareBy({ it.hour }, {it.minute}))}
