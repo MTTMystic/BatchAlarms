@@ -1,5 +1,6 @@
 package mttmystic.batchAlarms.ui.viewmodels
 
+import android.util.Log
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -10,6 +11,7 @@ import jakarta.inject.Inject
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.WhileSubscribed
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
@@ -66,15 +68,21 @@ class AlarmListViewModel @Inject constructor(
     private val deleteAlarms: DeleteAlarms
 ) : ViewModel() {
 
-    private var _selectedIds = MutableStateFlow<MutableSet<Int>>(mutableSetOf())
+    private var _selectedIds = MutableStateFlow<Set<Int>>(mutableSetOf())
     val selectedIds get() = _selectedIds.asStateFlow()
 
     val inSelectionMode : StateFlow<Boolean> = _selectedIds.map {it.isNotEmpty()}
         .stateIn(
             scope = viewModelScope,
-            started = SharingStarted.Eagerly,
+            started = SharingStarted.WhileSubscribed(5000),
             initialValue = false
         )
+
+    val allSelected : StateFlow<Boolean> = _selectedIds.map {it.size == getAlarms().value.size}.stateIn(
+        scope = viewModelScope,
+        started = SharingStarted.WhileSubscribed(5000),
+        initialValue = false
+    )
 
     fun getAlarms() : StateFlow<List<uiAlarm>> {
          //TODO fix this lol
@@ -106,20 +114,34 @@ class AlarmListViewModel @Inject constructor(
     }
 
     fun onAlarmLongPress(alarmId: Int) {
-        _selectedIds.value.add(alarmId)
+        _selectedIds.value = _selectedIds.value + alarmId
+        Log.d("SELECTIONDEBUG", "long press")
     }
 
     fun onAlarmClick(alarmId: Int) {
         if (_selectedIds.value.contains(alarmId)) {
-            _selectedIds.value.remove(alarmId)
+            _selectedIds.value = _selectedIds.value - alarmId
         } else {
-            _selectedIds.value.add(alarmId)
+            _selectedIds.value = _selectedIds.value + alarmId
         }
     }
 
     fun clearSelected() {
-        selectedIds.value.clear()
+        _selectedIds.value = emptySet()
     }
 
+    /*
+
+    fun toggleSelectAll() {
+        val alarms = getAlarms().value
+        val allSelected = alarms.size  == selectedIds.value.size
+        if (allSelected) {
+            clearSelected()
+        } else {
+            alarms.forEach {
+                _selectedIds.value.add(it.alarm.id)
+            }
+        }
+    }*/
 
 }

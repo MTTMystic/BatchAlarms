@@ -72,7 +72,7 @@ fun DisplayAlarmsScreen(
             FloatingActionButton(onClick = onClickFAB) {
                 Icon(
                 Icons.Filled.Add,
-                contentDescription = "create a new set of alarms"
+                contentDescription = "create alarms"
                 )
             } },
 

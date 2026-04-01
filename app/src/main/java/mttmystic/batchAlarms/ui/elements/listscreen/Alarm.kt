@@ -3,6 +3,7 @@ package mttmystic.batchAlarms.ui.elements.listscreen
 import android.widget.Toast
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.foundation.background
+import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -16,7 +17,9 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
@@ -26,13 +29,15 @@ fun Alarm(
     timeText : String,
     //isToday : Boolean,
     id : Int,
-    onClickToggle : () -> Unit,
+    onClickToggle : (Int) -> Unit,
     isActive : Boolean,
     nextTimeLabel : String = "upcoming",
     isSelected : Boolean = false,
     onClick : () -> Unit = {},
     onLongPress : () -> Unit = {}
 ) {
+    val haptic = LocalHapticFeedback.current
+
     val description  = if (isActive) {
         nextTimeLabel
     } else {
@@ -60,6 +65,13 @@ fun Alarm(
             .padding(bottom = 5.dp)
             .background(bgColor, RoundedCornerShape(16.dp))
             .padding(10.dp)
+            .combinedClickable(
+                onClick = onClick,
+                onLongClick = {
+                    haptic.performHapticFeedback(HapticFeedbackType.LongPress)
+                    onLongPress()
+                }
+            )
     ) {
         Column () {
             Text(description)
@@ -73,7 +85,7 @@ fun Alarm(
                 )
                 Switch(checked = isActive,
                     onCheckedChange = {
-                        onClickToggle()
+                        onClickToggle(id)
                         if (isActive) {toggleToast.show()}
 
                     })
