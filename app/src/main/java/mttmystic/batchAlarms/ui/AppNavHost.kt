@@ -5,15 +5,14 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import kotlinx.serialization.Serializable
-import mttmystic.batchAlarms.ui.elements.AlarmsListScreen
+import mttmystic.batchAlarms.ui.elements.listscreen.oldAlarmsListScreen
 import androidx.hilt.navigation.compose.hiltViewModel
-import mttmystic.batchAlarms.ui.elements.CreateAlarmsScreen
+import mttmystic.batchAlarms.ui.elements.createscreens.CreateAlarmsScreen
 //import mttmystic.batchAlarms.ui.elements.oldCreateAlarmsScreen
 import mttmystic.batchAlarms.ui.elements.SettingsScreen
 import mttmystic.batchAlarms.ui.viewmodels.AlarmListViewModel
 import mttmystic.batchAlarms.ui.viewmodels.CreateAlarmBatchViewModel
 import mttmystic.batchAlarms.ui.viewmodels.CreateAlarmViewModel
-import mttmystic.batchAlarms.ui.viewmodels.CreateAlarmsViewModel
 import mttmystic.batchAlarms.ui.viewmodels.SettingsViewModel
 
 @Serializable
@@ -29,7 +28,7 @@ fun AppNavHost () {
     NavHost(navController = navController, startDestination = AlarmList) {
         composable<AlarmList> {
             val viewModel : AlarmListViewModel = hiltViewModel()
-            AlarmsListScreen(
+            oldAlarmsListScreen(
                 viewModel,
                 onClickFAB = {navController.navigate(route = CreateAlarms)},
                 onClickSettings = {navController.navigate(route = SettingsRoute)})

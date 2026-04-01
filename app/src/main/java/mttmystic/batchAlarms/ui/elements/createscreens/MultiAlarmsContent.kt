@@ -1,4 +1,4 @@
-package mttmystic.batchAlarms.ui.elements
+package mttmystic.batchAlarms.ui.elements.createscreens
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
@@ -21,11 +21,11 @@ fun MultiAlarmsContent(
     //TODO str resource!!
     Text("First Alarm")
     TimePicker(
-        onChange = {pair : Pair<Int, Int> -> viewModel.setStart(pair)}
+        onChange = { pair: Pair<Int, Int> -> viewModel.setStart(pair) }
     )
     Text("Last Alarm")
     TimePicker(
-        onChange = {pair : Pair<Int, Int> -> viewModel.setEnd(pair)}
+        onChange = { pair: Pair<Int, Int> -> viewModel.setEnd(pair) }
     )
     Text("Alarms Every")
     Row(
@@ -37,7 +37,7 @@ fun MultiAlarmsContent(
             modifier = Modifier,
             viewModel.freqValid.collectAsState().value,
             viewModel.freqText.collectAsState().value,
-            {viewModel.setFreq(it)}
+            { viewModel.setFreq(it) }
         )
         Spacer(Modifier.width(dimensionResource(R.dimen.padding_small)))
         Text("minutes")

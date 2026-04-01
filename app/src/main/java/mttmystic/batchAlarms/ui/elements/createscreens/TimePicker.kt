@@ -1,4 +1,4 @@
-package mttmystic.batchAlarms.ui.elements
+package mttmystic.batchAlarms.ui.elements.createscreens
 
 import android.icu.util.Calendar
 import androidx.compose.foundation.layout.Box
@@ -18,7 +18,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.focus.focusProperties
 import androidx.compose.ui.unit.dp
-import mttmystic.batchAlarms.data.Time
+import kotlinx.coroutines.delay
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -30,7 +30,7 @@ fun TimePicker(
 
     var allowFocus by remember {mutableStateOf(false)}
     LaunchedEffect(Unit) {
-        kotlinx.coroutines.delay(200)
+        delay(200)
         allowFocus = true
     }
 

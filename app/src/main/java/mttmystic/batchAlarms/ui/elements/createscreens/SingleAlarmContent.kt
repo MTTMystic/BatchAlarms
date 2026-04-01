@@ -1,9 +1,8 @@
-package mttmystic.batchAlarms.ui.elements
+package mttmystic.batchAlarms.ui.elements.createscreens
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import mttmystic.batchAlarms.ui.viewmodels.CreateAlarmViewModel
-import mttmystic.batchAlarms.ui.viewmodels.CreateAlarmsViewModel
 
 @Composable
 fun SingleAlarmContent(
@@ -11,6 +10,6 @@ fun SingleAlarmContent(
 ) {
     TimePicker(
         modifier = Modifier,
-        onChange = {pair ->  viewModel.setTime(pair) }
+        onChange = { pair -> viewModel.setTime(pair) }
     )
 }

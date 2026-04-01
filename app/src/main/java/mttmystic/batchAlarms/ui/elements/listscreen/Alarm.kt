@@ -1,6 +1,7 @@
-package mttmystic.batchAlarms.ui.elements
+package mttmystic.batchAlarms.ui.elements.listscreen
 
 import android.widget.Toast
+import androidx.compose.animation.animateColorAsState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -13,6 +14,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
@@ -26,20 +28,28 @@ fun Alarm(
     id : Int,
     onClickToggle : () -> Unit,
     isActive : Boolean,
-    nextTimeLabel : String = "upcoming"
+    nextTimeLabel : String = "upcoming",
+    isSelected : Boolean = false,
+    onClick : () -> Unit = {},
+    onLongPress : () -> Unit = {}
 ) {
     val description  = if (isActive) {
         nextTimeLabel
-        /*if (isToday){
-            "Today"
-        } else {
-            "Tomorrow"
-        }*/
     } else {
         "Not Scheduled"
     }
 
     val toggleToast = Toast.makeText(LocalContext.current, "alarm canceled", Toast.LENGTH_SHORT)
+    //change bg color based on whether it's selected or not
+    val bgColor by animateColorAsState(
+        targetValue = if(isSelected) {
+            MaterialTheme.colorScheme.secondaryContainer
+        } else {
+            MaterialTheme.colorScheme.surfaceContainer
+        },
+        label = "background color"
+    )
+
     Box (
         modifier = Modifier
             //.background(Color.LightGray) //TODO replace with theme colors
@@ -48,7 +58,7 @@ fun Alarm(
             //.clip()
             .padding(horizontal = 15.dp)
             .padding(bottom = 5.dp)
-            .background(MaterialTheme.colorScheme.surfaceContainer, RoundedCornerShape(16.dp))
+            .background(bgColor, RoundedCornerShape(16.dp))
             .padding(10.dp)
     ) {
         Column () {

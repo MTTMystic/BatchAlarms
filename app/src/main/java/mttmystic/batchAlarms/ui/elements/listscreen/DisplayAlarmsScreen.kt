@@ -1,4 +1,4 @@
-package mttmystic.batchAlarms.ui.elements
+package mttmystic.batchAlarms.ui.elements.listscreen
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -28,8 +28,6 @@ import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.sp
 import mttmystic.batchAlarms.R
-import mttmystic.batchAlarms.data.AlarmUI
-import mttmystic.batchAlarms.data.Time
 import mttmystic.batchAlarms.data.models.uiAlarm
 
 
@@ -92,13 +90,14 @@ fun DisplayAlarmsScreen(
                 alarms.forEach { uiAlarm ->
                     val alarm = uiAlarm.alarm
                     //val time = Time(alarm.hour, alarm.minute)
-                    Alarm (
+                    Alarm(
                         //isToday = isAlarmToday(time),
                         timeText = uiAlarm.timeLabel,
                         id = alarm.id,
-                        onClickToggle = {onClickToggle(alarm.id)},
+                        onClickToggle = { onClickToggle(alarm.id) },
                         isActive = alarm.active,
-                        nextTimeLabel = uiAlarm.dayLabel
+                        nextTimeLabel = uiAlarm.dayLabel,
+                        isSelected = true
                     )
                     //Text(alarm.time.display(), fontSize=48.sp)
                 }

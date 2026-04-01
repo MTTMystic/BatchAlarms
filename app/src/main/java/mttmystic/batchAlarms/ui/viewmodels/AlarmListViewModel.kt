@@ -1,6 +1,7 @@
 package mttmystic.batchAlarms.ui.viewmodels
 
 import androidx.compose.runtime.derivedStateOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -17,6 +18,7 @@ import mttmystic.batchAlarms.domain.usecases.DeleteAlarms
 import mttmystic.batchAlarms.domain.usecases.oldGetAlarms
 import mttmystic.batchAlarms.domain.usecases.oldToggleAlarm
 import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.flow.map
 import mttmystic.batchAlarms.data.models.uiAlarm
 import mttmystic.batchAlarms.domain.usecases.GetAlarms
 import mttmystic.batchAlarms.domain.usecases.ToggleAlarm
@@ -64,11 +66,17 @@ class AlarmListViewModel @Inject constructor(
     private val deleteAlarms: DeleteAlarms
 ) : ViewModel() {
 
-    private var _selectedIds = MutableStateFlow<Set<Int>>(emptySet())
+    private var _selectedIds = MutableStateFlow<MutableSet<Int>>(mutableSetOf())
     val selectedIds get() = _selectedIds.asStateFlow()
 
-    val inSelectionMode = _selectedIds.value.isNotEmpty()
-     fun getAlarms() : StateFlow<List<uiAlarm>> {
+    val inSelectionMode : StateFlow<Boolean> = _selectedIds.map {it.isNotEmpty()}
+        .stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.Eagerly,
+            initialValue = false
+        )
+
+    fun getAlarms() : StateFlow<List<uiAlarm>> {
          //TODO fix this lol
          return getAlarmsUseCase().stateIn(
              scope = viewModelScope,
@@ -96,4 +104,22 @@ class AlarmListViewModel @Inject constructor(
         }
 
     }
+
+    fun onAlarmLongPress(alarmId: Int) {
+        _selectedIds.value.add(alarmId)
+    }
+
+    fun onAlarmClick(alarmId: Int) {
+        if (_selectedIds.value.contains(alarmId)) {
+            _selectedIds.value.remove(alarmId)
+        } else {
+            _selectedIds.value.add(alarmId)
+        }
+    }
+
+    fun clearSelected() {
+        selectedIds.value.clear()
+    }
+
+
 }
