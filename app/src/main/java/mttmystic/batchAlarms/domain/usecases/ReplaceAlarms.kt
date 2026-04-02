@@ -4,6 +4,7 @@ import jakarta.inject.Inject
 import mttmystic.batchAlarms.data.Interval
 import mttmystic.batchAlarms.data.Span
 
+/*
 class ReplaceAlarms @Inject constructor(
     private val deleteAlarms: DeleteAlarms,
     private val createAlarms: CreateAlarms
@@ -13,4 +14,4 @@ class ReplaceAlarms @Inject constructor(
         deleteAlarms()
         createAlarms(span, interval)
     }
-}
+}*/

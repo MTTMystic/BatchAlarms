@@ -8,7 +8,7 @@ import mttmystic.batchAlarms.data.repository.oldAlarmRepository
 import mttmystic.batchAlarms.domain.AlarmScheduler
 
 
-class ToggleAlarm @Inject constructor(
+class ToggleAlarms @Inject constructor(
     private val alarmRepository: AlarmRepository,
     private val alarmScheduler: AlarmScheduler
 ) {
@@ -21,6 +21,24 @@ class ToggleAlarm @Inject constructor(
         } else {
             //so alarm will be enabled
             alarmScheduler.scheduleAlarm(alarmId, alarm.hour, alarm.minute, alarm.repeatDays)
+        }
+    }
+
+    suspend operator fun invoke(alarmIds : Collection<Int>) {
+        alarmIds.forEach {
+            this.invoke(it)
+        }
+    }
+
+    suspend operator fun invoke(alarmIds : Collection<Int>, active : Boolean) {
+        alarmIds.forEach {
+            val alarm = alarmRepository.find(it)
+            alarmRepository.updateActive(it, active)
+            if (alarm.active) {
+                alarmScheduler.cancelAlarm(it)
+            } else {
+                alarmScheduler.scheduleAlarm(it, alarm.hour, alarm.minute)
+            }
         }
     }
 }

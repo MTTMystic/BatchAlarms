@@ -23,7 +23,7 @@ import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.map
 import mttmystic.batchAlarms.data.models.uiAlarm
 import mttmystic.batchAlarms.domain.usecases.GetAlarms
-import mttmystic.batchAlarms.domain.usecases.ToggleAlarm
+import mttmystic.batchAlarms.domain.usecases.ToggleAlarms
 
 //import mttmystic.batchAlarms.data.AlarmRepositoryNew
 
@@ -63,9 +63,9 @@ import mttmystic.batchAlarms.domain.usecases.ToggleAlarm
 
 @HiltViewModel
 class AlarmListViewModel @Inject constructor(
-    private val toggleAlarmUseCase: ToggleAlarm,
+    private val toggleAlarmUseCase: ToggleAlarms,
     private val getAlarmsUseCase : GetAlarms,
-    private val deleteAlarms: DeleteAlarms
+    private val deleteAlarms: DeleteAlarms,
 ) : ViewModel() {
 
     private var _selectedIds = MutableStateFlow<Set<Int>>(mutableSetOf())
@@ -83,6 +83,9 @@ class AlarmListViewModel @Inject constructor(
         started = SharingStarted.WhileSubscribed(5000),
         initialValue = false
     )
+
+    private var _toggleSelectedActive = MutableStateFlow<Boolean>(false)
+    val toggleSelectedActive = _toggleSelectedActive.asStateFlow()
 
     fun getAlarms() : StateFlow<List<uiAlarm>> {
          //TODO fix this lol
@@ -106,11 +109,17 @@ class AlarmListViewModel @Inject constructor(
 
     }
 
-    fun deleteAllAlarms() {
+    fun deleteAlarm(id : Int) {
         viewModelScope.launch {
-           deleteAlarms()
+            deleteAlarms(id)
         }
+    }
 
+
+    fun deleteSelected() {
+        viewModelScope.launch {
+           deleteAlarms(_selectedIds.value)
+        }
     }
 
     fun onAlarmLongPress(alarmId: Int) {
@@ -129,6 +138,13 @@ class AlarmListViewModel @Inject constructor(
     fun clearSelected() {
         _selectedIds.value = emptySet()
     }
+
+    fun toggleSelected() {
+        viewModelScope.launch {
+            toggleAlarmUseCase(_selectedIds.value, toggleSelectedActive.value)
+        }
+    }
+
 
     /*
 

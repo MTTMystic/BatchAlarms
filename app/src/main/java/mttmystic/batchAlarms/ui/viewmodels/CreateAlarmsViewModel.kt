@@ -11,10 +11,11 @@ import kotlinx.coroutines.launch
 import mttmystic.batchAlarms.data.Interval
 import mttmystic.batchAlarms.data.Span
 import mttmystic.batchAlarms.data.Time
-import mttmystic.batchAlarms.domain.usecases.ReplaceAlarms
+//import mttmystic.batchAlarms.domain.usecases.ReplaceAlarms
 import mttmystic.batchAlarms.domain.usecases.ValidateInterval
 import mttmystic.batchAlarms.domain.usecases.ValidateSpanLength
 
+/*
 @HiltViewModel
 class CreateAlarmsViewModel @Inject constructor(
     private val replaceAlarms: ReplaceAlarms,
@@ -82,4 +83,4 @@ class CreateAlarmsViewModel @Inject constructor(
 
 
     }
-}
+}*/
