@@ -7,13 +7,13 @@ import kotlinx.coroutines.runBlocking
 import mttmystic.batchAlarms.data.models.Alarm
 import mttmystic.batchAlarms.data.repository.AlarmRepository
 import mttmystic.batchAlarms.domain.AlarmScheduler
-import mttmystic.batchAlarms.domain.usecases.ToggleAlarm
+import mttmystic.batchAlarms.domain.usecases.ToggleAlarms
 import org.junit.jupiter.api.Test
 
 class ToggleAlarmTest {
     val mockAlarmRepository : AlarmRepository = mockk<AlarmRepository>(relaxed=true)
     val mockAlarmScheduler : AlarmScheduler = mockk<AlarmScheduler>(relaxed = true)
-    val toggleAlarmUseCase = ToggleAlarm(mockAlarmRepository, mockAlarmScheduler)
+    val toggleAlarmUseCase = ToggleAlarms(mockAlarmRepository, mockAlarmScheduler)
     val alarm = Alarm(hour=0, minute =0, repeatDays = emptySet(), active=true)
 
     @Test

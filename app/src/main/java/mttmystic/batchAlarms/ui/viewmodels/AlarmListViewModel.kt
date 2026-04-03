@@ -113,6 +113,7 @@ class AlarmListViewModel @Inject constructor(
         viewModelScope.launch {
             deleteAlarms(id)
         }
+        _selectedIds.value = _selectedIds.value - id
     }
 
 
@@ -120,11 +121,12 @@ class AlarmListViewModel @Inject constructor(
         viewModelScope.launch {
            deleteAlarms(_selectedIds.value)
         }
+        _selectedIds.value = emptySet()
     }
 
     fun onAlarmLongPress(alarmId: Int) {
         _selectedIds.value = _selectedIds.value + alarmId
-        Log.d("SELECTIONDEBUG", "long press")
+        //Log.d("SELECTIONDEBUG", "long press")
     }
 
     fun onAlarmClick(alarmId: Int) {
@@ -139,9 +141,10 @@ class AlarmListViewModel @Inject constructor(
         _selectedIds.value = emptySet()
     }
 
-    fun toggleSelected() {
+    fun toggleSelected(activate : Boolean) {
+        _toggleSelectedActive.value = activate
         viewModelScope.launch {
-            toggleAlarmUseCase(_selectedIds.value, toggleSelectedActive.value)
+            toggleAlarmUseCase(_selectedIds.value, _toggleSelectedActive.value)
         }
     }
 
