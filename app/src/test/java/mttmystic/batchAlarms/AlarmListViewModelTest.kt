@@ -2,17 +2,12 @@
 
 package mttmystic.batchAlarms
 
-import androidx.compose.runtime.collectAsState
-import com.google.common.base.Verify.verify
 import io.mockk.coEvery
 import io.mockk.coVerify
-import io.mockk.every
 import io.mockk.mockk
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
-import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.advanceUntilIdle
 import kotlinx.coroutines.test.resetMain
@@ -41,7 +36,7 @@ class AlarmListViewModelTest {
     val mockDayLabeler = mockk<DayLabel>(relaxed = true)
     val mockTimeString = mockk<TimeString>(relaxed = true)
     val toggleAlarmUseCase = ToggleAlarms(mockRepository, mockScheduler)
-    val getAlarmsUseCase = GetAlarms(
+    val oldGetAlarmsUseCase = GetAlarms(
         mockRepository,
         mockScheduler,
         mockDayLabeler,
@@ -59,7 +54,7 @@ class AlarmListViewModelTest {
         active = true
     )
 
-    val alarms = setOf(alarm, alarm.copy(id = 1, hour = 6), alarm.copy(id = 2, hour = 7))
+    val oldGetAlarms = setOf(alarm, alarm.copy(id = 1, hour = 6), alarm.copy(id = 2, hour = 7))
 
     @BeforeEach
     fun setup() {
@@ -67,12 +62,12 @@ class AlarmListViewModelTest {
         Dispatchers.setMain(UnconfinedTestDispatcher())
         mockAlarmListViewModel = AlarmListViewModel(
             toggleAlarmUseCase,
-            getAlarmsUseCase,
+            getOldGetAlarmsUseCase,
             deleteAlarmsUseCase
         )
         coEvery {mockRepository.find(0)} returns alarm
-        coEvery {mockRepository.find(1)} returns alarms.elementAt(1).copy(active = false)
-        coEvery {mockRepository.find(2)} returns alarms.elementAt(2)
+        coEvery {mockRepository.find(1)} returns oldGetAlarms.elementAt(1).copy(active = false)
+        coEvery {mockRepository.find(2)} returns oldGetAlarms.elementAt(2)
     }
 
     @AfterEach
@@ -92,23 +87,31 @@ class AlarmListViewModelTest {
         @Test
         fun `clicking an alarm that is already selected de-selects it`() = runBlocking {
             mockAlarmListViewModel.onAlarmLongPress(0)
-            mockAlarmListViewModel.onAlarmClick(0)
+            mockAlarmListViewModel.onAlarmSelectionClick(0)
             assert(!mockAlarmListViewModel.selectedIds.value.contains(0))
         }
 
 
         @Test
         fun `clicking an alarm that is not already selected selects it`() = runBlocking {
-            mockAlarmListViewModel.onAlarmClick(1)
+            mockAlarmListViewModel.onAlarmSelectionClick(1)
             assert(mockAlarmListViewModel.selectedIds.value.contains(1))
         }
 
         @Test
         fun `clearing all selected alarms empties the list`() = runBlocking {
             mockAlarmListViewModel.onAlarmLongPress(0)
-            mockAlarmListViewModel.onAlarmClick(1)
+            mockAlarmListViewModel.onAlarmSelectionClick(1)
             mockAlarmListViewModel.clearSelected()
             assertEquals(emptySet<Int>(), mockAlarmListViewModel.selectedIds.value)
+        }
+
+        @Test
+        fun `select all selects all alarms` () = runTest {
+            mockAlarmListViewModel.onAlarmLongPress(0)
+            mockAlarmListViewModel.onAlarmSelectionClick(1)
+            mockAlarmListViewModel.selectAll()
+            assertEquals(setOf(0,1), mockAlarmListViewModel.selectedIds.value)
         }
     }
 
@@ -118,8 +121,8 @@ class AlarmListViewModelTest {
         @BeforeEach
         fun setUp() {
             mockAlarmListViewModel.onAlarmLongPress(0)
-            mockAlarmListViewModel.onAlarmClick(1)
-            mockAlarmListViewModel.onAlarmClick(2)
+            mockAlarmListViewModel.onAlarmSelectionClick(1)
+            mockAlarmListViewModel.onAlarmSelectionClick(2)
         }
 
         @Test
@@ -158,7 +161,7 @@ class AlarmListViewModelTest {
         @Test
         fun `delete selected alarms deletes the selected alarms` () = runTest {
             mockAlarmListViewModel.onAlarmLongPress(0)
-            mockAlarmListViewModel.onAlarmClick(2)
+            mockAlarmListViewModel.onAlarmSelectionClick(2)
             assertEquals(setOf<Int>(0, 2), mockAlarmListViewModel.selectedIds.value)
             mockAlarmListViewModel.deleteSelected()
             advanceUntilIdle()
@@ -172,7 +175,7 @@ class AlarmListViewModelTest {
         @Test
         fun `delete alarm deletes correct alarm` () = runTest {
             mockAlarmListViewModel.onAlarmLongPress(0)
-            mockAlarmListViewModel.onAlarmClick(1)
+            mockAlarmListViewModel.onAlarmSelectionClick(1)
             mockAlarmListViewModel.deleteAlarm(0)
             advanceUntilIdle()
             assertEquals(setOf<Int>(1), mockAlarmListViewModel.selectedIds.value)

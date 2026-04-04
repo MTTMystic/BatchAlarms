@@ -1,9 +1,6 @@
 package mttmystic.batchAlarms.ui.viewmodels
 
 import android.util.Log
-import androidx.compose.runtime.derivedStateOf
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -11,15 +8,10 @@ import jakarta.inject.Inject
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.WhileSubscribed
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
-import mttmystic.batchAlarms.data.AlarmUI
 import mttmystic.batchAlarms.domain.usecases.DeleteAlarms
-import mttmystic.batchAlarms.domain.usecases.oldGetAlarms
-import mttmystic.batchAlarms.domain.usecases.oldToggleAlarm
-import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.map
 import mttmystic.batchAlarms.data.models.uiAlarm
 import mttmystic.batchAlarms.domain.usecases.GetAlarms
@@ -78,16 +70,22 @@ class AlarmListViewModel @Inject constructor(
             initialValue = false
         )
 
-    val allSelected : StateFlow<Boolean> = _selectedIds.map {it.size == getAlarms().value.size}.stateIn(
+    val allSelected : StateFlow<Boolean> = _selectedIds.map {it.size == alarms.value.size}.stateIn(
         scope = viewModelScope,
         started = SharingStarted.WhileSubscribed(5000),
         initialValue = false
     )
 
+    val alarms : StateFlow<List<uiAlarm>> = getAlarmsUseCase().stateIn(
+        scope = viewModelScope,
+        started = SharingStarted.Eagerly,
+        initialValue = emptyList()
+    )
+
     private var _toggleSelectedActive = MutableStateFlow<Boolean>(false)
     val toggleSelectedActive = _toggleSelectedActive.asStateFlow()
 
-    fun getAlarms() : StateFlow<List<uiAlarm>> {
+    fun oldGetAlarms() : StateFlow<List<uiAlarm>> {
          //TODO fix this lol
          return getAlarmsUseCase().stateIn(
              scope = viewModelScope,
@@ -129,14 +127,22 @@ class AlarmListViewModel @Inject constructor(
         //Log.d("SELECTIONDEBUG", "long press")
     }
 
-    fun onAlarmClick(alarmId: Int) {
-        if (_selectedIds.value.contains(alarmId)) {
-            _selectedIds.value = _selectedIds.value - alarmId
-        } else {
-            _selectedIds.value = _selectedIds.value + alarmId
+    fun onAlarmSelectionClick(alarmId: Int) {
+        if(inSelectionMode.value) {
+            if (_selectedIds.value.contains(alarmId)) {
+                _selectedIds.value = _selectedIds.value - alarmId
+            } else {
+                _selectedIds.value = _selectedIds.value + alarmId
+            }
         }
+
     }
 
+    fun selectAll() {
+        alarms.value.forEach {
+            _selectedIds.value = _selectedIds.value + it.alarm.id
+        }
+    }
     fun clearSelected() {
         _selectedIds.value = emptySet()
     }

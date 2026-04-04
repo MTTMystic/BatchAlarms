@@ -1,5 +1,6 @@
 package mttmystic.batchAlarms.ui.elements.listscreen
 
+import android.util.Log
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
@@ -30,9 +31,9 @@ fun AlarmsListScreen(
     onClickSettings: () -> Unit
 ) {
     val inSelectionMode by viewModel.inSelectionMode.collectAsState()
-    val alarms by viewModel.getAlarms().collectAsState()
-    val selectedIds = viewModel.selectedIds.collectAsState()
-
+    val alarms by viewModel.alarms.collectAsState()
+    val selectedIds by viewModel.selectedIds.collectAsState()
+    val allSelected by viewModel.allSelected.collectAsState()
     if (inSelectionMode) {
         BackHandler { viewModel.clearSelected()}
     }
@@ -40,8 +41,21 @@ fun AlarmsListScreen(
         topBar = {
             if (inSelectionMode) {
                 SelectingTopBar(
-                    allSelected = selectedIds.value.size == alarms.size,
-                    numSelected = selectedIds.value.size)
+                    allSelected = allSelected,
+                    numSelected = selectedIds.size,
+                    toggleSelectedActive = viewModel.toggleSelectedActive.collectAsState().value,
+                    onClickToggle = {viewModel.toggleSelected(it)},
+                    onClickAll = {
+                        Log.d("TAG", "onClickAll fired, allSelected = ${allSelected}, selectedIds=${selectedIds.size}, alarms=${alarms.size}")
+                        if (allSelected) {
+                            viewModel.clearSelected()
+                        } else {
+                            viewModel.selectAll()
+                        }
+                        Log.d("TAG", "onClickAll finished, allSelected = ${allSelected}, selectedIds=${selectedIds.size}, alarms=${alarms.size}")
+                    },
+                    onClickDelete = {viewModel.deleteSelected()}
+                )
             } else {
                 NonSelectingTopBar()
             }
@@ -79,8 +93,8 @@ fun AlarmsListScreen(
                             onClickToggle = {id -> viewModel.toggleAlarm(id)},
                             isActive = uiAlarm.alarm.active,
                             nextTimeLabel = uiAlarm.dayLabel,
-                            isSelected = selectedIds.value.contains(uiAlarm.alarm.id),
-                            onClick = { viewModel.onAlarmClick(uiAlarm.alarm.id)},
+                            isSelected = selectedIds.contains(uiAlarm.alarm.id),
+                            onClick = { viewModel.onAlarmSelectionClick(uiAlarm.alarm.id)},
                             onLongPress = { viewModel.onAlarmLongPress(uiAlarm.alarm.id) },
                         )
                 }

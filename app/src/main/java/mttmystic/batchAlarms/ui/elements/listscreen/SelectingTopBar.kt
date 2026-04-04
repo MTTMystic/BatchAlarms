@@ -1,5 +1,6 @@
 package mttmystic.batchAlarms.ui.elements.listscreen
 
+import android.util.Log
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -16,6 +17,7 @@ import androidx.compose.runtime.Composable
 fun SelectingTopBar(
     allSelected : Boolean = false,
     numSelected : Int = 1,
+    toggleSelectedActive : Boolean = false,
     onClickToggle : (Boolean) -> Unit = {},
     onClickDelete : () -> Unit = {},
     onClickAll : () -> Unit = {}
@@ -26,14 +28,16 @@ fun SelectingTopBar(
         //TODO
         actions = {
             TextButton(onClick = onClickAll) {
+
                 if (allSelected) {
-                    "unselect all"
+                    Text("unselect all")
                 } else {
-                    "select all"
+                    Text("select all")
+
                 }
             }
             Switch(
-                checked = false,
+                checked = toggleSelectedActive,
                 onCheckedChange = { onClickToggle(it)},
             )
             IconButton(onClick = onClickDelete) {
